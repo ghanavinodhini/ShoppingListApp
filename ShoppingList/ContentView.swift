@@ -10,11 +10,11 @@ import Firebase
 
 struct ContentView: View {
     
-    @StateObject var model = ModelData()
-    
+    //@StateObject var model = ModelData()
+    @State var userModel = ModelData()
     var body: some View {
        
-        LoginView(model: model)
+        LoginView(userModel: userModel)
         
     }
 }
@@ -27,7 +27,7 @@ struct ContentView_Previews: PreviewProvider {
 
 struct LoginView : View {
       
-      @ObservedObject var model : ModelData
+      @ObservedObject var userModel : ModelData
       
       var body: some View{
           
@@ -35,7 +35,7 @@ struct LoginView : View {
               
               VStack{
                   
-                  Spacer()
+                 // Spacer()
                   
                   ZStack{
                       //For smaller Devices
@@ -55,21 +55,39 @@ struct LoginView : View {
                       .padding(.vertical,20)
                       //.padding(.top)
                   
-                  VStack(spacing: 5){
-                      HStack(spacing: 10){
+                VStack(spacing:10){
+                     // HStack(spacing: 10){
                           Text("Shopping List")
                               .font(.system(size: 35, weight: .heavy))
                               .foregroundColor(.blue)
-                      }
+                     // }
                   }.padding(.top)
                   
                   VStack(spacing: 20)
                   {
-                    TextField("Enter Email", text:$model.email)
-                    TextField("Enter Password", text:$model.password)
+                    HStack(spacing:15){
+                        Image(systemName: "envelope.fill")
+                        TextField("Enter Email", text:$userModel.email)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    HStack(spacing: 15){
+                        Image(systemName: "eye.slash.fill")
+                        TextField("Enter Password", text:$userModel.password)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    
                   }.padding()
+                
+                    //Forget Password action
+                    Button(action: userModel.resetPassword) {
+                        Text("Forget Password?")
+                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                            .foregroundColor(Color.blue)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    .padding(.top,10)
                   
-                  Button(action: model.login)
+                  Button(action: userModel.login)
                   {
                       Text("LOGIN")
                             .fontWeight(.bold)
@@ -86,7 +104,7 @@ struct LoginView : View {
                   
                   HStack(spacing: 10){
                       
-                      Button(action: {model.isSignUp.toggle()})
+                      Button(action: {userModel.isSignUp.toggle()})
                       {
                           Text("Sign Up")
                               .fontWeight(.bold)
@@ -96,14 +114,14 @@ struct LoginView : View {
                     Spacer()
                   
               }
-          }.fullScreenCover(isPresented: $model.isSignUp)
+          }.fullScreenCover(isPresented: $userModel.isSignUp)
                 {
-                    SignUpView(model: model)
+                    SignUpView(userModel: userModel)
                 }
           // Alerts...
-          .alert(isPresented: $model.alert, content: {
+          .alert(isPresented: $userModel.alert, content: {
               
-              Alert(title: Text("Message"), message: Text(model.alertMsg), dismissButton: .destructive(Text("Ok")))
+              Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok")))
           })
       }
 }
@@ -113,7 +131,7 @@ struct LoginView : View {
 
 struct SignUpView : View {
     
-    @ObservedObject var model : ModelData
+    @ObservedObject var userModel : ModelData
     
     var body: some View{
         
@@ -121,7 +139,7 @@ struct SignUpView : View {
             
             VStack{
                 
-                Spacer(minLength: 0)
+                //Spacer(minLength: 0)
                 
                 ZStack{
                     //For small devices
@@ -137,10 +155,9 @@ struct SignUpView : View {
                             .frame(width: 150, height: 150)
                     }
                 }
-                    .padding(.horizontal)
-                    .padding(.vertical,20)
-                   
-                    .cornerRadius(30)
+                   // .padding(.horizontal)
+                   // .padding(.vertical,20)
+                   // .cornerRadius(30)
                     .padding(.top)
                 
                 VStack(spacing: 5){
@@ -157,14 +174,31 @@ struct SignUpView : View {
                 .padding(.top)
                 
                 VStack(spacing: 20){
-                  
-                  TextField("Enter Email",text:$model.email_SignUp)
-                  TextField("Enter Password",text:$model.password_SignUp)
-                  TextField ("Re-Enter Password",text:$model.reEnterPassword)
+                    HStack(spacing: 15){
+                        Image(systemName: "person.fill")
+                        TextField("Enter Your Name",text:$userModel.userName)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    HStack(spacing: 15){
+                        Image(systemName: "envelope.fill")
+                        TextField("Enter Email",text:$userModel.email_SignUp)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    HStack(spacing: 15){
+                        Image(systemName: "eye.slash.fill")
+                        TextField("Enter Password",text:$userModel.password_SignUp)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                    HStack(spacing: 15){
+                        Image(systemName: "eye.slash.fill")
+                        TextField ("Re-Enter Password",text:$userModel.reEnterPassword)
+                    }
+                    Divider().background(Color.white.opacity(0.5))
+                 
                 }
                 .padding()
                 
-                Button(action: model.signUp) {
+                Button(action: userModel.signUp) {
                     
                     Text("SIGNUP")
                         .fontWeight(.bold)
@@ -177,7 +211,7 @@ struct SignUpView : View {
                     Spacer()
             }
             
-            Button(action: {model.isSignUp.toggle()}) {
+            Button(action: {userModel.isSignUp.toggle()}) {
                 
                 Image(systemName: "xmark")
                     .padding()
@@ -190,18 +224,18 @@ struct SignUpView : View {
         })
     
         // Alerts...
-        .alert(isPresented: $model.alert, content: {
+        .alert(isPresented: $userModel.alert, content: {
             
-            Alert(title: Text("Message"), message: Text(model.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
+            Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
                  
               
-              if model.alertMsg == "SignUp Successful"
+              if userModel.alertMsg == "SignUp Successful"
               {
                     
                    // model.isSignUp.toggle()
-                    model.email_SignUp = ""
-                    model.password_SignUp = ""
-                    model.reEnterPassword = ""
+                    userModel.email_SignUp = ""
+                    userModel.password_SignUp = ""
+                    userModel.reEnterPassword = ""
                 }
                 
             }))
