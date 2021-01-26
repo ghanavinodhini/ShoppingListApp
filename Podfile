@@ -18,5 +18,6 @@ target 'ShoppingList' do
 	pod 'Firebase/Analytics'
 	pod 'Firebase/Firestore'
 	pod 'Firebase/Auth'
+	
 
 end

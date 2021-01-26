@@ -9,45 +9,38 @@ import Foundation
 import Firebase
 
 
-// MVVM Model...
+// MVVM Model
 
 class ModelData : ObservableObject
 {
-    @Published var userName = ""
+    @Published var userName_SignUp = ""
     @Published var email = ""
     @Published var password = ""
     @Published var isSignUp = false
     @Published var email_SignUp = ""
     @Published var password_SignUp = ""
     @Published var reEnterPassword = ""
-    //@Published var isEmailLinkSent = false
    
-    
-    // Error Alerts...
-    
+    // Error Alerts
     @Published var alert = false
     @Published var alertMsg = ""
     
    
     
-    // Login...
-    
+    // Login
     func login()
     {
-        
-        // checking all fields are inputted correctly...
-        
-        if email == "" || password == ""{
-            
+        // checking all fields are entered
+        if email == "" || password == ""
+        {
             self.alertMsg = "Please Fill All Data"
             self.alert.toggle()
             return
         }
-        
+        //Login useraccount
         Auth.auth().signIn(withEmail: email, password: password) { (result, err) in
             
             if err != nil{
-                
                 self.alertMsg = err!.localizedDescription
                 self.alert.toggle()
                 return
@@ -59,14 +52,12 @@ class ModelData : ObservableObject
         }
     }
     
-    // SignUp..
-    
+    // SignUp
     func signUp()
     {
         
-        // checking....
-        
-        if email_SignUp == "" || password_SignUp == "" || reEnterPassword == ""
+        // checking all fields have values
+        if userName_SignUp == "" || email_SignUp == "" || password_SignUp == "" || reEnterPassword == ""
         {
             self.alertMsg = "Please Enter All Data"
             self.alert.toggle()
@@ -79,7 +70,7 @@ class ModelData : ObservableObject
             self.alert.toggle()
             return
         }
-        
+        //Create New User in Firebase
         Auth.auth().createUser(withEmail: email_SignUp, password: password_SignUp) { (result, err) in
             if err != nil{
                 self.alertMsg = err!.localizedDescription
@@ -88,30 +79,24 @@ class ModelData : ObservableObject
             }else{
               self.alertMsg = "SignUp Successful"
               self.alert.toggle()
-            
-            
-            // sending Verifcation Link....
-            
-            result?.user.sendEmailVerification(completion: { (err) in
-                
-                if err != nil{
-                    self.alertMsg = err!.localizedDescription
-                    self.alert.toggle()
-                    return
-                }
-                
-                // Alerting User To Verify Email...
-                self.alertMsg = "Email Verification Has Been Sent !!! Verify Your Email ID !!!"
-                self.alert.toggle()
-            })
+                //Calling upload function to store user data
+                self.uploadUserInfo(userName:self.userName_SignUp,userEmail:self.email_SignUp)
         }
         }
+    }
+    
+    //Store user info in Firestore
+    func uploadUserInfo(userName:String,userEmail:String)
+    {
+        print("Inside upload user info")
+        let db = Firestore.firestore()
+        db.collection("Users").document().setData(["UserName":userName,"UserEmail":userEmail])
     }
     
     //Reset Password
     func resetPassword()
     {
-        let resetAlert = UIAlertController(title: "Reset Password", message: "Enter Your E-Mail ID To Reset Your Password", preferredStyle: .alert)
+        let resetAlert = UIAlertController(title: "Reset Password", message: "Enter Valid E-Mail ID To Reset Your Password", preferredStyle: .alert)
     
         resetAlert.addTextField { (password) in
         password.placeholder = "Valid Email Address"
@@ -121,7 +106,6 @@ class ModelData : ObservableObject
         let resetOk = UIAlertAction(title: "Reset", style: .default) { (_) in
             
             // Sending Password Link...
-            
             if resetAlert.textFields![0].text! != ""
             {
                 let resetEmail = resetAlert.textFields?[0].text
@@ -135,7 +119,7 @@ class ModelData : ObservableObject
                         return
                     }
                     
-                    // ALerting User...
+                    // Alerting User for password reset link
                     self.alertMsg = "Password Reset Link Has Been Sent"
                     self.alert.toggle()
                 }
@@ -146,8 +130,7 @@ class ModelData : ObservableObject
         resetAlert.addAction(cancel)
         resetAlert.addAction(resetOk)
         
-        // Presenting...
-        
+        // Presenting alert window
         UIApplication.shared.windows.first?.rootViewController?.present(resetAlert, animated: true)
     }
 }

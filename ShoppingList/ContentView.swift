@@ -10,12 +10,9 @@ import Firebase
 
 struct ContentView: View {
     
-    //@StateObject var model = ModelData()
     @State var userModel = ModelData()
     var body: some View {
-       
         LoginView(userModel: userModel)
-        
     }
 }
 
@@ -25,6 +22,7 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+//Login View
 struct LoginView : View {
       
       @ObservedObject var userModel : ModelData
@@ -32,11 +30,7 @@ struct LoginView : View {
       var body: some View{
           
           ZStack{
-              
               VStack{
-                  
-                 // Spacer()
-                  
                   ZStack{
                       //For smaller Devices
                       if UIScreen.main.bounds.height < 750
@@ -87,6 +81,7 @@ struct LoginView : View {
                     Divider().background(Color.white.opacity(0.5))
                     .padding(.top,10)
                   
+                //Login Button
                   Button(action: userModel.login)
                   {
                       Text("LOGIN")
@@ -103,7 +98,6 @@ struct LoginView : View {
                      // ListContentView()
                   
                   HStack(spacing: 10){
-                      
                       Button(action: {userModel.isSignUp.toggle()})
                       {
                           Text("Sign Up")
@@ -128,7 +122,7 @@ struct LoginView : View {
 
 
   
-
+//SignUp View
 struct SignUpView : View {
     
     @ObservedObject var userModel : ModelData
@@ -138,8 +132,6 @@ struct SignUpView : View {
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
             
             VStack{
-                
-                //Spacer(minLength: 0)
                 
                 ZStack{
                     //For small devices
@@ -154,29 +146,20 @@ struct SignUpView : View {
                             .resizable()
                             .frame(width: 150, height: 150)
                     }
-                }
-                   // .padding(.horizontal)
-                   // .padding(.vertical,20)
-                   // .cornerRadius(30)
-                    .padding(.top)
+                }.padding(.top)
                 
                 VStack(spacing: 5){
-                    
                     HStack{
-                        
                         Text("New Account")
                             .font(.system(size: 35, weight: .heavy))
                             .foregroundColor(.blue)
-                      
                     }
-                  
-                }
-                .padding(.top)
+                }.padding(.top)
                 
                 VStack(spacing: 20){
                     HStack(spacing: 15){
                         Image(systemName: "person.fill")
-                        TextField("Enter Your Name",text:$userModel.userName)
+                        TextField("Enter Your Name",text:$userModel.userName_SignUp)
                     }
                     Divider().background(Color.white.opacity(0.5))
                     HStack(spacing: 15){
@@ -197,9 +180,9 @@ struct SignUpView : View {
                  
                 }
                 .padding()
-                
+               
+                //SignUp button
                 Button(action: userModel.signUp) {
-                    
                     Text("SIGNUP")
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
@@ -212,32 +195,25 @@ struct SignUpView : View {
             }
             
             Button(action: {userModel.isSignUp.toggle()}) {
-                
                 Image(systemName: "xmark")
                     .padding()
                     .clipShape(Circle())
             }
             .padding(.trailing)
             .padding(.top,10)
-            
-       
         })
     
-        // Alerts...
+        // Alerts Signup success
         .alert(isPresented: $userModel.alert, content: {
-            
             Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
                  
-              
               if userModel.alertMsg == "SignUp Successful"
               {
-                    
-                   // model.isSignUp.toggle()
+                    userModel.userName_SignUp = ""
                     userModel.email_SignUp = ""
                     userModel.password_SignUp = ""
                     userModel.reEnterPassword = ""
                 }
-                
             }))
         })
     }
