@@ -10,7 +10,8 @@ import Firebase
 
 struct ContentView: View {
     
-    @State var userModel = ModelData()
+   // @State var userModel = ModelData()
+    @EnvironmentObject var userModel : ModelData
     var body: some View {
         LoginView(userModel: userModel)
     }
@@ -47,14 +48,12 @@ struct LoginView : View {
                   }
                       .padding(.horizontal)
                       .padding(.vertical,20)
-                      //.padding(.top)
+                     
                   
                 VStack(spacing:10){
-                     // HStack(spacing: 10){
                           Text("Shopping List")
                               .font(.system(size: 35, weight: .heavy))
                               .foregroundColor(.blue)
-                     // }
                   }.padding(.top)
                   
                   VStack(spacing: 20)
@@ -72,9 +71,9 @@ struct LoginView : View {
                     
                   }.padding()
                 
-                    //Forget Password action
+                    //Forgot Password action
                     Button(action: userModel.resetPassword) {
-                        Text("Forget Password?")
+                        Text("Forgot Password?")
                             .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
                             .foregroundColor(Color.blue)
                     }
@@ -94,9 +93,22 @@ struct LoginView : View {
                   }
                   .padding(.top,20)
                   //Display Next List screen if Login success
-                  //.sheet(isPresented: $model.isSuccessful) {
-                     // ListContentView()
-                  
+                /* .alert(isPresented: $userModel.alert, content: {
+                       
+                       Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
+                 
+                 if userModel.alertMsg == "Login Success"
+                 {
+                    print("Navigate to home screen")
+                    userModel.isLogin.toggle()
+                 }
+                   }))
+                 })*/
+               // .sheet(isPresented: $userModel.isLogin) {
+                     // MyListsView()
+             // }
+                
+                
                   HStack(spacing: 10){
                       Button(action: {userModel.isSignUp.toggle()})
                       {
@@ -108,10 +120,18 @@ struct LoginView : View {
                     Spacer()
                   
               }
-          }.fullScreenCover(isPresented: $userModel.isSignUp)
+          }.sheet(isPresented: $userModel.isSignUp)
                 {
                     SignUpView(userModel: userModel)
                 }
+        VStack{
+           /* if (userModel.isLogin == true){
+                MyListsView()
+            }*/
+        }.sheet(isPresented: $userModel.isLogin)
+        {
+            MyListsView()
+        }
           // Alerts...
           .alert(isPresented: $userModel.alert, content: {
               
@@ -174,7 +194,7 @@ struct SignUpView : View {
                     Divider().background(Color.white.opacity(0.5))
                     HStack(spacing: 15){
                         Image(systemName: "eye.slash.fill")
-                        TextField ("Re-Enter Password",text:$userModel.reEnterPassword)
+                        TextField("Re-Enter Password",text:$userModel.reEnterPassword)
                     }
                     Divider().background(Color.white.opacity(0.5))
                  
@@ -193,8 +213,8 @@ struct SignUpView : View {
                 }.padding(.vertical,20)
                     Spacer()
             }
-            
-            Button(action: {userModel.isSignUp.toggle()}) {
+            //Toggle isSignup on click,  //Display close button in signup view
+            Button(action: {userModel.isSignUp.toggle()}){
                 Image(systemName: "xmark")
                     .padding()
                     .clipShape(Circle())

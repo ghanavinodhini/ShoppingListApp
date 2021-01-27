@@ -9,6 +9,7 @@ import Foundation
 import Firebase
 
 
+
 // MVVM Model
 
 class ModelData : ObservableObject
@@ -17,6 +18,7 @@ class ModelData : ObservableObject
     @Published var email = ""
     @Published var password = ""
     @Published var isSignUp = false
+    @Published var isLogin = false
     @Published var email_SignUp = ""
     @Published var password_SignUp = ""
     @Published var reEnterPassword = ""
@@ -25,6 +27,8 @@ class ModelData : ObservableObject
     @Published var alert = false
     @Published var alertMsg = ""
     
+    //Current User Name
+    @Published var currentUserName = ""
    
     
     // Login
@@ -45,9 +49,10 @@ class ModelData : ObservableObject
                 self.alert.toggle()
                 return
             }else{
-              self.alertMsg = "Login Success"
-              self.alert.toggle()
-            
+              //self.alertMsg = "Login Success"
+              //self.alert.toggle()
+                self.isLogin.toggle()
+                self.getCurrentUserInfo()
             }
         }
     }
@@ -89,8 +94,28 @@ class ModelData : ObservableObject
     func uploadUserInfo(userName:String,userEmail:String)
     {
         print("Inside upload user info")
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
         let db = Firestore.firestore()
-        db.collection("Users").document().setData(["UserName":userName,"UserEmail":userEmail])
+        db.collection("Users").document(currentUser).setData(["UserName":userName,"UserEmail":userEmail])
+    }
+    
+    //Retrieve user info from Firebase
+    func getCurrentUserInfo(){
+        let db = Firestore.firestore()
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser)
+            .addSnapshotListener{(snap,err) in
+            if err != nil{
+                print("Error fetching data from firebase")
+                return
+            }
+                if let data = snap?.data(){
+                    self.currentUserName = (data["UserName"] as? String)!
+                    print("Current User Name in Modeldata: \(self.currentUserName)")
+                   
+                }
+        }
+       
     }
     
     //Reset Password
