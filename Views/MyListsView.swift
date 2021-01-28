@@ -11,20 +11,22 @@ import Firebase
 
 struct MyListsView: View {
     @EnvironmentObject var userModel : ModelData
+    @Environment(\.presentationMode) var presentationMode
     @State var uname = ""
     var body: some View {
-        ZStack(alignment: .top){
-            VStack(spacing: 10){
-                HStack{
-                        Text("Logout")
-                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                            .foregroundColor(Color.blue)
-                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
-                    
-                        Text("\(userModel.currentUserName)")
-                            .multilineTextAlignment(.center)
-                }
-        }
+        NavigationView
+        {
+            VStack
+            {
+              /*  Button(action:{
+                    userModel.userSignOut()
+                    self.presentationMode.wrappedValue.dismiss()
+                }){
+                    Text("LOGOUT")
+                }*/
+            }.navigationBarTitle("Welcome \(userModel.currentUserName)")
+           // .navigationBarItems(leading: NavigationLink(destination: ContentView(),label: {
+                                                           // Text("Logout") }))
         }
     }
     

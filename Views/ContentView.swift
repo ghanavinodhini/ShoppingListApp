@@ -146,7 +146,7 @@ struct LoginView : View {
 struct SignUpView : View {
     
     @ObservedObject var userModel : ModelData
-    
+    @Environment(\.presentationMode) var presentationMode
     var body: some View{
         
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
@@ -233,6 +233,7 @@ struct SignUpView : View {
                     userModel.email_SignUp = ""
                     userModel.password_SignUp = ""
                     userModel.reEnterPassword = ""
+                self.presentationMode.wrappedValue.dismiss()
                 }
             }))
         })

@@ -158,4 +158,19 @@ class ModelData : ObservableObject
         // Presenting alert window
         UIApplication.shared.windows.first?.rootViewController?.present(resetAlert, animated: true)
     }
+    
+    //Signout User
+    func userSignOut()
+    {
+        do {
+            try Auth.auth().signOut()
+            print("User signedout")
+            self.isLogin.toggle()
+        } catch let signOutError as NSError {
+          print ("Error signing out: %@", signOutError)
+            self.alertMsg = signOutError as! String
+            self.alert.toggle()
+            return
+        }
+    }
 }
