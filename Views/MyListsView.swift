@@ -12,26 +12,19 @@ import Firebase
 struct MyListsView: View {
     @EnvironmentObject var userModel : ModelData
     @Environment(\.presentationMode) var presentationMode
-    @State var uname = ""
+    
     var body: some View {
+        
         NavigationView
         {
-            VStack
-            {
-              /*  Button(action:{
-                    userModel.userSignOut()
-                    self.presentationMode.wrappedValue.dismiss()
-                }){
-                    Text("LOGOUT")
-                }*/
+            ZStack{
+                Text("Hello World").padding()
+           
             }.navigationBarTitle("Welcome \(userModel.currentUserName)")
-           // .navigationBarItems(leading: NavigationLink(destination: ContentView(),label: {
-                                                           // Text("Logout") }))
+            .navigationBarTitleDisplayMode(.inline)
         }
-    }
-    
 }
-
+}
 
 
 struct MyListsView_Previews: PreviewProvider {

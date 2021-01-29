@@ -13,7 +13,7 @@
 		DA71D8F925BC885D00F22D63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */; };
 		DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D92925BC98E600F22D63 /* ModelData.swift */; };
 		DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D95625C1602F00F22D63 /* MyListsView.swift */; };
-		DA71D95C25C1A74A00F22D63 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D95B25C1A74A00F22D63 /* CurrentUser.swift */; };
+		DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */; };
 		E2C2BECB25BAF00400A1D5A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */; };
 		E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */; };
 		E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */; };
@@ -53,7 +53,7 @@
 		DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DA71D92925BC98E600F22D63 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		DA71D95625C1602F00F22D63 /* MyListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListsView.swift; sourceTree = "<group>"; };
-		DA71D95B25C1A74A00F22D63 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
+		DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingMenuView.swift; sourceTree = "<group>"; };
 		DE6069F49CBA3BA2DCEF7C7E /* Pods-ShoppingList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShoppingList.release.xcconfig"; path = "Target Support Files/Pods-ShoppingList/Pods-ShoppingList.release.xcconfig"; sourceTree = "<group>"; };
 		E2C2BEC725BAF00400A1D5A4 /* ShoppingList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -127,6 +127,7 @@
 			children = (
 				E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */,
 				DA71D95625C1602F00F22D63 /* MyListsView.swift */,
+				DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -135,7 +136,6 @@
 			isa = PBXGroup;
 			children = (
 				DA71D92925BC98E600F22D63 /* ModelData.swift */,
-				DA71D95B25C1A74A00F22D63 /* CurrentUser.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -447,7 +447,7 @@
 				DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */,
 				DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */,
 				E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */,
-				DA71D95C25C1A74A00F22D63 /* CurrentUser.swift in Sources */,
+				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,
 				E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

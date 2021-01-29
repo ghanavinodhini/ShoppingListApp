@@ -13,7 +13,9 @@ struct ContentView: View {
    // @State var userModel = ModelData()
     @EnvironmentObject var userModel : ModelData
     var body: some View {
+        
         LoginView(userModel: userModel)
+       
     }
 }
 
@@ -125,14 +127,14 @@ struct LoginView : View {
                     SignUpView(userModel: userModel)
                 }
         VStack{
-           /* if (userModel.isLogin == true){
-                MyListsView()
+           /* if (userModel.isLogin){
+               MyListsView()
             }*/
-        }.sheet(isPresented: $userModel.isLogin)
+        }.fullScreenCover(isPresented: $userModel.isLogin)
         {
             MyListsView()
         }
-          // Alerts...
+          // Alerts for Login button validate fields
           .alert(isPresented: $userModel.alert, content: {
               
               Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok")))
