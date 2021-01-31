@@ -67,7 +67,7 @@ struct LoginView : View {
                     Divider().background(Color.white.opacity(0.5))
                     HStack(spacing: 15){
                         Image(systemName: "eye.slash.fill")
-                        TextField("Enter Password", text:$userModel.password)
+                        SecureField("Enter Password", text:$userModel.password)
                     }
                     Divider().background(Color.white.opacity(0.5))
                     
@@ -94,23 +94,7 @@ struct LoginView : View {
                             .clipShape(Capsule())
                   }
                   .padding(.top,20)
-                  //Display Next List screen if Login success
-                /* .alert(isPresented: $userModel.alert, content: {
-                       
-                       Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
                  
-                 if userModel.alertMsg == "Login Success"
-                 {
-                    print("Navigate to home screen")
-                    userModel.isLogin.toggle()
-                 }
-                   }))
-                 })*/
-               // .sheet(isPresented: $userModel.isLogin) {
-                     // MyListsView()
-             // }
-                
-                
                   HStack(spacing: 10){
                       Button(action: {userModel.isSignUp.toggle()})
                       {
@@ -127,12 +111,11 @@ struct LoginView : View {
                     SignUpView(userModel: userModel)
                 }
         VStack{
-           /* if (userModel.isLogin){
-               MyListsView()
-            }*/
+          
         }.fullScreenCover(isPresented: $userModel.isLogin)
         {
             MyListsView()
+            
         }
           // Alerts for Login button validate fields
           .alert(isPresented: $userModel.alert, content: {

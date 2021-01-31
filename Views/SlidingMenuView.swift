@@ -7,36 +7,49 @@
 
 import SwiftUI
 
-struct MenuButton:Identifiable
+/*struct MenuButton:Identifiable
 {
     var id = UUID()
     var text:String
     var sfsymbol:String
     var action:() -> Void
-}
+}*/
 struct SlidingMenuView: View {
+    @EnvironmentObject var userModel : ModelData
     
-    var buttons :[MenuButton]
     var body: some View {
-        HStack {
-            VStack {
-                Spacer().frame(height: UIApplication.shared.windows.first?.safeAreaInsets.top)
-                ForEach(buttons, id: \.id){thisButton in Button(action: {thisButton.action()}){
-                    HStack{
-                        Image(systemName: thisButton.sfsymbol)
-                        Text(thisButton.text)
-                    }.padding().foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                }}
-                //Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        
+        VStack()
+        {
+            NavigationView
+            {
+            HStack
+            {
+                Button(action: userModel.userSignOut) {
+                    Image(systemName: "arrow.left.square").foregroundColor(.blue).imageScale(.large)
+                    Text("Logout").foregroundColor(.blue).font(.headline)
+                    Spacer()
+                    if !userModel.isLogin
+                    {
+                        NavigationLink(destination: ContentView()){}
+                            
+                    }
+                
+                }
+                
+            }.padding(.top,10)
                 Spacer()
-            }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-            Spacer()
         }
+    }.padding()
+        .frame(maxWidth: .infinity,alignment: .leading)
+        .background(Color.gray)
+        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        Spacer()
     }
 }
 
-/*struct SlidingMenuView_Previews: PreviewProvider {
+struct SlidingMenuView_Previews: PreviewProvider {
     static var previews: some View {
         SlidingMenuView()
     }
-}*/
+}
