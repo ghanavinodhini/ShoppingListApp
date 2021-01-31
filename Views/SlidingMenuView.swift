@@ -7,28 +7,26 @@
 
 import SwiftUI
 
-/*struct MenuButton:Identifiable
-{
-    var id = UUID()
-    var text:String
-    var sfsymbol:String
-    var action:() -> Void
-}*/
 struct SlidingMenuView: View {
-    @EnvironmentObject var userModel : ModelData
-    
+   // @EnvironmentObject var userModel : ModelData
+    @ObservedObject var userModel: ModelData
     var body: some View {
-        
+       
         VStack()
         {
-            NavigationView
-            {
+            
+            Text("Welcome \(userModel.currentUserName)")
+                .font(.headline)
+                .padding(.top,100)
+            
+           // NavigationView
+           // {
             HStack
             {
                 Button(action: userModel.userSignOut) {
-                    Image(systemName: "arrow.left.square").foregroundColor(.blue).imageScale(.large)
-                    Text("Logout").foregroundColor(.blue).font(.headline)
-                    Spacer()
+                    Image(systemName: "arrow.left.square").foregroundColor(.black).imageScale(.large)
+                    Text("Logout").foregroundColor(.black).font(.headline)
+                 
                     if !userModel.isLogin
                     {
                         NavigationLink(destination: ContentView()){}
@@ -37,19 +35,20 @@ struct SlidingMenuView: View {
                 
                 }
                 
-            }.padding(.top,10)
+                
+            }.padding(.top,80)
                 Spacer()
-        }
-    }.padding()
+       // }
+        }.padding()
         .frame(maxWidth: .infinity,alignment: .leading)
         .background(Color.gray)
         .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-        Spacer()
+        
     }
 }
 
-struct SlidingMenuView_Previews: PreviewProvider {
+/*struct SlidingMenuView_Previews: PreviewProvider {
     static var previews: some View {
         SlidingMenuView()
     }
-}
+}*/

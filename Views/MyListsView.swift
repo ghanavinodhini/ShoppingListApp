@@ -26,13 +26,13 @@ struct MyListsView: View {
                         .disabled(self.showMenu ? true:false)
                     
                     if self.showMenu{
-                        SlidingMenuView()
+                        SlidingMenuView(userModel: userModel)
                             .frame(width: geometry.size.width/2)
                             .transition(.move(edge: .leading))
                         
                     }
                 }
-            }.navigationBarTitle("Welcome \(userModel.currentUserName)", displayMode: .inline)
+            }.navigationBarTitle("Shopping List", displayMode: .inline)
             .navigationBarItems(leading: (
                 Button(action: {
                     withAnimation{

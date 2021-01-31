@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "94A2478F-FEEA-4F23-BCCA-4F22DC850AC0"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C2A088CF-2709-4CB3-B9E5-8CC882981C7E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Views/SlidingMenuView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "body"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "C2A088CF-2709-4CB3-B9E5-8CC882981C7E - 33080dceca88679f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.Button&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0, SwiftUI.Text, Swift.Optional&lt;SwiftUI.NavigationLink&lt;SwiftUI.EmptyView, ShoppingList.ContentView&gt;&gt;)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in ShoppingList.SlidingMenuView.body.getter : some"
+                  moduleName = "ShoppingList"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ghanavinodhinichandrasekaran/Documents/iOS%20Projects/ITHSProjects/ShoppingListApp/Views/SlidingMenuView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "141">
+               </Location>
+               <Location
+                  uuid = "C2A088CF-2709-4CB3-B9E5-8CC882981C7E - 5964949d43eb31b6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "implicit closure #2 () -&gt; () in implicit closure #1 (ShoppingList.ModelData) -&gt; () -&gt; () in closure #1 () -&gt; SwiftUI.Button&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0, SwiftUI.Text, Swift.Optional&lt;SwiftUI.NavigationLink&lt;SwiftUI.EmptyView, ShoppingList.ContentView&gt;&gt;)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in ShoppingList.SlidingMenuView.body.getter : some"
+                  moduleName = "ShoppingList"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ghanavinodhinichandrasekaran/Documents/iOS%20Projects/ITHSProjects/ShoppingListApp/Views/SlidingMenuView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "28"
+                  endingLineNumber = "28"
+                  offsetFromSymbolStart = "19">
+               </Location>
+               <Location
+                  uuid = "C2A088CF-2709-4CB3-B9E5-8CC882981C7E - 9323f5cc48302ffe"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0, SwiftUI.Text, Swift.Optional&lt;SwiftUI.NavigationLink&lt;SwiftUI.EmptyView, ShoppingList.ContentView&gt;&gt;)&gt; in closure #1 () -&gt; SwiftUI.Button&lt;SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.imageScale(SwiftUI.Image.Scale) -&gt; some&gt;&gt;.0, SwiftUI.Text, Swift.Optional&lt;SwiftUI.NavigationLink&lt;SwiftUI.EmptyView, ShoppingList.ContentView&gt;&gt;)&gt;&gt; in closure #1 () -&gt; SwiftUI.TupleView&lt;(&lt;&lt;opaque return type of (extension in SwiftUI):SwiftUI.View.padding(SwiftUI.Edge.Set, Swift.Optional&lt;CoreGraphics.CGFloat&gt;) -&gt; some&gt;&gt;.0, SwiftUI.Spacer)&gt; in ShoppingList.SlidingMenuView.body.getter : some"
+                  moduleName = "ShoppingList"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ghanavinodhinichandrasekaran/Documents/iOS%20Projects/ITHSProjects/ShoppingListApp/Views/SlidingMenuView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "531">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
