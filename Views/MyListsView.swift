@@ -10,7 +10,8 @@ import Firebase
 
 
 struct MyListsView: View {
-    @EnvironmentObject var userModel : ModelData
+    //@EnvironmentObject var userModel : ModelData
+    @ObservedObject var userModel : ModelData
    // @Environment(\.presentationMode) var presentationMode
     
     @State var showMenu = false
@@ -73,6 +74,6 @@ struct MainView : View
 
 struct MyListsView_Previews: PreviewProvider {
     static var previews: some View {
-        MyListsView()
+        MyListsView(userModel: ModelData())
     }
 }
