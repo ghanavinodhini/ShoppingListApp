@@ -7,31 +7,43 @@
 
 import SwiftUI
 
-struct MenuButton:Identifiable
-{
-    var id = UUID()
-    var text:String
-    var sfsymbol:String
-    var action:() -> Void
-}
 struct SlidingMenuView: View {
-    
-    var buttons :[MenuButton]
+   // @EnvironmentObject var userModel : ModelData
+    @ObservedObject var userModel: ModelData
     var body: some View {
-        HStack {
-            VStack {
-                Spacer().frame(height: UIApplication.shared.windows.first?.safeAreaInsets.top)
-                ForEach(buttons, id: \.id){thisButton in Button(action: {thisButton.action()}){
-                    HStack{
-                        Image(systemName: thisButton.sfsymbol)
-                        Text(thisButton.text)
-                    }.padding().foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                }}
-                //Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+       
+        VStack()
+        {
+            
+            Text("Welcome \(userModel.currentUserName)")
+                .font(.headline)
+                .padding(.top,100)
+            
+           // NavigationView
+           // {
+            HStack
+            {
+                Button(action: userModel.userSignOut) {
+                    Image(systemName: "arrow.left.square").foregroundColor(.black).imageScale(.large)
+                    Text("Logout").foregroundColor(.black).font(.headline)
+                 
+                    if !userModel.isLogin
+                    {
+                        NavigationLink(destination: ContentView()){}
+                            
+                    }
+                
+                }
+                
+                
+            }.padding(.top,80)
                 Spacer()
-            }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
-            Spacer()
-        }
+       // }
+        }.padding()
+        .frame(maxWidth: .infinity,alignment: .leading)
+        .background(Color.gray)
+        .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        
     }
 }
 
