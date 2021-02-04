@@ -19,7 +19,6 @@
 		E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */; };
 		E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */; };
 		E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */; };
-		E294FDE125CB5BAA0018CEBA /* EditShoppingListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E294FDE025CB5BA90018CEBA /* EditShoppingListAlertView.swift */; };
 		E2C2BECB25BAF00400A1D5A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */; };
 		E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */; };
 		E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */; };
@@ -66,7 +65,6 @@
 		E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListItemView.swift; sourceTree = "<group>"; };
 		E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewListAlertView.swift; sourceTree = "<group>"; };
 		E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCardView.swift; sourceTree = "<group>"; };
-		E294FDE025CB5BA90018CEBA /* EditShoppingListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListAlertView.swift; sourceTree = "<group>"; };
 		E2C2BEC725BAF00400A1D5A4 /* ShoppingList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,7 +139,6 @@
 				DA71D95625C1602F00F22D63 /* MyListsView.swift */,
 				E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */,
 				E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */,
-				E294FDE025CB5BA90018CEBA /* EditShoppingListAlertView.swift */,
 				E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */,
 				DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */,
 			);
@@ -468,7 +465,6 @@
 				E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */,
 				E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */,
 				E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */,
-				E294FDE125CB5BAA0018CEBA /* EditShoppingListAlertView.swift in Sources */,
 				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,
 				E28060D125C8B4E700BB9FD7 /* ShoppingListName.swift in Sources */,
 				E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */,
