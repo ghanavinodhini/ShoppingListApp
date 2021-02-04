@@ -115,6 +115,7 @@ struct LoginView : View {
         }.fullScreenCover(isPresented: $userModel.isLogin)
         {
             MyListsView(userModel: userModel)
+            //, entry: ListEntry(listTitle: "Bra dag")
             
         }
           // Alerts for Login button validate fields
