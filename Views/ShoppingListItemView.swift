@@ -9,14 +9,16 @@ import SwiftUI
 
 
 struct ShoppingListItemView : View {
-    
+    @ObservedObject var list = ShoppingListName()
     @ObservedObject var itemsList = ItemsList()
       @State var newItem:String = ""
       @State var showErrorMessage = false
       //Text field for adding new item
-      var searchBar : some View{
+      var itemTextBar : some View{
           HStack{
-              TextField("Enter New Item",text:self.$newItem)
+            TextField("Enter New Item",text:self.$newItem)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .border(Color.black)
               Button(action: self.addNewItem, label: {
                   Text("ADD")
                   
@@ -34,7 +36,7 @@ struct ShoppingListItemView : View {
               self.showErrorMessage.toggle()
           }else{
               self.showErrorMessage = false
-          itemsList.itemsList.append(Items(itemName: newItem, itemQty: "0"))
+            itemsList.itemsList.append(Items(itemName: newItem, itemQty: "0"))
           self.newItem = ""
           }
       }
@@ -42,14 +44,17 @@ struct ShoppingListItemView : View {
     
     var body: some View {
                    VStack{
-                       searchBar.padding()
+                       itemTextBar.padding()
                       // List(self.itemsList.itemsList){ items in
                        List{
                            ForEach(self.itemsList.itemsList){
                                items in
                                RowView(entry: items)
                            }
-                           //Text(items.itemName)
+                           .onDelete(perform: { indexSet in
+                            itemsList.itemsList.remove(atOffsets: indexSet)
+                           })
+                           .listRowBackground(Color(.white).clipped().cornerRadius(10))
                        }.navigationBarTitle("List Items")
                        .navigationBarItems(trailing: EditButton())
                    }
@@ -60,24 +65,26 @@ struct ShoppingListItemView : View {
     
 struct RowView: View{
     var entry: Items
-    //@State var stepperValue: Int = 0
- 
     @State var itemQty:String = "0"
-    //@State var qtyType:String = "Kg"
     var qtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
     @State var selectedPickerValue = 0
     
     var body: some View {
         ScrollView{
-           
         VStack{
-           
-            HStack(alignment: .center)
-            {
+            HStack(){
+                Button(action: {
+                    print("Checkbox")
+                },label: {
+                    Image(systemName: entry.itemShopped ? "checkmark.square" : "square")
+                })
+               
+           // }
+           // HStack(alignment: .center)
+           // {
                 Text(entry.itemName).fontWeight(.bold)
-                
+                Spacer()
             }
-            
             
             HStack{
                 Text("Qty:")
@@ -87,16 +94,7 @@ struct RowView: View{
                     .foregroundColor(.blue)
                     .fixedSize()
                 Spacer()
-            //}.padding()
-            
-            //For dropdown box
-                    //DropDown()
-            
-            //For PickerView
-           // VStack{
-            
-               // HStack{
-                //    Text("QtyValue:").padding()
+           
                 
                 Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
                             ForEach(0 ..< qtyType.count) {
@@ -106,6 +104,7 @@ struct RowView: View{
                 .frame(width: 40)
                 .scaledToFit()
                 .scaleEffect(CGSize(width: 0.8, height: 0.8))
+                
                 //Text("You selected: \(qtyType[selectedPickerValue])")
             }.padding()
             
