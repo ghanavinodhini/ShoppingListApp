@@ -21,24 +21,25 @@ struct MyListsView: View {
    // @State var addNewListAlert = false
     
     var body: some View {
-         NavigationView {
-            GeometryReader{ geometry in
-                ZStack(alignment: .leading)
-                {
-                    //MainView(showMenu: self.$showMenu)
+        // NavigationView {
+            //GeometryReader{ geometry in
+                //ZStack(alignment: .leading)
+                //{
+           
                     MainView(entry: ShoppingListEntry(listName: "Bra dag"))
-                        .frame(width: geometry.size.width,height: geometry.size.height)
+                       /* .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
-                        .disabled(self.showMenu ? true:false)
+                        .disabled(self.showMenu ? true:false)*/
                     
-                    if self.showMenu{
+                   /* if self.showMenu{
                         SlidingMenuView(userModel: userModel)
                             .frame(width: geometry.size.width/2)
                             .transition(.move(edge: .leading))
-                    }
-                }
-            }.navigationBarTitle("Shopping List", displayMode: .inline)
-            .navigationBarItems(leading: (
+                    }*/
+            
+                //}
+           // }.navigationBarTitle("Shopping List", displayMode: .inline)
+           /* .navigationBarItems(leading: (
                 Button(action: {
                     withAnimation{
                         self.showMenu.toggle()
@@ -46,18 +47,8 @@ struct MyListsView: View {
                 }){
                     Image(systemName: "line.horizontal.3").imageScale(/*@START_MENU_TOKEN@*/.medium/*@END_MENU_TOKEN@*/)
                 }
-            ))
-        }
-        
-        /*NavigationView
-        {
-            ZStack{
-                Text("Hello World").padding()
-           
-            }.navigationBarTitle("Welcome \(userModel.currentUserName)")
-            .navigationBarTitleDisplayMode(.inline)
-        }*/
-        
+            ))*/
+        //}
         
 }
 }
@@ -75,14 +66,6 @@ struct MainView : View
 
     var body: some View
     {
-      /*  Button(action: {
-            withAnimation{
-            self.showMenu = false
-            }
-        }){
-            Text("Hello")
-        }*/
-    
         VStack{
             NavigationView {
                 List(){
@@ -110,6 +93,7 @@ struct MainView : View
             .onAppear() {
                 list.fetchListFromDatabase()
             }
+            
         }
             VStack{
                 Spacer()
