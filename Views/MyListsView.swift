@@ -60,7 +60,8 @@ struct MainView : View
         @ObservedObject var list = ShoppingListName()
         @State var addNewListAlert = false
         @State private var listName: String = ""
-        var entry : ShoppingListEntry
+        //var entry : ShoppingListEntry
+        var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
 
@@ -71,8 +72,8 @@ struct MainView : View
                 List(){
                     ForEach(list.entries) { entry in
                      NavigationLink(
-                        destination: ShoppingListItemView()) {
-                    ShoppingListCardView(entry: entry)
+                        destination: ShoppingListItemView(listEntry: entry)) {
+                        ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                                         Button(action: {
                                        }) {
@@ -87,7 +88,7 @@ struct MainView : View
                                 }
                     }
                 }
-                //.navigationBarTitle("Lists")
+                .navigationBarTitle("Lists")
                 
             }
             .onAppear() {

@@ -9,11 +9,14 @@ import SwiftUI
 
 
 struct ShoppingListItemView : View {
-    @ObservedObject var list = ShoppingListName()
-    @ObservedObject var itemsList = ItemsList()
+    
+    @State var listEntry : ShoppingListEntry
+    @ObservedObject var listEntries = ShoppingListName()
+    //@ObservedObject var itemsList = ItemsList()
       @State var newItem:String = ""
       @State var showErrorMessage = false
-      //Text field for adding new item
+      
+    //Text field for adding new item
       var itemTextBar : some View{
           HStack{
             TextField("Enter New Item",text:self.$newItem)
@@ -28,7 +31,7 @@ struct ShoppingListItemView : View {
               Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
           }
       }
-      
+    
       func addNewItem()
       {
           if self.newItem.isEmpty
@@ -36,35 +39,43 @@ struct ShoppingListItemView : View {
               self.showErrorMessage.toggle()
           }else{
               self.showErrorMessage = false
-            itemsList.itemsList.append(Items(itemName: newItem, itemQty: "0"))
+            //itemsList.itemsList.append(Items(itemName: newItem, itemQty: "0"))
+            listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
           self.newItem = ""
           }
       }
 
     
     var body: some View {
-                   VStack{
+                   
                        itemTextBar.padding()
                       // List(self.itemsList.itemsList){ items in
+        
+            VStack(alignment: .leading){
                        List{
-                           ForEach(self.itemsList.itemsList){
+                           //ForEach(self.itemsList.itemsList)
+                        ForEach(self.listEntry.eachListItems)
+                           {
                                items in
                                RowView(entry: items)
                            }
                            .onDelete(perform: { indexSet in
-                            itemsList.itemsList.remove(atOffsets: indexSet)
+                            //itemsList.itemsList.remove(atOffsets: indexSet)
+                            listEntry.eachListItems.remove(atOffsets: indexSet)
                            })
-                           .listRowBackground(Color(.white).clipped().cornerRadius(10))
-                       }.navigationBarTitle("List Items")
+                           
+                       }
+                       .navigationBarTitle("\(self.listEntry.listName)")
                        .navigationBarItems(trailing: EditButton())
                    }
-               }
-           }
+               
+    }
+}
 
     
     
 struct RowView: View{
-    var entry: Items
+   @State var entry: Items
     @State var itemQty:String = "0"
     var qtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
     @State var selectedPickerValue = 0
@@ -74,14 +85,12 @@ struct RowView: View{
         VStack{
             HStack(){
                 Button(action: {
-                    print("Checkbox")
+                    print("Checkbox clicked")
+                    self.entry.itemIsShopped.toggle()
                 },label: {
-                    Image(systemName: entry.itemShopped ? "checkmark.square" : "square")
+                    Image(systemName: entry.itemIsShopped ? "checkmark.square" : "square")
                 })
                
-           // }
-           // HStack(alignment: .center)
-           // {
                 Text(entry.itemName).fontWeight(.bold)
                 Spacer()
             }
@@ -117,6 +126,6 @@ struct RowView: View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView()
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"))
     }
 }

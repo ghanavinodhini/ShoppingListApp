@@ -15,4 +15,8 @@ struct ShoppingListEntry : Identifiable {
     var listItem : String = ""
     var date : Date = Date()
     
+    var eachListItems = [Items]()
+    
 }
+
+

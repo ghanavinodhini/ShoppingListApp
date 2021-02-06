@@ -11,7 +11,7 @@ struct Items : Identifiable{
     var id = UUID()
     var itemName:String
     var itemQty:String
-    var itemShopped:Bool = false
+    var itemIsShopped:Bool = false
 }
 
 class ItemsList : ObservableObject{
