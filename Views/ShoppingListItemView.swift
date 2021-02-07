@@ -13,7 +13,7 @@ struct ShoppingListItemView : View {
     
     @State var listEntry : ShoppingListEntry
     @ObservedObject var listEntries = ShoppingListName()
-    
+    @ObservedObject var item = ItemsList()
       @State var newItem:String = ""
       @State var showErrorMessage = false
     
@@ -47,7 +47,7 @@ struct ShoppingListItemView : View {
                     .background(Color(.systemIndigo))
                     .cornerRadius(5)
                 }
-           }.padding(.horizontal)
+                }.padding(.horizontal)
             }
             VStack{
                 HStack{
@@ -68,7 +68,8 @@ struct ShoppingListItemView : View {
                     .scaledToFit()
                     .scaleEffect(CGSize(width: 0.8, height: 0.8))
                     .foregroundColor(.white)
-                }.padding(.leading, 50)
+                    .pickerStyle(WheelPickerStyle())
+                }.padding(.leading, 150)
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
                         .background(Color.blue)
@@ -101,7 +102,6 @@ struct ShoppingListItemView : View {
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
-                           
                             RowView(entry: items)
                            }
                            .onDelete(perform: { indexSet in
@@ -121,7 +121,6 @@ struct ShoppingListItemView : View {
                                         Image(systemName: "plus.circle")
                                        })
             }
-               
     }
     
     //Function adds item to items list array
@@ -134,7 +133,7 @@ struct ShoppingListItemView : View {
           }else{
               self.showErrorMessage = false
             
-            self.listEntry.eachListItems.append(Items(itemName: newItem, itemQty: newItemQty,itemQtyType: newQtyType[selectedPickerValue],itemIsShopped: newItemIsShopped))
+            self.listEntry.eachListItems.append(Items(itemName: self.newItem, itemQty: self.newItemQty,itemQtyType: self.newQtyType[selectedPickerValue],itemIsShopped: self.newItemIsShopped))
             saveItemToDB()
            // listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
             clearFields()
@@ -152,6 +151,7 @@ struct ShoppingListItemView : View {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped])
     }
+    
     
     func fetchItemsFromDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -188,21 +188,29 @@ struct RowView: View{
     var body: some View {
         ScrollView{
         VStack{
+            ZStack{
+                RoundedRectangle(cornerRadius: 2)
+                    .fill(LinearGradient(gradient: Gradient(colors:[Color.green,Color.blue]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                        .padding(.horizontal, 4)
+                        .shadow(color: Color.black, radius: 3, x: 3, y: 3)
+
             HStack(){
                 Button(action: {
                     print("Checkbox clicked")
                     self.entry.itemIsShopped.toggle()
                     
                 },label: {
-                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square" : "square")
+                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square.fill" : "square")
+                        .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
+                        .padding()
                 })
                
-                Text(self.entry.itemName).fontWeight(.bold)
+                Text(self.entry.itemName).fontWeight(.bold).font(.body)
                 Spacer()
-                Text(self.entry.itemQty)
-                Text(self.entry.itemQtyType)
+                Text(self.entry.itemQty).font(.body)
+                Text(self.entry.itemQtyType).font(.body).padding()
             }
-            
+            }
             }
         }
 }

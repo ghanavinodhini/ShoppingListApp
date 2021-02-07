@@ -17,7 +17,7 @@ struct Items : Identifiable{
     var itemIsShopped:Bool
 }
 
-/*class ItemsList : ObservableObject{
+class ItemsList : ObservableObject{
     
     @Published var itemsList = [Items]()
     
@@ -27,10 +27,10 @@ struct Items : Identifiable{
         
     }
     
-    func addItems(_ itemName:String,_ itemQty:String,_ itemQtyType:String,_ itemIsShopped:Bool){
+    /*func addItems(_ itemName:String,_ itemQty:String,_ itemQtyType:String,_ itemIsShopped:Bool){
         self.itemsList.append(Items(itemName: itemName, itemQty: itemQty, itemQtyType: itemQtyType))
-    }
+    }*/
     
     
-}*/
+}
 

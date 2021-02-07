@@ -55,20 +55,18 @@ struct MyListsView: View {
 
 struct MainView : View
 {
-    //@Binding var showMenu:Bool
-    
         @ObservedObject var list = ShoppingListName()
         @State var addNewListAlert = false
         @State private var listName: String = ""
-        //var entry : ShoppingListEntry
         var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
 
     var body: some View
     {
+        NavigationView {
         VStack{
-            NavigationView {
+            //NavigationView {
                 List(){
                     ForEach(list.entries) { entry in
                      NavigationLink(
