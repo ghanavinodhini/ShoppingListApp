@@ -18,32 +18,76 @@ struct ShoppingListItemView : View {
       @State var showErrorMessage = false
     
     @State var newItemQty:String = "0"
-    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Bunches","Bottles","Cans"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     
     var db = Firestore.firestore()
     //Text field for adding new item
       var itemTextBar : some View{
-          HStack{
-            TextField("Enter New Item",text:self.$newItem)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .border(Color.black)
+        ZStack{
+            Rectangle().foregroundColor(Color(.systemGray3)).cornerRadius(5).frame(height:40)
+            HStack{
+                TextField("Enter New Item",text:self.$newItem).padding()
             
-              //Alert if no values entered in textfield
-          }.alert(isPresented: self.$showErrorMessage) {
-              Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
-          }
+            Spacer()
+            
+                Button(action: {
+                    print("mic button pressed")
+                }) {
+                Image(systemName: "mic")
+                    .font(Font.system(size:15).weight(.bold)).padding()
+                    .frame(width:40,height:40)
+                    .foregroundColor(.white)
+                    .background(Color(.systemIndigo))
+                    .cornerRadius(5)
+                }
+            }.padding(.horizontal)
+            
+            VStack{
+                HStack{
+                    Text("Qty:")
+                    TextField("Qty", text:$newItemQty)
+                        .keyboardType(.numbersAndPunctuation)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .foregroundColor(.blue)
+                        .fixedSize()
+                Spacer()
+                
+                    Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
+                                ForEach(0 ..< newQtyType.count) {
+                                   Text(self.newQtyType[$0])
+                                }
+                    }.frame(height: 50)
+                    .frame(width: 40)
+                    .scaledToFit()
+                    .scaleEffect(CGSize(width: 0.8, height: 0.8))
+                }
+                Button(action: self.addNewItem, label: {
+                     Text("ADD")
+                        .background(Color.blue)
+                        .foregroundColor(.white)
+                        .font(.title)
+                        .padding()
+                        .cornerRadius(40)
+                 })
+            }.padding()
+              
+        }.frame(width: 300, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .background(Color.pink)
+        .cornerRadius(10)
+        .shadow(radius:8)
+        //Alert if no values entered in textfield
+                .alert(isPresented: self.$showErrorMessage) {
+                        Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
+                                                    }
       }
     
    
-
-    
     var body: some View {
        
-            VStack{
-                       itemTextBar.padding()
-        VStack{
+                itemTextBar.padding()
+       /* VStack{
             HStack{
                 Text("Qty:")
                 TextField("Qty", text:$newItemQty)
@@ -70,8 +114,8 @@ struct ShoppingListItemView : View {
                     .padding()
                     .cornerRadius(40)
              })
-        }.padding()
-        }
+        }.padding()*/
+        
         
         //List UI
             VStack(alignment: .leading){
