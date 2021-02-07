@@ -18,17 +18,22 @@ struct ShoppingListItemView : View {
       @State var showErrorMessage = false
     
     @State var newItemQty:String = "0"
-    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Bunches","Bottles","Cans"]
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
-    
+    @State var isItemAddCardShown:Bool = false
     var db = Firestore.firestore()
+    
     //Text field for adding new item
       var itemTextBar : some View{
-        ZStack{
-            Rectangle().foregroundColor(Color(.systemGray3)).cornerRadius(5).frame(height:40)
+       
+        VStack{
+            ZStack(){
+            Rectangle().foregroundColor(Color(.systemGray2))
+                .cornerRadius(5)
+                .frame(width: UIScreen.main.bounds.width - 30,height:40)
             HStack{
-                TextField("Enter New Item",text:self.$newItem).padding()
+                TextField("Enter New Item",text:self.$newItem).padding().foregroundColor(.black)
             
             Spacer()
             
@@ -42,8 +47,8 @@ struct ShoppingListItemView : View {
                     .background(Color(.systemIndigo))
                     .cornerRadius(5)
                 }
-            }.padding(.horizontal)
-            
+           }.padding(.horizontal)
+            }
             VStack{
                 HStack{
                     Text("Qty:")
@@ -62,61 +67,33 @@ struct ShoppingListItemView : View {
                     .frame(width: 40)
                     .scaledToFit()
                     .scaleEffect(CGSize(width: 0.8, height: 0.8))
-                }
+                    .foregroundColor(.white)
+                }.padding(.leading, 50)
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
                         .background(Color.blue)
                         .foregroundColor(.white)
-                        .font(.title)
+                        .font(.title3)
                         .padding()
                         .cornerRadius(40)
                  })
             }.padding()
               
-        }.frame(width: 300, height: /*@START_MENU_TOKEN@*/100/*@END_MENU_TOKEN@*/, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
         .background(Color.pink)
         .cornerRadius(10)
         .shadow(radius:8)
         //Alert if no values entered in textfield
-                .alert(isPresented: self.$showErrorMessage) {
+        .alert(isPresented: self.$showErrorMessage) {
                         Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
                                                     }
       }
     
    
     var body: some View {
-       
+        if self.isItemAddCardShown{
                 itemTextBar.padding()
-       /* VStack{
-            HStack{
-                Text("Qty:")
-                TextField("Qty", text:$newItemQty)
-                    .keyboardType(.numbersAndPunctuation)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .foregroundColor(.blue)
-                    .fixedSize()
-            Spacer()
-            
-                Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
-                            ForEach(0 ..< newQtyType.count) {
-                               Text(self.newQtyType[$0])
-                            }
-                }.frame(height: 50)
-                .frame(width: 40)
-                .scaledToFit()
-                .scaleEffect(CGSize(width: 0.8, height: 0.8))
-            }
-            Button(action: self.addNewItem, label: {
-                 Text("ADD")
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .font(.title)
-                    .padding()
-                    .cornerRadius(40)
-             })
-        }.padding()*/
-        
-        
+        }
         //List UI
             VStack(alignment: .leading){
                        List{
@@ -131,19 +108,18 @@ struct ShoppingListItemView : View {
                             listEntry.eachListItems.remove(atOffsets: indexSet)
                            })
                            
-                       }
+                       }.onAppear(){ fetchItemsFromDB() }
                        .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
                                        Button(action: {
-                                           print("Save button pressed...")
+                                           print("Navigation Add button pressed...")
+                                        self.isItemAddCardShown.toggle()
                                         print("ListName:\(self.listEntry.listName)")
                                         print("List docID: \(self.$listEntry.docId)")
                                        }) {
-                                           Text("SAVE")
-                                       }
-                                   )
-            }.onAppear(){
-                fetchItemsFromDB()
+                                           
+                                        Image(systemName: "plus.circle")
+                                       })
             }
                
     }
@@ -195,7 +171,7 @@ struct ShoppingListItemView : View {
                     let ItemData = Items(id: itemDocId, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
                     
                     self.listEntry.eachListItems.append(ItemData)
-                   /* let itemData = Items(id: document.documentID, itemName: document.get("Item Name") as! String, itemQty: document.get("Item Qty") as! String, itemQtyType: document.get("Item Qty Type"), itemIsShopped: document.get("Item IsShopped"))*/
+                   
                    
                 }
             }
@@ -227,36 +203,10 @@ struct RowView: View{
                 Text(self.entry.itemQtyType)
             }
             
-           /* HStack{
-                Text("Qty:")
-                TextField("Qty", text:$itemQty)
-                    .keyboardType(.numbersAndPunctuation)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .foregroundColor(.blue)
-                    .fixedSize()
-                Spacer()
-           
-                
-                Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
-                            ForEach(0 ..< qtyType.count) {
-                               Text(self.qtyType[$0])
-                            }
-                }.frame(height: 50)
-                .frame(width: 40)
-                .scaledToFit()
-                .scaleEffect(CGSize(width: 0.8, height: 0.8))
-                
-                //Text("You selected: \(qtyType[selectedPickerValue])")
-            }.padding()*/
-            
             }
         }
 }
     
-   /* func saveItemData(){
-        listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
-        
-    }*/
 }
 
 
