@@ -6,21 +6,31 @@
 //
 
 import Foundation
+import Firebase
 
 struct Items : Identifiable{
-    var id = UUID()
+    //var id = UUID()
+    var id:String?
     var itemName:String
     var itemQty:String
     var itemQtyType:String
-    var itemIsShopped:Bool = false
+    var itemIsShopped:Bool
 }
 
-class ItemsList : ObservableObject{
+/*class ItemsList : ObservableObject{
     
     @Published var itemsList = [Items]()
     
+    private var db = Firestore.firestore()
+    
     init(){
-       // addItems()
+        
     }
-}
+    
+    func addItems(_ itemName:String,_ itemQty:String,_ itemQtyType:String,_ itemIsShopped:Bool){
+        self.itemsList.append(Items(itemName: itemName, itemQty: itemQty, itemQtyType: itemQtyType))
+    }
+    
+    
+}*/
 

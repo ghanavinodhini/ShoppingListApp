@@ -32,8 +32,8 @@ class ShoppingListName : ObservableObject {
                 let docId = queryDocumentSnapshot.documentID
                 return ShoppingListEntry(docId: docId, listName: listName)
                 
-                
             }
         }
     }
+    
 }

@@ -17,9 +17,11 @@ struct ShoppingListItemView : View {
       @State var newItem:String = ""
       @State var showErrorMessage = false
     
-    @State var itemQty:String = "0"
-    @State var qtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
+    @State var newItemQty:String = "0"
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
     @State var selectedPickerValue = 0
+    @State var newItemIsShopped:Bool = false
+    
     var db = Firestore.firestore()
     //Text field for adding new item
       var itemTextBar : some View{
@@ -27,50 +29,24 @@ struct ShoppingListItemView : View {
             TextField("Enter New Item",text:self.$newItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .border(Color.black)
-             /* Button(action: self.addNewItem, label: {
-                  Text("ADD")
-                  
-              })*/
+            
               //Alert if no values entered in textfield
           }.alert(isPresented: self.$showErrorMessage) {
               Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
           }
       }
     
-    //Function adds item to items list array
-      func addNewItem()
-      {
-          if self.newItem.isEmpty
-          {
-              self.showErrorMessage.toggle()
-            return
-          }else{
-              self.showErrorMessage = false
-            listEntry.eachListItems.append(Items(itemName: newItem, itemQty: itemQty,itemQtyType: qtyType[selectedPickerValue]))
-            saveItemToDB()
-           // listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
-          self.newItem = ""
-            self.itemQty = "0"
-          }
-      }
-    
-    //Function adds item to DB
-    func saveItemToDB(){
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": itemQty, "Item Qty Type": qtyType[selectedPickerValue]])
-    }
+   
 
     
     var body: some View {
-        ZStack{
-            RoundedRectangle(cornerRadius:10,style:.continuous).fill(Color.white)
+       
             VStack{
                        itemTextBar.padding()
-                      
         VStack{
             HStack{
                 Text("Qty:")
-                TextField("Qty", text:$itemQty)
+                TextField("Qty", text:$newItemQty)
                     .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .foregroundColor(.blue)
@@ -78,8 +54,8 @@ struct ShoppingListItemView : View {
             Spacer()
             
                 Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
-                            ForEach(0 ..< qtyType.count) {
-                               Text(self.qtyType[$0])
+                            ForEach(0 ..< newQtyType.count) {
+                               Text(self.newQtyType[$0])
                             }
                 }.frame(height: 50)
                 .frame(width: 40)
@@ -96,21 +72,18 @@ struct ShoppingListItemView : View {
              })
         }.padding()
         }
-        }
         
-        
-        
+        //List UI
             VStack(alignment: .leading){
                        List{
-                           //ForEach(self.itemsList.itemsList)
+                        //ForEach(self.listEntry.eachListItems)
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
-                           // RowView(entry: items, listEntry: self.$listEntry, newItem: self.$newItem)
+                           
                             RowView(entry: items)
                            }
                            .onDelete(perform: { indexSet in
-                            //itemsList.itemsList.remove(atOffsets: indexSet)
                             listEntry.eachListItems.remove(atOffsets: indexSet)
                            })
                            
@@ -125,8 +98,65 @@ struct ShoppingListItemView : View {
                                            Text("SAVE")
                                        }
                                    )
-                   }
+            }.onAppear(){
+                fetchItemsFromDB()
+            }
                
+    }
+    
+    //Function adds item to items list array
+      func addNewItem()
+      {
+          if self.newItem.isEmpty
+          {
+              self.showErrorMessage.toggle()
+            return
+          }else{
+              self.showErrorMessage = false
+            
+            self.listEntry.eachListItems.append(Items(itemName: newItem, itemQty: newItemQty,itemQtyType: newQtyType[selectedPickerValue],itemIsShopped: newItemIsShopped))
+            saveItemToDB()
+           // listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
+            clearFields()
+            
+          }
+      }
+    
+    func clearFields(){
+        self.newItem = ""
+        self.newItemQty = "0"
+    }
+    
+    //Function adds item to DB
+    func saveItemToDB(){
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped])
+    }
+    
+    func fetchItemsFromDB(){
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
+            if let err = err{
+                print("Error getting document: \(err)")
+            }else{
+                for document in snapshot!.documents{
+                    print("\(document.documentID) : \(document.data())")
+                    
+                    let data = document.data()
+                    let itemDocId = document.documentID
+                    let itemNameData = data["Item Name"] as? String ?? ""
+                    let itemQtyData = data["Item Qty"] as? String ?? ""
+                    let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
+                    let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
+                    let ItemData = Items(id: itemDocId, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
+                    
+                    self.listEntry.eachListItems.append(ItemData)
+                   /* let itemData = Items(id: document.documentID, itemName: document.get("Item Name") as! String, itemQty: document.get("Item Qty") as! String, itemQtyType: document.get("Item Qty Type"), itemIsShopped: document.get("Item IsShopped"))*/
+                   
+                }
+            }
+            
+        }
     }
 }
 
@@ -134,11 +164,6 @@ struct ShoppingListItemView : View {
     
 struct RowView: View{
    @State var entry: Items
-   // @State var itemQty:String = "0"
-   // @State var qtyType = ["KG","Grams","Pcs","Boxes","Bottles","Cans"]
-   // @State var selectedPickerValue = 0
-   // @Binding var newItem:String
-   // @Binding var listEntry:ShoppingListEntry
     
     var body: some View {
         ScrollView{
@@ -147,14 +172,15 @@ struct RowView: View{
                 Button(action: {
                     print("Checkbox clicked")
                     self.entry.itemIsShopped.toggle()
+                    
                 },label: {
-                    Image(systemName: entry.itemIsShopped ? "checkmark.square" : "square")
+                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square" : "square")
                 })
                
-                Text(entry.itemName).fontWeight(.bold)
+                Text(self.entry.itemName).fontWeight(.bold)
                 Spacer()
-                Text(entry.itemQty)
-                Text(entry.itemQtyType)
+                Text(self.entry.itemQty)
+                Text(self.entry.itemQtyType)
             }
             
            /* HStack{
@@ -181,10 +207,6 @@ struct RowView: View{
             
             }
         }
-        
-        
-        
-        
 }
     
    /* func saveItemData(){
