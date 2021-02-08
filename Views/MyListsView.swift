@@ -10,14 +10,11 @@ import Firebase
 
 
 struct MyListsView: View {
-    //@EnvironmentObject var userModel : ModelData
-    @ObservedObject var userModel : ModelData
-   // @Environment(\.presentationMode) var presentationMode
     
+    @ObservedObject var userModel : ModelData
     @State var showMenu = false
     
-     //   @State private var listName: String = ""
-        var db = Firestore.firestore()
+    var db = Firestore.firestore()
    // @State var addNewListAlert = false
     
     var body: some View {
@@ -61,6 +58,7 @@ struct MainView : View
         var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
+    @ObservedObject var newItemEntries = ItemsModel()
 
     var body: some View
     {
@@ -70,7 +68,7 @@ struct MainView : View
                 List(){
                     ForEach(list.entries) { entry in
                      NavigationLink(
-                        destination: ShoppingListItemView(listEntry: entry)) {
+                        destination: ShoppingListItemView(newItemEntries: newItemEntries, listEntry: entry)) {
                         ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                                         Button(action: {

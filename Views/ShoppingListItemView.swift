@@ -11,30 +11,37 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
+    var item : Items? = nil
+    var newItemEntries:ItemsModel
+    
     @State var listEntry : ShoppingListEntry
     @ObservedObject var listEntries = ShoppingListName()
-    @ObservedObject var item = ItemsList()
-      @State var newItem:String = ""
-      @State var showErrorMessage = false
-    
+    @ObservedObject var itemModel = ItemsModel()
+      
+   
+    @State var newItem:String = ""
+    @State var showErrorMessage = false
     @State var newItemQty:String = "0"
     @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
     var db = Firestore.firestore()
+   
     
     //Text field for adding new item
       var itemTextBar : some View{
        
         VStack{
             ZStack(){
-            Rectangle().foregroundColor(Color(.systemGray2))
+            Rectangle().foregroundColor(Color(.white))
                 .cornerRadius(5)
-                .frame(width: UIScreen.main.bounds.width - 30,height:40)
+                .frame(width: UIScreen.main.bounds.width - 35,height:40)
             HStack{
-                TextField("Enter New Item",text:self.$newItem).padding().foregroundColor(.black)
-            
+                TextField("Enter New Item",text:self.$newItem)
+                    //.frame(width: 100, height: 40)
+                    .padding().foregroundColor(.black)
+                
             Spacer()
             
                 Button(action: {
@@ -52,7 +59,7 @@ struct ShoppingListItemView : View {
             VStack{
                 HStack{
                     Text("Qty:")
-                    TextField("Qty", text:$newItemQty)
+                    TextField("Qty", text:self.$newItemQty)
                         .keyboardType(.numbersAndPunctuation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundColor(.blue)
@@ -69,14 +76,15 @@ struct ShoppingListItemView : View {
                     .scaleEffect(CGSize(width: 0.8, height: 0.8))
                     .foregroundColor(.white)
                     .pickerStyle(WheelPickerStyle())
-                }.padding(.leading, 150)
+                    .padding()
+                }.padding(.leading, 100)
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .font(.title3)
-                        .padding()
-                        .cornerRadius(40)
+                        .cornerRadius(5)
+                        .padding(.bottom,20)
                  })
             }.padding()
               
@@ -98,17 +106,18 @@ struct ShoppingListItemView : View {
         //List UI
             VStack(alignment: .leading){
                        List{
-                        //ForEach(self.listEntry.eachListItems)
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
                             RowView(entry: items)
+                           
                            }
                            .onDelete(perform: { indexSet in
                             listEntry.eachListItems.remove(atOffsets: indexSet)
                            })
                            
                        }.onAppear(){ fetchItemsFromDB() }
+                       
                        .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
                                        Button(action: {
@@ -132,11 +141,17 @@ struct ShoppingListItemView : View {
             return
           }else{
               self.showErrorMessage = false
+            let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
+            newItemEntries.itemModel.append(newItemEntry)
+            self.listEntry.eachListItems.append(newItemEntry)
             
-            self.listEntry.eachListItems.append(Items(itemName: self.newItem, itemQty: self.newItemQty,itemQtyType: self.newQtyType[selectedPickerValue],itemIsShopped: self.newItemIsShopped))
             saveItemToDB()
-           // listEntry.eachListItems.append(Items(itemName: newItem, itemQty: "0"))
             clearFields()
+            
+           /* itemModel.listDocID = self.listEntry.docId ?? ""
+            self.itemModel.addItems(self.newItem,self.newItemQty,self.newQtyType[selectedPickerValue],self.newItemIsShopped)*/
+            
+            
             
           }
       }
@@ -149,7 +164,14 @@ struct ShoppingListItemView : View {
     //Function adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped])
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped]){ error in
+            if let error = error{
+                print("Error saving document: \(error)")
+            }else{
+               print("Data is inserted")
+            }
+            
+        }
     }
     
     
@@ -171,8 +193,6 @@ struct ShoppingListItemView : View {
                     let ItemData = Items(id: itemDocId, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
                     
                     self.listEntry.eachListItems.append(ItemData)
-                   
-                   
                 }
             }
             
@@ -184,6 +204,8 @@ struct ShoppingListItemView : View {
     
 struct RowView: View{
    @State var entry: Items
+    //@State var entry: ShoppingListEntry
+   // @Binding var entry: Items
     
     var body: some View {
         ScrollView{
@@ -205,9 +227,13 @@ struct RowView: View{
                         .padding()
                 })
                
+               // TextEditor(text: self.$entry.itemName)
                 Text(self.entry.itemName).fontWeight(.bold).font(.body)
+                
                 Spacer()
+                //TextEditor(text: self.$entry.itemQty)
                 Text(self.entry.itemQty).font(.body)
+                //TextEditor(text: self.$entry.itemQtyType)
                 Text(self.entry.itemQtyType).font(.body).padding()
             }
             }
@@ -220,6 +246,6 @@ struct RowView: View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"))
+        ShoppingListItemView(newItemEntries: ItemsModel(), listEntry: ShoppingListEntry(listName: "Good day"))
     }
 }
