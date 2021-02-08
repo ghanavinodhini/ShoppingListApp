@@ -15,7 +15,6 @@ struct ShoppingListCardView: View {
             VStack{
                 Text(entry.listName)
             }
-            
         }
     }
 }

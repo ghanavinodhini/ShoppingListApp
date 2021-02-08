@@ -12,7 +12,7 @@ import FirebaseAuth
 class ShoppingListName : ObservableObject {
     
     @Published var entries = [ShoppingListEntry]()
-    
+    @Published var docId: String = ""
     private var db = Firestore.firestore()
     
     init(){
@@ -30,10 +30,14 @@ class ShoppingListName : ObservableObject {
                 let data = queryDocumentSnapshot.data()
                 let listName = data["listName"] as? String ?? ""
                 let docId = queryDocumentSnapshot.documentID
+                self.docId = queryDocumentSnapshot.documentID
+                print(docId)
+                print(self.docId)
                 return ShoppingListEntry(docId: docId, listName: listName)
                 
                 
             }
         }
     }
+    
 }

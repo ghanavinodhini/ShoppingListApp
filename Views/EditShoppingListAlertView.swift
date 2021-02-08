@@ -1,13 +1,14 @@
 //
-//  AddNewListAlertView.swift
+//  EditShoppingListAlertView.swift
 //  ShoppingList
 //
-//  Created by Jayabharathi Jayaraman on 2021-02-03.
+//  Created by Jayabharathi Jayaraman on 2021-02-04.
 //
+
 import Foundation
 import SwiftUI
 
-struct AddNewListAlertView: View {
+struct EditShoppingListAlertView: View {
     
     let screenSize = UIScreen.main.bounds
     var title: String = ""
@@ -19,22 +20,20 @@ struct AddNewListAlertView: View {
     
     var body: some View {
     
-        VStack(alignment: .center) {
+        VStack(alignment: .leading) {
           
             Text(title)
                 .font(.headline)
             TextField("", text: $listName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
-            HStack(alignment: .center) {
+            HStack() {
                 Button("Cancel") {
                     self.isShown = false
                     self.onCancel()
                 }.foregroundColor(.red)
-               
-               Divider()
             
-                Button("Add") {
+                Button("Update") {
                     self.isShown = false
                     self.onAdd(self.listName)
                 }
@@ -52,8 +51,8 @@ struct AddNewListAlertView: View {
     }
 }
 
-struct AddNewListAlertView_Previews: PreviewProvider {
-    static var previews: some 	View {
+struct EditShoppingListAlertView_Previews: PreviewProvider {
+    static var previews: some View {
         AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""))
     }
 }

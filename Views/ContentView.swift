@@ -114,7 +114,7 @@ struct LoginView : View {
           
         }.fullScreenCover(isPresented: $userModel.isLogin)
         {
-            MyListsView(userModel: userModel)
+            MyListsView(userModel: userModel, entry: ShoppingListEntry(listName: "Bra dag"))
             //, entry: ListEntry(listTitle: "Bra dag")
             
         }
