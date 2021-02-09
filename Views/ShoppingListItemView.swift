@@ -11,14 +11,10 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
-   /* var item : Items? = nil
-    var newItemEntries:ItemsModel */
-    
     @State var listEntry : ShoppingListEntry
     @ObservedObject var listEntries = ShoppingListName()
-   // @ObservedObject var itemModel = ItemsModel()
-      
    
+    @State var item : Items
     @State var newItem:String = ""
     @State var showErrorMessage = false
     @State var newItemQty:String = "0"
@@ -26,9 +22,9 @@ struct ShoppingListItemView : View {
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
+    
     var db = Firestore.firestore()
    
-    
     //Text field for adding new item
       var itemTextBar : some View{
        
@@ -39,7 +35,6 @@ struct ShoppingListItemView : View {
                 .frame(width: UIScreen.main.bounds.width - 35,height:40)
             HStack{
                 TextField("Enter New Item",text:self.$newItem)
-                    //.frame(width: 100, height: 40)
                     .padding().foregroundColor(.black)
                 
             Spacer()
@@ -78,25 +73,27 @@ struct ShoppingListItemView : View {
                     .pickerStyle(WheelPickerStyle())
                     .padding()
                 }.padding(.leading, 100)
+                
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
-                        .background(Color.blue)
+                        .background(Color(.darkGray))
                         .foregroundColor(.white)
-                        .font(.title3)
-                        .cornerRadius(5)
-                        .padding(.bottom,20)
+                        .font(.title2)
+                        .padding(.bottom,50)
                  })
             }.padding()
               
         }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
-        .background(Color.pink)
+        .background(Color(.systemTeal))
         .cornerRadius(10)
         .shadow(radius:8)
+        
         //Alert if no values entered in textfield
-        .alert(isPresented: self.$showErrorMessage) {
-                        Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
-                                                    }
-      }
+        .alert(isPresented: self.$showErrorMessage)
+        {
+            Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
+        }
+    }
     
    
     var body: some View
@@ -105,7 +102,7 @@ struct ShoppingListItemView : View {
         {
                 itemTextBar.padding()
         }
-        //List UI
+            //List UI
             VStack(alignment: .leading)
             {
                 List
@@ -122,13 +119,12 @@ struct ShoppingListItemView : View {
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
                         Button(action: {
-                            print("Navigation Add button pressed...")
+                            print("Navigation ItemAdd button pressed...")
                             self.isItemAddCardShown.toggle()
                             print("ListName:\(self.listEntry.listName)")
                             print("List docID: \(self.$listEntry.docId)")
                         }) {
-                                           
-                            Image(systemName: "plus.circle")
+                            Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         })
             }
     }
@@ -160,13 +156,25 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-    func deleteItem(at indexSet: IndexSet){
+    func deleteItem(at indexSet: IndexSet)
+    {
+        print("Inside delete item function")
         listEntry.eachListItems.remove(atOffsets: indexSet)
+       
        /* guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document()*/
+        
+        print("Item doc id: \(self.$item.itemDocid)")
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(self.item.itemDocid!).delete{
+                    error in
+                            if let error = error{
+                                print(error.localizedDescription)
+                            } else {
+                                print("deleteItem Success")
+                            }
+                    } */
     }
     
-    //Function adds item to DB
+    // Adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped]){ error in
@@ -179,7 +187,7 @@ struct ShoppingListItemView : View {
         }
     }
     
-    
+    //Get All Items For List
     func fetchItemsFromDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
@@ -209,9 +217,7 @@ struct ShoppingListItemView : View {
     
 struct RowView: View{
    @State var entry: Items
-    //@State var entry: ShoppingListEntry
-   // @Binding var entry: Items
-    
+   
     var body: some View {
         ScrollView{
         VStack{
@@ -245,12 +251,12 @@ struct RowView: View{
             }
         }
 }
-    
 }
 
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"))
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
     }
 }
+

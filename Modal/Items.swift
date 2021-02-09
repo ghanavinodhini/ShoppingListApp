@@ -8,7 +8,7 @@
 import Foundation
 import Firebase
 
-struct Items : Identifiable,Codable{
+struct Items : Identifiable{
     var id = UUID()
     var itemDocid:String?
     var itemName:String

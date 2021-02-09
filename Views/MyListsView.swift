@@ -22,7 +22,7 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    MainView(entry: ShoppingListEntry(listName: "Bra dag"))
+                    MainView(entry: ShoppingListEntry(listName: "Bra dag"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? CGFloat(Int(geometry.size.width/2)):0)
                         .disabled(self.showMenu ? true:false)
@@ -58,6 +58,8 @@ struct MainView : View
         var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
+        var item:Items
+    
     var body: some View
     {
         NavigationView {
@@ -66,7 +68,7 @@ struct MainView : View
                 List(){
                     ForEach(list.entries) { entry in
                      NavigationLink(
-                        destination: ShoppingListItemView(listEntry: entry)) {
+                        destination: ShoppingListItemView(listEntry: entry, item: item)) {
                         ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                                         Button(action: {
