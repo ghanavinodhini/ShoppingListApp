@@ -18,19 +18,21 @@ struct AddNewListAlertView: View {
     
     
     var body: some View {
-    
-        VStack(alignment: .leading) {
-          
+        
+        VStack(alignment: .center) {
+            
             Text(title)
                 .font(.headline)
             TextField("", text: $listName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             
-            HStack() {
+            HStack(alignment: .center) {
                 Button("Cancel") {
                     self.isShown = false
                     self.onCancel()
                 }.foregroundColor(.red)
+                
+                Divider()
                 Button("Add") {
                     self.isShown = false
                     self.onAdd(self.listName)
@@ -44,8 +46,8 @@ struct AddNewListAlertView: View {
         .offset(y: isShown ? 0 : screenSize.height)
         .animation(.spring())
         
-        .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 6, x: -9, y: -9)
-
+        .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
+        
     }
 }
 

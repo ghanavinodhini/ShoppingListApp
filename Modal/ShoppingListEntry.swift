@@ -10,9 +10,8 @@ import FirebaseFirestoreSwift
 struct ShoppingListEntry : Codable, Identifiable  {
     
     var id = UUID()
-    @DocumentID var docId : String?
+    var docId : String?
     var listName : String
-    var listItem : String = ""
     var date : Date = Date()
     
 }
