@@ -223,7 +223,7 @@ struct RowView: View{
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(LinearGradient(gradient: Gradient(colors:[Color.green,Color.blue]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.clear]),startPoint: .topLeading,endPoint: .bottomTrailing))
                         .padding(.horizontal, 4)
                         .shadow(color: Color.black, radius: 3, x: 3, y: 3)
 
@@ -231,26 +231,50 @@ struct RowView: View{
                 Button(action: {
                     print("Checkbox clicked")
                     self.entry.itemIsShopped.toggle()
+                    //itemSelectedImplementation()
                     
                 },label: {
-                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square.fill" : "square")
+                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square.fill" : "square").font(Font.system(size:20))
                         .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
                         .padding()
                 })
                
                // TextEditor(text: self.$entry.itemName)
+                
+                self.entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemName).fontWeight(.bold).font(.body)
                 
                 Spacer()
                 //TextEditor(text: self.$entry.itemQty)
+                self.entry.itemIsShopped ?
+                    Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemQty).font(.body)
+                
                 //TextEditor(text: self.$entry.itemQtyType)
-                Text(self.entry.itemQtyType).font(.body).padding()
+                self.entry.itemIsShopped ?
+                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).padding() :
+                    Text(self.entry.itemQtyType).font(.body).padding()
             }
             }
             }
         }
 }
+    
+  /*  func itemSelectedImplementation()
+    {
+        if self.entry.itemIsShopped{
+            Text(self.entry.itemName).fontWeight(.bold).font(.body)
+                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
+            Text(self.entry.itemQty).font(.body)
+                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
+            Text(self.entry.itemQtyType).font(.body)
+                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
+        }else{
+            Text(self.entry.itemName).fontWeight(.bold).font(.body)
+            Text(self.entry.itemQty).font(.body)
+            Text(self.entry.itemQtyType).font(.body).padding()
+        }
+    }*/
 }
 
 
