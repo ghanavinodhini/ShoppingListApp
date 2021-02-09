@@ -8,20 +8,20 @@
 import Foundation
 import Firebase
 
-struct Items : Identifiable{
-    //var id = UUID()
-    var id:String?
+struct Items : Identifiable,Codable{
+    var id = UUID()
+    var itemDocid:String?
     var itemName:String
     var itemQty:String
     var itemQtyType:String
     var itemIsShopped:Bool
 }
 
-class ItemsModel : ObservableObject{
+/*class ItemsModel : ObservableObject{
     
     @Published var itemModel = [Items]()
     
-  /*  @Published var shopItemEntry = ShoppingListEntry(listName: "")
+   @Published var shopItemEntry = ShoppingListEntry(listName: "")
     
     @Published var listDocID:String = ""
     
@@ -66,6 +66,6 @@ class ItemsModel : ObservableObject{
               }
               
           }
-      }*/
-}
+      }
+}*/
 

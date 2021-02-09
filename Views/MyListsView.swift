@@ -25,7 +25,7 @@ struct MyListsView: View {
            
                     MainView(entry: ShoppingListEntry(listName: "Bra dag"))
                         .frame(width: geometry.size.width,height: geometry.size.height)
-                        .offset(x: self.showMenu ? geometry.size.width/2:0)
+                        .offset(x: self.showMenu ? CGFloat(Int(geometry.size.width/2)):0)
                         .disabled(self.showMenu ? true:false)
                     
                     if self.showMenu{
@@ -58,7 +58,7 @@ struct MainView : View
         var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
-    @ObservedObject var newItemEntries = ItemsModel()
+    //@ObservedObject var newItemEntries = ItemsModel()
 
     var body: some View
     {
@@ -68,7 +68,7 @@ struct MainView : View
                 List(){
                     ForEach(list.entries) { entry in
                      NavigationLink(
-                        destination: ShoppingListItemView(newItemEntries: newItemEntries, listEntry: entry)) {
+                        destination: ShoppingListItemView(listEntry: entry)) {
                         ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                                         Button(action: {

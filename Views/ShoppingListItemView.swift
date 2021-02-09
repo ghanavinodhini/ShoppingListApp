@@ -11,12 +11,12 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
-    var item : Items? = nil
-    var newItemEntries:ItemsModel
+   /* var item : Items? = nil
+    var newItemEntries:ItemsModel */
     
     @State var listEntry : ShoppingListEntry
     @ObservedObject var listEntries = ShoppingListName()
-    @ObservedObject var itemModel = ItemsModel()
+   // @ObservedObject var itemModel = ItemsModel()
       
    
     @State var newItem:String = ""
@@ -99,36 +99,36 @@ struct ShoppingListItemView : View {
       }
     
    
-    var body: some View {
-        if self.isItemAddCardShown{
+    var body: some View
+    {
+        if self.isItemAddCardShown
+        {
                 itemTextBar.padding()
         }
         //List UI
-            VStack(alignment: .leading){
-                       List{
+            VStack(alignment: .leading)
+            {
+                List
+                    {
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
                             RowView(entry: items)
                            
-                           }
-                           .onDelete(perform: { indexSet in
-                            listEntry.eachListItems.remove(atOffsets: indexSet)
-                           })
-                           
-                       }.onAppear(){ fetchItemsFromDB() }
-                       
-                       .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
+                            }.onDelete(perform: self.deleteItem(at:))
+                            
+                    }.onAppear(){ fetchItemsFromDB() }
+                        .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
-                                       Button(action: {
-                                           print("Navigation Add button pressed...")
-                                        self.isItemAddCardShown.toggle()
-                                        print("ListName:\(self.listEntry.listName)")
-                                        print("List docID: \(self.$listEntry.docId)")
-                                       }) {
+                        Button(action: {
+                            print("Navigation Add button pressed...")
+                            self.isItemAddCardShown.toggle()
+                            print("ListName:\(self.listEntry.listName)")
+                            print("List docID: \(self.$listEntry.docId)")
+                        }) {
                                            
-                                        Image(systemName: "plus.circle")
-                                       })
+                            Image(systemName: "plus.circle")
+                        })
             }
     }
     
@@ -141,8 +141,9 @@ struct ShoppingListItemView : View {
             return
           }else{
               self.showErrorMessage = false
-            let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
-            newItemEntries.itemModel.append(newItemEntry)
+                let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
+            
+            //newItemEntries.itemModel.append(newItemEntry)
             self.listEntry.eachListItems.append(newItemEntry)
             
             saveItemToDB()
@@ -150,15 +151,18 @@ struct ShoppingListItemView : View {
             
            /* itemModel.listDocID = self.listEntry.docId ?? ""
             self.itemModel.addItems(self.newItem,self.newItemQty,self.newQtyType[selectedPickerValue],self.newItemIsShopped)*/
-            
-            
-            
           }
       }
     
     func clearFields(){
         self.newItem = ""
         self.newItemQty = "0"
+    }
+    
+    func deleteItem(at indexSet: IndexSet){
+        listEntry.eachListItems.remove(atOffsets: indexSet)
+       /* guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document()*/
     }
     
     //Function adds item to DB
@@ -185,12 +189,12 @@ struct ShoppingListItemView : View {
                     print("\(document.documentID) : \(document.data())")
                     
                     let data = document.data()
-                    let itemDocId = document.documentID
+                    let itemDocIdData = document.documentID
                     let itemNameData = data["Item Name"] as? String ?? ""
                     let itemQtyData = data["Item Qty"] as? String ?? ""
                     let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
                     let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
-                    let ItemData = Items(id: itemDocId, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
+                    let ItemData = Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
                     
                     self.listEntry.eachListItems.append(ItemData)
                 }
@@ -246,6 +250,6 @@ struct RowView: View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(newItemEntries: ItemsModel(), listEntry: ShoppingListEntry(listName: "Good day"))
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"))
     }
 }
