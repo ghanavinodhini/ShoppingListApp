@@ -22,7 +22,6 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-           
                     MainView(entry: ShoppingListEntry(listName: "Bra dag"))
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? CGFloat(Int(geometry.size.width/2)):0)
@@ -35,7 +34,8 @@ struct MyListsView: View {
                     }
             
                 }
-            }.navigationBarTitle("Shopping List", displayMode: .inline)
+            }
+            .navigationBarTitle("Shopping List", displayMode: .inline)
             .navigationBarItems(leading: (
                 Button(action: {
                     withAnimation{
@@ -58,8 +58,6 @@ struct MainView : View
         var entry:ShoppingListEntry
         var db = Firestore.firestore()
     
-    //@ObservedObject var newItemEntries = ItemsModel()
-
     var body: some View
     {
         NavigationView {

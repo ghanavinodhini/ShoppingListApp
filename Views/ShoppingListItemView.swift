@@ -115,7 +115,8 @@ struct ShoppingListItemView : View {
                                items in
                             RowView(entry: items)
                            
-                            }.onDelete(perform: self.deleteItem(at:))
+                        }.onDelete(perform: self.deleteItem(at:))
+                        .id(UUID())
                             
                     }.onAppear(){ fetchItemsFromDB() }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
