@@ -19,6 +19,9 @@ struct MyListsView: View {
      //   @State private var listName: String = ""
         var db = Firestore.firestore()
    // @State var addNewListAlert = false
+    @State var addNewListAlert = false
+    @State private var listName: String = ""
+    @State private var buttonDisabled = true
     
     var body: some View {
          NavigationView {
@@ -47,6 +50,7 @@ struct MyListsView: View {
                     Image(systemName: "line.horizontal.3").imageScale(/*@START_MENU_TOKEN@*/.medium/*@END_MENU_TOKEN@*/)
                 }
             ))
+            
         }
         
         /*NavigationView
@@ -57,9 +61,11 @@ struct MyListsView: View {
             }.navigationBarTitle("Welcome \(userModel.currentUserName)")
             .navigationBarTitleDisplayMode(.inline)
         }*/
-        
+    
+
         
 }
+   
 }
 
 struct MainView : View
@@ -68,10 +74,13 @@ struct MainView : View
     
         @ObservedObject var list = ShoppingListName()
         @State var addNewListAlert = false
+        @State var ediShoppingListAlert = false
         @State private var listName: String = ""
         var entry : ShoppingListEntry
         var db = Firestore.firestore()
-    
+    var rowview = RowView(entry: ShoppingListEntry(listName: "Bra dag"))
+    @State var docID : String = ""
+    @State private var buttonDisabled = true
 
     var body: some View
     {
@@ -90,14 +99,16 @@ struct MainView : View
                      NavigationLink(
                         destination: ShoppingListItemView()) {
                     ShoppingListCardView(entry: entry)
+                       // RowView(entry: entry)
                         }        .contextMenu{
                                         Button(action: {
+                                            self.ediShoppingListAlert = true
                                        }) {
                                             Text("Edit")
                                         }
                                         
                                         Button(action: {
-                                            
+                                            deleteListInDB()
                                         }) {
                                             Text("Cancel")
                                         }
@@ -105,37 +116,27 @@ struct MainView : View
                     }
                 }
                 .navigationBarTitle("Lists")
-                
+                .navigationBarItems(trailing: Button(action: {
+                    self.addNewListAlert = true
+                }){
+                    Image(systemName: "plus")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                        .frame(width: 55, height: 55)
+                })
             }
             .onAppear() {
                 list.fetchListFromDatabase()
             }
         }
-            VStack{
-                Spacer()
-                HStack{
-                    ZStack{
-        Button(action: {
-            
-            self.addNewListAlert.toggle()
-            
-        }) {
-            Image(systemName: "plus")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding()
-                .frame(width: 75, height: 75)
-        }
-                    AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
-                    saveShoppingListInDB()
-            })
-                    }
-                   
-        }
-               
-        }
-
-        }
+        AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
+        saveShoppingListInDB()
+})
+        EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
+         //                   updateShoppingListInDB()
+                })
+}
     
     func saveShoppingListInDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -147,11 +148,29 @@ struct MainView : View
             }
     }
 }
-    func deleteListInDB(at indexSet: IndexSet){
-        indexSet.forEach {index in
-            let task = list.entries[index]
+    func updateShoppingListInDB(){
+    
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        print(currentUser)
+        if let docId = entry.docId {
+            db.collection("Users").document(currentUser).collection("Lists").document(docId).updateData(["listName" : listName])
+            
+       { error in
+            if let error = error{
+                print("error")
+            } else{
+                print ("Data is inserted")
+            }
+    }
+        }
+}
+   
+    func deleteListInDB(){
+        /*indexSet.forEach {index in
+            let task = list.entries[index]*/
+            guard let currentUser = Auth.auth().currentUser?.uid else { return }
         if let documentId = entry.docId{
-        db.collection("List").document(documentId).delete{
+            db.collection("Users").document(currentUser).collection("Lists").document(documentId).delete{
             error in
             if let error = error{
                 print(error.localizedDescription)
@@ -163,8 +182,21 @@ struct MainView : View
     }
 }
     }
+    
+struct RowView : View {
+    
+    var entry : ShoppingListEntry
+    var db = Firestore.firestore()
+    @State private var listName: String = ""
+    var body: some View {
+        HStack {
+            Text(entry.listName)
+            Text(entry.docId!)
+            
+        }
     }
-
+    
+}
 
 struct MyListsView_Previews: PreviewProvider {
     static var previews: some View {

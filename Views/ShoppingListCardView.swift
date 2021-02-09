@@ -14,6 +14,7 @@ struct ShoppingListCardView: View {
             Rectangle().fill(Color.blue).frame(width:350, height:25).cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/).shadow(radius: 10 )
             VStack{
                 Text(entry.listName)
+                Text(entry.docId!)
             }
             
         }

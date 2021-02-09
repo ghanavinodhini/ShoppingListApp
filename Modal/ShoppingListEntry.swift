@@ -6,11 +6,11 @@
 //
 
 import Foundation
-
-struct ShoppingListEntry : Identifiable {
+import FirebaseFirestoreSwift
+struct ShoppingListEntry : Codable, Identifiable  {
     
     var id = UUID()
-    var docId : String?
+    @DocumentID var docId : String?
     var listName : String
     var listItem : String = ""
     var date : Date = Date()
