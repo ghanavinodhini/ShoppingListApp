@@ -149,9 +149,10 @@ struct MainView : View
     }
     
     func updateShoppingListInDB(){
-    
+        
         self.docID = list.docID
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
+
             db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
             
             { error in
@@ -161,6 +162,7 @@ struct MainView : View
                     print ("Data is inserted")
                 }
             }
+        
     }
     
     func deleteListInDB(){
