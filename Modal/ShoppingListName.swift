@@ -12,7 +12,7 @@ import FirebaseAuth
 class ShoppingListName : ObservableObject {
     
     @Published var entries = [ShoppingListEntry]()
-    
+    @Published var docID : String = ""
     private var db = Firestore.firestore()
     
     init(){
@@ -29,10 +29,8 @@ class ShoppingListName : ObservableObject {
             self.entries = documents.map { (queryDocumentSnapshot) -> ShoppingListEntry in
                 let data = queryDocumentSnapshot.data()
                 let listName = data["listName"] as? String ?? ""
-                let docId = queryDocumentSnapshot.documentID
-                return ShoppingListEntry(docId: docId, listName: listName)
-                
-                
+                self.docID = queryDocumentSnapshot.documentID
+                return ShoppingListEntry(docId: self.docID, listName: listName)
             }
         }
     }

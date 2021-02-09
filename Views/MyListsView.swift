@@ -12,19 +12,18 @@ import Firebase
 struct MyListsView: View {
     //@EnvironmentObject var userModel : ModelData
     @ObservedObject var userModel : ModelData
-   // @Environment(\.presentationMode) var presentationMode
+    // @Environment(\.presentationMode) var presentationMode
     
     @State var showMenu = false
     
-     //   @State private var listName: String = ""
-        var db = Firestore.firestore()
-   // @State var addNewListAlert = false
+    //   @State private var listName: String = ""
+    var db = Firestore.firestore()
+    // @State var addNewListAlert = false
     @State var addNewListAlert = false
     @State private var listName: String = ""
-    @State private var buttonDisabled = true
     
     var body: some View {
-         NavigationView {
+        NavigationView {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
@@ -54,65 +53,64 @@ struct MyListsView: View {
         }
         
         /*NavigationView
-        {
-            ZStack{
-                Text("Hello World").padding()
-           
-            }.navigationBarTitle("Welcome \(userModel.currentUserName)")
-            .navigationBarTitleDisplayMode(.inline)
-        }*/
-    
-
+         {
+         ZStack{
+         Text("Hello World").padding()
+         
+         }.navigationBarTitle("Welcome \(userModel.currentUserName)")
+         .navigationBarTitleDisplayMode(.inline)
+         }*/
         
-}
-   
+        
+        
+    }
+    
 }
 
 struct MainView : View
 {
     //@Binding var showMenu:Bool
     
-        @ObservedObject var list = ShoppingListName()
-        @State var addNewListAlert = false
-        @State var ediShoppingListAlert = false
-        @State private var listName: String = ""
-        var entry : ShoppingListEntry
-        var db = Firestore.firestore()
+    @ObservedObject var list = ShoppingListName()
+    @State var addNewListAlert = false
+    @State var ediShoppingListAlert = false
+    @State private var listName: String = ""
+    var entry : ShoppingListEntry
+    var db = Firestore.firestore()
     var rowview = RowView(entry: ShoppingListEntry(listName: "Bra dag"))
     @State var docID : String = ""
-    @State private var buttonDisabled = true
-
+    
     var body: some View
     {
-      /*  Button(action: {
-            withAnimation{
-            self.showMenu = false
-            }
-        }){
-            Text("Hello")
-        }*/
-    
+        /*  Button(action: {
+         withAnimation{
+         self.showMenu = false
+         }
+         }){
+         Text("Hello")
+         }*/
+        
         VStack{
             NavigationView {
                 List(){
                     ForEach(list.entries) { entry in
-                     NavigationLink(
-                        destination: ShoppingListItemView()) {
-                    ShoppingListCardView(entry: entry)
-                       // RowView(entry: entry)
+                        NavigationLink(
+                            destination: ShoppingListItemView()) {
+                            ShoppingListCardView(entry: entry)
+                            // RowView(entry: entry)
                         }        .contextMenu{
-                                        Button(action: {
-                                            self.ediShoppingListAlert = true
-                                       }) {
-                                            Text("Edit")
-                                        }
-                                        
-                                        Button(action: {
-                                            deleteListInDB()
-                                        }) {
-                                            Text("Cancel")
-                                        }
-                                }
+                            Button(action: {
+                                self.ediShoppingListAlert = true
+                            }) {
+                                Text("Edit")
+                            }
+                            
+                            Button(action: {
+                                deleteListInDB()
+                            }) {
+                                Text("Cancel")
+                            }
+                        }
                     }
                 }
                 .navigationBarTitle("Lists")
@@ -131,14 +129,15 @@ struct MainView : View
             }
         }
         AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
-        saveShoppingListInDB()
-})
+            saveShoppingListInDB()
+        })
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
-         //                   updateShoppingListInDB()
-                })
-}
+                               updateShoppingListInDB()
+        })
+    }
     
     func saveShoppingListInDB(){
+        
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
             if let error = error{
@@ -146,43 +145,42 @@ struct MainView : View
             } else{
                 print ("Data is inserted")
             }
+        }
     }
-}
+    
     func updateShoppingListInDB(){
     
+        self.docID = list.docID
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        print(currentUser)
-        if let docId = entry.docId {
-            db.collection("Users").document(currentUser).collection("Lists").document(docId).updateData(["listName" : listName])
+            db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
             
-       { error in
-            if let error = error{
-                print("error")
-            } else{
-                print ("Data is inserted")
+            { error in
+                if let error = error{
+                    print("error")
+                } else{
+                    print ("Data is inserted")
+                }
             }
-    }
-        }
-}
-   
-    func deleteListInDB(){
-        /*indexSet.forEach {index in
-            let task = list.entries[index]*/
-            guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        if let documentId = entry.docId{
-            db.collection("Users").document(currentUser).collection("Lists").document(documentId).delete{
-            error in
-            if let error = error{
-                print(error.localizedDescription)
-            } else {
-                //self.list.fetchListFromDatabase()
-                print("deleteSuccess")
-            }
-        }
-    }
-}
     }
     
+    func deleteListInDB(){
+        /*indexSet.forEach {index in
+         let task = list.entries[index]*/
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        if let documentId = entry.docId{
+            db.collection("Users").document(currentUser).collection("Lists").document(documentId).delete{
+                error in
+                if let error = error{
+                    print(error.localizedDescription)
+                } else {
+                    //self.list.fetchListFromDatabase()
+                    print("deleteSuccess")
+                }
+            }
+        }
+    }
+}
+
 struct RowView : View {
     
     var entry : ShoppingListEntry
