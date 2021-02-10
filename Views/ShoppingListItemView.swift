@@ -13,7 +13,7 @@ struct ShoppingListItemView : View {
     
     @EnvironmentObject var userModel : ModelData
     @State var listEntry : ShoppingListEntry
-    //@ObservedObject var listEntries = ShoppingListName()
+    
     @State var item : Items
     @State var newItem:String = ""
     @State var showErrorMessage = false
@@ -72,7 +72,7 @@ struct ShoppingListItemView : View {
                     .foregroundColor(.white)
                     .pickerStyle(WheelPickerStyle())
                     .padding()
-                }.padding(.leading, 80)
+                }.padding(.leading, 60)
                 
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
@@ -140,14 +140,11 @@ struct ShoppingListItemView : View {
               self.showErrorMessage = false
                 let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
             
-            //newItemEntries.itemModel.append(newItemEntry)
             self.listEntry.eachListItems.append(newItemEntry)
             
             saveItemToDB()
             clearFields()
             
-           /* itemModel.listDocID = self.listEntry.docId ?? ""
-            self.itemModel.addItems(self.newItem,self.newItemQty,self.newQtyType[selectedPickerValue],self.newItemIsShopped)*/
           }
       }
     
@@ -160,18 +157,6 @@ struct ShoppingListItemView : View {
     {
         print("Inside delete item function")
         listEntry.eachListItems.remove(atOffsets: indexSet)
-       
-       /* guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        
-        print("Item doc id: \(self.$item.itemDocid)")
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(self.item.itemDocid!).delete{
-                    error in
-                            if let error = error{
-                                print(error.localizedDescription)
-                            } else {
-                                print("deleteItem Success")
-                            }
-                    } */
     }
     
     // Adds item to DB
@@ -226,8 +211,7 @@ struct RowView: View{
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
-                    .background(Color.red)
-                   // .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.clear]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.green]),startPoint: .topLeading,endPoint: .bottomTrailing))
                         .padding(.horizontal, 4)
                         .shadow(color: Color.black, radius: 3, x: 3, y: 3)
 
@@ -238,17 +222,6 @@ struct RowView: View{
                     print("ItemIsShooped value after click: \(self.entry.itemIsShopped)")
                     guard let itemId = self.entry.itemDocid else {return}
                     itemSelectedUpdateInDB(itemId)
-                    
-                   /* if let itemDocId = entry.itemDocid{
-                        guard let currentUser = Auth.auth().currentUser?.uid else { return }
-                        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId).updateData(["Item IsShopped":!entry.itemIsShopped]){ error in
-                            if let error = error{
-                                print("Error updating document for item selected : \(error)")
-                            }else{
-                               print("Updated item document for item selection")
-                            }
-                        }
-                    }*/
                     
                 },label: {
                     Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square").font(Font.system(size:20))

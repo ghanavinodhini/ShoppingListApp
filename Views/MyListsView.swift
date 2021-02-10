@@ -18,7 +18,6 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    //MainView(entry: ShoppingListEntry (listName: ""))
                     MainView(entry: ShoppingListEntry(listName: "Bra dag"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
@@ -62,7 +61,6 @@ struct MainView : View
                 List(){
                     ForEach(shoppingList.entries) { entry in
                         NavigationLink(
-                     //       destination: ShoppingListItemView()) {
                             destination: ShoppingListItemView(listEntry: entry, item: item)){
                             ShoppingListCardView(entry: entry)
                         }        .contextMenu{
