@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct ShoppingListEntry : Codable, Identifiable  {
+struct ShoppingListEntry : Identifiable  {
     
     var id = UUID()
     var docId : String?
     var listName : String
     var date : Date = Date()
-    
+    var eachListItems = [Items]()
 }

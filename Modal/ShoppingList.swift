@@ -12,6 +12,7 @@ import FirebaseAuth
 class ShoppingList : ObservableObject {
     
     @Published var entries = [ShoppingListEntry]()
+    @Published var itemModel = [Items]()
     private var db = Firestore.firestore()
     
     init(){
