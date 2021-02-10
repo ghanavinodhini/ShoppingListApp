@@ -11,6 +11,7 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
+    @EnvironmentObject var userModel : ModelData
     @State var listEntry : ShoppingListEntry
     @ObservedObject var listEntries = ShoppingListName()
    
@@ -110,7 +111,7 @@ struct ShoppingListItemView : View {
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
-                            RowView(entry: items)
+                            RowView(entry: items, listEntry: $listEntry)
                            
                         }.onDelete(perform: self.deleteItem(at:))
                         .id(UUID())
@@ -217,7 +218,10 @@ struct ShoppingListItemView : View {
     
 struct RowView: View{
    @State var entry: Items
-   
+    
+    @Binding var listEntry : ShoppingListEntry
+    var db = Firestore.firestore()
+    
     var body: some View {
         ScrollView{
         VStack{
@@ -231,27 +235,40 @@ struct RowView: View{
                 Button(action: {
                     print("Checkbox clicked")
                     self.entry.itemIsShopped.toggle()
-                    //itemSelectedImplementation()
+                    print("ItemIsShooped value after click: \(self.entry.itemIsShopped)")
+                    guard let itemId = self.entry.itemDocid else {return}
+                    itemSelectedUpdateInDB(itemId)
+                    
+                   /* if let itemDocId = entry.itemDocid{
+                        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+                        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId).updateData(["Item IsShopped":!entry.itemIsShopped]){ error in
+                            if let error = error{
+                                print("Error updating document for item selected : \(error)")
+                            }else{
+                               print("Updated item document for item selection")
+                            }
+                        }
+                    }*/
                     
                 },label: {
-                    Image(systemName: self.entry.itemIsShopped ? "checkmark.square.fill" : "square").font(Font.system(size:20))
+                    Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square").font(Font.system(size:20))
                         .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
                         .padding()
                 })
                
                // TextEditor(text: self.$entry.itemName)
                 
-                self.entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemName).fontWeight(.bold).font(.body)
                 
                 Spacer()
                 //TextEditor(text: self.$entry.itemQty)
-                self.entry.itemIsShopped ?
+                entry.itemIsShopped ?
                     Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemQty).font(.body)
                 
                 //TextEditor(text: self.$entry.itemQtyType)
-                self.entry.itemIsShopped ?
+                entry.itemIsShopped ?
                     Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).padding() :
                     Text(self.entry.itemQtyType).font(.body).padding()
             }
@@ -260,21 +277,21 @@ struct RowView: View{
         }
 }
     
-  /*  func itemSelectedImplementation()
+    func itemSelectedUpdateInDB(_ itemId:String)
     {
-        if self.entry.itemIsShopped{
-            Text(self.entry.itemName).fontWeight(.bold).font(.body)
-                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
-            Text(self.entry.itemQty).font(.body)
-                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
-            Text(self.entry.itemQtyType).font(.body)
-                .strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/)
-        }else{
-            Text(self.entry.itemName).fontWeight(.bold).font(.body)
-            Text(self.entry.itemQty).font(.body)
-            Text(self.entry.itemQtyType).font(.body).padding()
-        }
-    }*/
+            print("Value of list docId: \(self.listEntry.docId!)")
+            print("Value itemShopped inside function: \(self.entry.itemIsShopped)")
+            print("Item Doc id inside function: \(String(describing: itemId))")
+            
+            guard let currentUser = Auth.auth().currentUser?.uid else { return }
+            db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemId).updateData(["Item IsShopped":self.entry.itemIsShopped]){ error in
+                if let error = error{
+                    print("Error updating document for item selected : \(error)")
+                }else{
+                   print("Updated item document for item selection")
+                }
+            }
+    }
 }
 
 
