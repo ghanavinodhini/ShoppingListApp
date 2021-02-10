@@ -11,7 +11,7 @@ struct ShoppingListCardView: View {
     var entry: ShoppingListEntry
     var body: some View {
         ZStack{
-            Rectangle().fill(Color.blue).frame(width:350, height:25).cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/).shadow(radius: 10 )
+            Rectangle().fill(Color.blue).frame(width:330, height:25).cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/).shadow(radius: 10 )
             VStack{
                 Text(entry.listName)
             }
@@ -22,6 +22,6 @@ struct ShoppingListCardView: View {
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListCardView(entry: ShoppingListEntry(listName: "Bra dag", listItem: ""))
+        ShoppingListCardView(entry: ShoppingListEntry(listName: "Bra dag"))
     }
 }

@@ -1,5 +1,5 @@
 //
-//  ShoppingListName.swift
+//  ShoppingList.swift
 //  ShoppingList
 //
 //  Created by Jayabharathi Jayaraman on 2021-02-01.
@@ -9,10 +9,9 @@ import Foundation
 import FirebaseFirestore
 import FirebaseAuth
 
-class ShoppingListName : ObservableObject {
+class ShoppingList : ObservableObject {
     
     @Published var entries = [ShoppingListEntry]()
-    
     private var db = Firestore.firestore()
     
     init(){
@@ -29,9 +28,9 @@ class ShoppingListName : ObservableObject {
             self.entries = documents.map { (queryDocumentSnapshot) -> ShoppingListEntry in
                 let data = queryDocumentSnapshot.data()
                 let listName = data["listName"] as? String ?? ""
-                let docId = queryDocumentSnapshot.documentID
-                return ShoppingListEntry(docId: docId, listName: listName)
-                
+                let docID = queryDocumentSnapshot.documentID
+                print(docID)
+                return ShoppingListEntry(docId: docID, listName: listName)
                 
             }
         }

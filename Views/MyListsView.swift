@@ -10,23 +10,15 @@ import Firebase
 
 
 struct MyListsView: View {
-    //@EnvironmentObject var userModel : ModelData
     @ObservedObject var userModel : ModelData
-   // @Environment(\.presentationMode) var presentationMode
-    
     @State var showMenu = false
     
-     //   @State private var listName: String = ""
-        var db = Firestore.firestore()
-   // @State var addNewListAlert = false
-    
     var body: some View {
-         NavigationView {
+        NavigationView {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    //MainView(showMenu: self.$showMenu)
-                    MainView(entry: ShoppingListEntry(listName: "Bra dag"))
+                    MainView(entry: ShoppingListEntry (listName: ""))
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
                         .disabled(self.showMenu ? true:false)
@@ -48,96 +40,72 @@ struct MyListsView: View {
                 }
             ))
         }
-        
-        /*NavigationView
-        {
-            ZStack{
-                Text("Hello World").padding()
-           
-            }.navigationBarTitle("Welcome \(userModel.currentUserName)")
-            .navigationBarTitleDisplayMode(.inline)
-        }*/
-        
-        
-}
+    }
 }
 
 struct MainView : View
 {
-    //@Binding var showMenu:Bool
+    @ObservedObject var shoppingList = ShoppingList()
     
-        @ObservedObject var list = ShoppingListName()
-        @State var addNewListAlert = false
-        @State private var listName: String = ""
-        var entry : ShoppingListEntry
-        var db = Firestore.firestore()
+    @State var addNewListAlert = false
+    @State var ediShoppingListAlert = false
+    @State private var listName: String = ""
+    var entry : ShoppingListEntry
+    var db = Firestore.firestore()
+    @State var docID : String = ""
     
-
     var body: some View
     {
-      /*  Button(action: {
-            withAnimation{
-            self.showMenu = false
-            }
-        }){
-            Text("Hello")
-        }*/
-    
         VStack{
             NavigationView {
                 List(){
-                    ForEach(list.entries) { entry in
-                     NavigationLink(
-                        destination: ShoppingListItemView()) {
-                    ShoppingListCardView(entry: entry)
+                    ForEach(shoppingList.entries) { entry in
+                        NavigationLink(
+                            destination: ShoppingListItemView()) {
+                            ShoppingListCardView(entry: entry)
                         }        .contextMenu{
-                                        Button(action: {
-                                       }) {
-                                            Text("Edit")
-                                        }
-                                        
-                                        Button(action: {
-                                            
-                                        }) {
-                                            Text("Cancel")
-                                        }
-                                }
+                            Button(action: {
+                                docID = entry.docId!
+                                self.ediShoppingListAlert = true
+                            }) {
+                                Text("Edit")
+                            }
+                            
+                            Button(action: {
+                                docID = entry.docId!
+                                print(docID)
+                            }) {
+                                Text("Cancel")
+                            }
+                        }
                     }
+                    .onDelete(perform: self.deleteListInDB)
                 }
                 .navigationBarTitle("Lists")
-                
+                .navigationBarItems(trailing: Button(action: {
+                    self.addNewListAlert = true
+                }){
+                    Image(systemName: "plus")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding()
+                        .frame(width: 55, height: 55)
+                })
             }
             .onAppear() {
-                list.fetchListFromDatabase()
+                shoppingList.fetchListFromDatabase()
             }
         }
-            VStack{
-                Spacer()
-                HStack{
-                    ZStack{
-        Button(action: {
-            
-            self.addNewListAlert.toggle()
-            
-        }) {
-            Image(systemName: "plus")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding()
-                .frame(width: 75, height: 75)
-        }
-                    AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
-                    saveShoppingListInDB()
-            })
-                    }
-                   
-        }
-               
-        }
-
-        }
+        AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
+            saveShoppingListInDB()
+        })
+        EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
+            updateShoppingListInDB()
+        })
+    }
     
     func saveShoppingListInDB(){
+        
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
             if let error = error{
@@ -145,30 +113,48 @@ struct MainView : View
             } else{
                 print ("Data is inserted")
             }
+        }
     }
-}
-    func deleteListInDB(at indexSet: IndexSet){
-        indexSet.forEach {index in
-            let task = list.entries[index]
-        if let documentId = entry.docId{
-        db.collection("List").document(documentId).delete{
+    
+    func updateShoppingListInDB(){
+        
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
+        { error in
+            if let error = error{
+                print("error")
+            } else{
+                print ("Data is inserted")
+            }
+        }
+    }
+    func deleteListInDB(at indexSet: IndexSet) {
+        indexSet.forEach { index in
+            let shoppingListDocId = shoppingList.entries[index]
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+            db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).delete{
             error in
             if let error = error{
                 print(error.localizedDescription)
             } else {
-                //self.list.fetchListFromDatabase()
                 print("deleteSuccess")
             }
         }
+            // Delete the Items of the Shopping list
+            /*db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).collection("Item").document("sBNYoe4a9zXBVDP96Zs6").delete{
+            error in
+            if let error = error{
+                print(error.localizedDescription)
+            } else {
+                print("deleteSuccess")
+            }
+        }*/
     }
 }
-    }
-    }
-
+}
 
 struct MyListsView_Previews: PreviewProvider {
     static var previews: some View {
-        //MyListsView(userModel: ModelData(), entry: ListEntry(listTitle: "Bra //dag"))
         MyListsView(userModel: ModelData())
     }
 }
