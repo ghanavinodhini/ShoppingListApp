@@ -53,7 +53,9 @@ struct MainView : View
     var entry : ShoppingListEntry
     var db = Firestore.firestore()
     @State var docID : String = ""
+    @State var itemDocID : String = ""
     var item:Items
+    @State private var showingAlert = false
     var body: some View
     {
         VStack{
@@ -73,13 +75,24 @@ struct MainView : View
                             
                             Button(action: {
                                 docID = entry.docId!
-                                print(docID)
+                                print(itemDocID)
+                                self.showingAlert = true
                             }) {
-                                Text("Cancel")
+                                Text("Delete")
                             }
-                        }
+                        }.alert(isPresented:$showingAlert)
+                        {
+                                    Alert(
+                                        title: Text("Are you sure you want to delete this?"),
+                                        message: Text("There is no undo"),
+                                        primaryButton: .destructive(Text("Delete")) {
+                                         //   deleteListInDB()
+                                        },
+                                        secondaryButton: .cancel()
+                                    )
+                                }
                     }
-                    .onDelete(perform: self.deleteListInDB)
+                   // .onDelete(perform: self.deleteListInDB)
                 }
                 .navigationBarTitle("Lists")
                 .navigationBarItems(trailing: Button(action: {
@@ -94,6 +107,7 @@ struct MainView : View
             }
             .onAppear() {
                 shoppingList.fetchListFromDatabase()
+            //shoppingList.fetchItemDocId()
             }
         }
         AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
@@ -103,6 +117,7 @@ struct MainView : View
             updateShoppingListInDB()
         })
     }
+    
     
     func saveShoppingListInDB(){
         
@@ -117,7 +132,6 @@ struct MainView : View
     }
     
     func updateShoppingListInDB(){
-        
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
         { error in
@@ -128,7 +142,27 @@ struct MainView : View
             }
         }
     }
-    func deleteListInDB(at indexSet: IndexSet) {
+    func deleteListInDB(){
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).delete()
+        { error in
+            if let error = error{
+                print("error")
+            } else{
+                print ("")
+            }
+        }
+        db.collection("Users").document(currentUser).collection("Lists").document(docID)
+            .collection("Items").document(itemDocID).delete()
+        { error in
+            if let error = error{
+                print("error")
+            } else{
+                print ("")
+            }
+        }
+    }
+   /* func deleteListInDB(at indexSet: IndexSet) {
         indexSet.forEach { index in
             let shoppingListDocId = shoppingList.entries[index]
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -150,7 +184,7 @@ struct MainView : View
             }
         }*/
     }
-}
+}*/
 }
 
 struct MyListsView_Previews: PreviewProvider {
