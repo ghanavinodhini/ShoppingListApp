@@ -74,7 +74,7 @@ struct MainView : View
                             }
                             
                             Button(action: {
-                                docID = entry.docId!
+                                itemDocID = entry.itemDocId!
                                 print(itemDocID)
                                 self.showingAlert = true
                             }) {
@@ -122,7 +122,7 @@ struct MainView : View
     func saveShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
+     db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
             if let error = error{
                 print("error")
             } else{
@@ -186,7 +186,20 @@ struct MainView : View
     }
 }*/
 }
+struct ShoppingListRowView : View {
 
+    var items: Items
+    var body: some View {
+        HStack {
+
+            Text(items.itemDocid!)
+            //Text(entry.docId!)
+            
+        }
+    }
+    
+    
+}
 struct MyListsView_Previews: PreviewProvider {
     static var previews: some View {
         MyListsView(userModel: ModelData())

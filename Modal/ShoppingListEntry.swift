@@ -11,6 +11,7 @@ struct ShoppingListEntry : Identifiable  {
     
     var id = UUID()
     var docId : String?
+    var itemDocId : String?
     var listName : String
     var date : Date = Date()
     var eachListItems = [Items]()
