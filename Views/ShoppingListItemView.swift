@@ -22,11 +22,14 @@ struct ShoppingListItemView : View {
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
+    @State var isAddCartIconClicked:Bool = false
+    @State var isAddItemMode:Bool = false
+   
     
     var db = Firestore.firestore()
    
     //Text field for adding new item
-      var itemTextBar : some View{
+      var newItemAddCard : some View{
        
         VStack{
             ZStack(){
@@ -100,7 +103,7 @@ struct ShoppingListItemView : View {
     {
         if self.isItemAddCardShown
         {
-                itemTextBar.padding()
+                newItemAddCard.padding()
         }
             //List UI
             VStack(alignment: .leading)
@@ -110,9 +113,9 @@ struct ShoppingListItemView : View {
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
-                            RowView(entry: items, listEntry: $listEntry)
+                            RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
-                        }.onDelete(perform: self.deleteItem(at:))
+                        }//.onDelete(perform: self.deleteItem(at:))
                         .id(UUID())
                             
                     }.onAppear(){ fetchItemsFromDB() }
@@ -121,11 +124,13 @@ struct ShoppingListItemView : View {
                         Button(action: {
                             print("Navigation ItemAdd button pressed...")
                             self.isItemAddCardShown.toggle()
+                            self.isAddCartIconClicked.toggle()
+                            self.isAddItemMode.toggle()
                             print("ListName:\(self.listEntry.listName)")
                             print("List docID: \(self.$listEntry.docId)")
                         }) {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
-                        })
+                        }.opacity(self.isAddItemMode ? 0 : 1))
             }
     }
     
@@ -153,11 +158,11 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-    func deleteItem(at indexSet: IndexSet)
+  /*  func deleteItem(at indexSet: IndexSet)
     {
         print("Inside delete item function")
         listEntry.eachListItems.remove(atOffsets: indexSet)
-    }
+    } */
     
     // Adds item to DB
     func saveItemToDB(){
@@ -201,12 +206,14 @@ struct ShoppingListItemView : View {
     
     
 struct RowView: View{
-   @State var entry: Items
-    
+    @State var entry: Items
     @Binding var listEntry : ShoppingListEntry
+    @Binding var isAddCartIconClicked:Bool
     var db = Firestore.firestore()
     
+    
     var body: some View {
+        
         ScrollView{
         VStack{
             ZStack{
@@ -220,36 +227,68 @@ struct RowView: View{
                     print("Checkbox clicked")
                     self.entry.itemIsShopped.toggle()
                     print("ItemIsShooped value after click: \(self.entry.itemIsShopped)")
-                    guard let itemId = self.entry.itemDocid else {return}
-                    itemSelectedUpdateInDB(itemId)
+                    guard let itemDocumentId = self.entry.itemDocid else {return}
+                    itemSelectedUpdateInDB(itemDocumentId)
                     
                 },label: {
-                    Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square").font(Font.system(size:20))
+                    //To check if screen in Add mode to remove checkboxes
+                    if !isAddCartIconClicked{
+                    Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square")
+                        .font(Font.system(size:20))
                         .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
                         .padding()
+                    }
                 })
                
-               // TextEditor(text: self.$entry.itemName)
+                //Strikeout item details by checking the checkbox click status
                 
                 entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemName).fontWeight(.bold).font(.body)
-                
                 Spacer()
-                //TextEditor(text: self.$entry.itemQty)
                 entry.itemIsShopped ?
                     Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemQty).font(.body)
-                
-                //TextEditor(text: self.$entry.itemQtyType)
                 entry.itemIsShopped ?
-                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).padding() :
-                    Text(self.entry.itemQtyType).font(.body).padding()
+                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                    Text(self.entry.itemQtyType).font(.body)
+                
+                //Delete item button
+                Button(action:{deleteItemFromDB()})
+                {
+                    //Remove delete icon in Add item mode
+                    if !isAddCartIconClicked
+                    {
+                    Image(systemName: "trash").font(.title).foregroundColor(.white).frame(width:30,height:20)
+                    }
+                }.padding()
+                
+                
             }
             }
             }
         }
 }
+    //Delete individual item
+    func deleteItemFromDB(){
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        guard let itemDocumentId = self.entry.itemDocid else {return}
+        
+        if let index = self.listEntry.eachListItems.firstIndex(of:entry){
+            print("index value insside delete function: \(index)")
+            self.listEntry.eachListItems.remove(atOffsets: [index])
+        }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocumentId).delete(){
+            error in
+                if let error = error{
+                    print("Error deleting document for item selected : \(error)")
+                }else{
+                   print(" Deleted item from DB")
+                }
+        }
+        
+    }
     
+    //Update checkbox click status in DB
     func itemSelectedUpdateInDB(_ itemId:String)
     {
             print("Value of list docId: \(self.listEntry.docId!)")
