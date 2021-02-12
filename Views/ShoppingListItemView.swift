@@ -24,8 +24,9 @@ struct ShoppingListItemView : View {
     @State var isItemAddCardShown:Bool = false
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
-   
     
+    @State var isMicCardViewShown:Bool = false
+   
     var db = Firestore.firestore()
    
     //Text field for adding new item
@@ -44,7 +45,9 @@ struct ShoppingListItemView : View {
             
                 Button(action: {
                     print("mic button pressed")
-                }) {
+                    self.isMicCardViewShown.toggle()
+                })
+                 {
                 Image(systemName: "mic")
                     .font(Font.system(size:15).weight(.bold)).padding()
                     .frame(width:40,height:40)
@@ -101,6 +104,14 @@ struct ShoppingListItemView : View {
    
     var body: some View
     {
+        //Displaying MicCardView on Mic button click
+        if self.isMicCardViewShown{
+            VStack{}.sheet(isPresented: $isMicCardViewShown)
+            {
+                   MicCardView()
+            }
+        }
+       
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
@@ -120,7 +131,7 @@ struct ShoppingListItemView : View {
                             
                     }.onAppear(){ fetchItemsFromDB() }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
-                       .navigationBarItems(trailing:
+                      .navigationBarItems(trailing:
                         Button(action: {
                             print("Navigation ItemAdd button pressed...")
                             self.isItemAddCardShown.toggle()
