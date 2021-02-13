@@ -24,10 +24,11 @@ struct ShoppingListItemView : View {
     @State var isItemAddCardShown:Bool = false
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
-   
-    
+    @State var itemDocId : String
+    @State var ediShoppingListItemAlert = false
+    @State var itemName : String = ""
     var db = Firestore.firestore()
-   
+    
     //Text field for adding new item
       var newItemAddCard : some View{
        
@@ -113,11 +114,25 @@ struct ShoppingListItemView : View {
                         ForEach(self.listEntry.eachListItems)
                            {
                                items in
+                            {
                             RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
-                        }//.onDelete(perform: self.deleteItem(at:))
-                        .id(UUID())
-                            
+                    }()
+                        .contextMenu{
+                            Button(action: {
+                                itemDocId = items.itemDocid!
+                                self.ediShoppingListItemAlert = true
+                            }) {
+                                Text("Edit")
+                                
+                            }
+                            Button(action: {
+                            }) {
+                                Text("Cancel")
+                            }
+                        }
+                    }.onDelete(perform: self.deleteItem)
+                    .id(UUID())
                     }.onAppear(){ fetchItemsFromDB() }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
@@ -132,7 +147,26 @@ struct ShoppingListItemView : View {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         }.opacity(self.isAddItemMode ? 0 : 1))
             }
+        //show alert to update Item name
+        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
+                updateShoppingListItemsInDB()
+                })
     }
+    //update Item name in DB
+    func updateShoppingListItemsInDB(){
+           guard let currentUser = Auth.auth().currentUser?.uid else { return }
+           //guard let itemDocumentId = self.item.itemDocid else {return}
+           itemName = self.item.itemName
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
+               .updateData(["Item Name" : itemName])
+           { error in
+               if let error = error{
+                   print("error")
+               } else{
+                   print ("Data is inserted")
+               }
+           }
+       }
     
     //Function adds item to items list array
       func addNewItem()
@@ -158,12 +192,29 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-  /*  func deleteItem(at indexSet: IndexSet)
+    func deleteItem(at indexSet: IndexSet)
     {
+        print(listEntry.docId)
         print("Inside delete item function")
-        listEntry.eachListItems.remove(atOffsets: indexSet)
-    } */
-    
+             indexSet.forEach { index in
+                 let listItemDocId = listEntry.eachListItems[index]
+             guard let currentUser = Auth.auth().currentUser?.uid else { return }
+                print(currentUser)
+        print("Inside delete item function")
+                db.collection("Users").document(currentUser).collection("Lists")
+                    .document(listEntry.docId!)
+                    .collection("Items")
+                    .document(listItemDocId.itemDocid!)
+                    .delete{
+                error in
+                if let error = error{
+                    print(error.localizedDescription)
+                } else {
+                    print("deleteSuccess")
+                }
+            }
+    }
+}
     // Adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -177,8 +228,29 @@ struct ShoppingListItemView : View {
         }
     }
     
+// fetchItems using SnapshotListener
+    func fetchItemsFromDB() {
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addSnapshotListener { (querySnapshot, error) in
+            guard let documents = querySnapshot?.documents else {
+                print("No documents")
+                return
+            }
+            self.listEntry.eachListItems = documents.map { (queryDocumentSnapshot) -> Items in
+                let data = queryDocumentSnapshot.data()
+                let itemDocIdData = queryDocumentSnapshot.documentID
+                let itemNameData = data["Item Name"] as? String ?? ""
+                let itemQtyData = data["Item Qty"] as? String ?? ""
+                let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
+                let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
+                let ItemData = Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
+                return Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
+            }
+        }
+    }
     //Get All Items For List
-    func fetchItemsFromDB(){
+    /*func fetchItemsFromDB(){
+        print("Fetch")
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
             if let err = err{
@@ -200,7 +272,7 @@ struct ShoppingListItemView : View {
             }
             
         }
-    }
+    }*/
 }
 
     
@@ -309,6 +381,6 @@ struct RowView: View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
     }
 }

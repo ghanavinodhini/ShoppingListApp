@@ -1,42 +1,51 @@
 //
-//  AddNewListAlertView.swift
+//  EditShoppingListItemAlertView.swift
 //  ShoppingList
 //
-//  Created by Jayabharathi Jayaraman on 2021-02-03.
+//  Created by Jayabharathi Jayaraman on 2021-02-13.
 //
+
 import Foundation
 import SwiftUI
 
-struct AddNewListAlertView: View {
+struct EditShoppingListItemAlertView: View {
     
     let screenSize = UIScreen.main.bounds
     var title: String = ""
     @Binding var isShown: Bool
-    @Binding var listName: String
+    @Binding var shoppingListItem: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
-    
+    @State var itemQty:String = "0"
     
     var body: some View {
         
         VStack(alignment: .center) {
-            
             Text(title)
                 .font(.headline)
-            TextField("", text: $listName)
+            TextField("", text: $shoppingListItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            
+            VStack(alignment: .leading) {
+            HStack{
+            Text("Qty")
+            TextField("Qty", text:self.$itemQty)
+                .keyboardType(.numbersAndPunctuation)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .foregroundColor(.blue)
+                .fixedSize()
+            }
+            }
             HStack(alignment: .center) {
                 Button("Cancel") {
                     self.isShown = false
                     self.onCancel()
                 }.foregroundColor(.red)
-                
+                .frame(width: 55, height: 50, alignment: .center)
                 Divider()
-                Button("Add") {
+                Button("Update") {
                     self.isShown = false
-                    self.onAdd(self.listName)
-                    self.listName = ""
+                    self.onAdd(self.shoppingListItem)
+                    self.shoppingListItem = ""
                 }
             }
         }
@@ -52,8 +61,8 @@ struct AddNewListAlertView: View {
     }
 }
 
-struct AddNewListAlertView_Previews: PreviewProvider {
+struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""))
     }
 }

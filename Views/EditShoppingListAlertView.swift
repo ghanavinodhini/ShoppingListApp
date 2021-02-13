@@ -36,6 +36,7 @@ struct EditShoppingListAlertView: View {
                 Button("Update") {
                     self.isShown = false
                     self.onAdd(self.listName)
+                    self.listName = ""
                 }
             }
         }
