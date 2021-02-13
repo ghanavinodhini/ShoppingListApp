@@ -149,8 +149,8 @@ struct ShoppingListItemView : View {
             }
         //show alert to update Item name
         EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
-                updateShoppingListItemsInDB()
-                })
+            updateShoppingListItemsInDB()
+        }, itemQty: self.$newItemQty)
     }
     //update Item name in DB
     func updateShoppingListItemsInDB(){
@@ -158,12 +158,12 @@ struct ShoppingListItemView : View {
            //guard let itemDocumentId = self.item.itemDocid else {return}
            itemName = self.item.itemName
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
-               .updateData(["Item Name" : itemName])
+            .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty])
            { error in
                if let error = error{
                    print("error")
                } else{
-                   print ("Data is inserted")
+                   print ("Data is updated")
                }
            }
        }
@@ -325,14 +325,14 @@ struct RowView: View{
                     Text(self.entry.itemQtyType).font(.body)
                 
                 //Delete item button
-                Button(action:{deleteItemFromDB()})
+                /*Button(action:{deleteItemFromDB()})
                 {
                     //Remove delete icon in Add item mode
                     if !isAddCartIconClicked
                     {
                     Image(systemName: "trash").font(.title).foregroundColor(.white).frame(width:30,height:20)
                     }
-                }.padding()
+                }.padding()*/
                 
                 
             }
