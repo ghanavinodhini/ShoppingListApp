@@ -28,7 +28,7 @@ struct MicCardView: View {
         }
             VStack{
             //Prints voice text
-            Text("\(self.speechData.outputText)")
+                Text("\(self.speechData.speech.outputText)")
                 .font(.title)
                 .padding(.top,20)
            

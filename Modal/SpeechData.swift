@@ -9,23 +9,23 @@ import Foundation
 import Speech
 import SwiftUI
 
-/*struct Speech{
-    @State var outputText:String = ""
-}*/
+struct Speech{
+     var outputText:String = ""
+}
 
 public class SpeechData:ObservableObject
 {
     /* Variables **/
     @Published var isRecording:Bool = false
     @Published var button = SpeechButton()
-//@Published var speech = Speech()
+    @Published var speech = Speech()
     
  let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
  var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
  let authStat = SFSpeechRecognizer.authorizationStatus()
  var recognitionTask: SFSpeechRecognitionTask?
  let audioEngine = AVAudioEngine()
-   public var outputText:String = ""
+   //public var outputText:String = ""
     
     init(){
         
@@ -66,7 +66,7 @@ public class SpeechData:ObservableObject
     func startRecording(){
         
         // restarts the text
-        self.outputText = ""
+        self.speech.outputText = ""
         
         // Configure the audio session for the app.
         let audioSession = AVAudioSession.sharedInstance()
@@ -105,11 +105,11 @@ public class SpeechData:ObservableObject
         // Create a recognition task for the speech recognition session.
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest){ result, error in
             if (result != nil){
-                self.outputText = (result?.transcriptions[0].formattedString)!
+                self.speech.outputText = (result?.transcriptions[0].formattedString)!
             }
             if let result = result{
                 // Update the text view with the results.
-                self.outputText = result.transcriptions[0].formattedString
+                self.speech.outputText = result.transcriptions[0].formattedString
             }
             if error != nil {
                 // Stop recognizing speech if there is a problem.
