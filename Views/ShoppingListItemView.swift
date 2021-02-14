@@ -26,6 +26,8 @@ struct ShoppingListItemView : View {
     @State var isAddItemMode:Bool = false
     
     @State var isMicCardViewShown:Bool = false
+    
+    var speechData = SpeechData()
    
     var db = Firestore.firestore()
    
@@ -108,7 +110,8 @@ struct ShoppingListItemView : View {
         if self.isMicCardViewShown{
             VStack{}.sheet(isPresented: $isMicCardViewShown)
             {
-                   MicCardView()
+                //MicCardView(speechData: speechData)
+                MicCardView().environmentObject(SpeechData())
             }
         }
        
