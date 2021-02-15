@@ -36,6 +36,7 @@ struct AddNewListAlertView: View {
                 Button("Add") {
                     self.isShown = false
                     self.onAdd(self.listName)
+                    self.listName = ""
                 }
             }
         }
