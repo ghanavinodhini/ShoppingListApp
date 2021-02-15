@@ -10,6 +10,9 @@
 		05A38F1613667DDA9DFF0349 /* Pods_ShoppingList_ShoppingListUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9C8725D025D5CD0EF5B67DE /* Pods_ShoppingList_ShoppingListUITests.framework */; };
 		BCF06471A8B13458F2026906 /* Pods_ShoppingListTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43F69DEC0957BDEB21CCE9F2 /* Pods_ShoppingListTests.framework */; };
 		CB0635C2F2E90E8586D38100 /* Pods_ShoppingList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB31B10E14092577C6191667 /* Pods_ShoppingList.framework */; };
+		DA00B70825D6F20500039061 /* MicCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00B70725D6F20500039061 /* MicCardView.swift */; };
+		DA00B72225D8436F00039061 /* SpeechButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00B72125D8436F00039061 /* SpeechButton.swift */; };
+		DA00B72725D84CAD00039061 /* SpeechData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00B72625D84CAD00039061 /* SpeechData.swift */; };
 		DA71D8F925BC885D00F22D63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */; };
 		DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D92925BC98E600F22D63 /* ModelData.swift */; };
 		DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D95625C1602F00F22D63 /* MyListsView.swift */; };
@@ -58,6 +61,9 @@
 		7B30D187071E7867FE820B79 /* Pods-ShoppingList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShoppingList.debug.xcconfig"; path = "Target Support Files/Pods-ShoppingList/Pods-ShoppingList.debug.xcconfig"; sourceTree = "<group>"; };
 		A9C8725D025D5CD0EF5B67DE /* Pods_ShoppingList_ShoppingListUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShoppingList_ShoppingListUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB31B10E14092577C6191667 /* Pods_ShoppingList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ShoppingList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA00B70725D6F20500039061 /* MicCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicCardView.swift; sourceTree = "<group>"; };
+		DA00B72125D8436F00039061 /* SpeechButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechButton.swift; sourceTree = "<group>"; };
+		DA00B72625D84CAD00039061 /* SpeechData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechData.swift; sourceTree = "<group>"; };
 		DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DA71D92925BC98E600F22D63 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		DA71D95625C1602F00F22D63 /* MyListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListsView.swift; sourceTree = "<group>"; };
@@ -149,6 +155,8 @@
 				E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */,
 				E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */,
 				DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */,
+				DA00B70725D6F20500039061 /* MicCardView.swift */,
+				DA00B72125D8436F00039061 /* SpeechButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -160,6 +168,7 @@
 				E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */,
 				DA71D92925BC98E600F22D63 /* ModelData.swift */,
 				E25C7B0325D456DF0080240E /* Items.swift */,
+				DA00B72625D84CAD00039061 /* SpeechData.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -478,9 +487,12 @@
 				E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */,
 				E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */,
 				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,
+				DA00B70825D6F20500039061 /* MicCardView.swift in Sources */,
 				E28060D125C8B4E700BB9FD7 /* ShoppingList.swift in Sources */,
 				E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */,
+				DA00B72725D84CAD00039061 /* SpeechData.swift in Sources */,
 				E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */,
+				DA00B72225D8436F00039061 /* SpeechButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
