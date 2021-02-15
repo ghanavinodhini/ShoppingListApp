@@ -24,10 +24,10 @@ struct ShoppingListItemView : View {
     @State var isItemAddCardShown:Bool = false
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
+
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
     @State var itemName : String = ""
-
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
@@ -123,6 +123,7 @@ struct ShoppingListItemView : View {
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
+           
         }
             //List UI
             VStack(alignment: .leading)
@@ -151,9 +152,10 @@ struct ShoppingListItemView : View {
                         }
                     }.onDelete(perform: self.deleteItem)
                     .id(UUID())
+
                     }.onAppear(){ fetchItemsFromDB() }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
-                       .navigationBarItems(trailing:
+                      .navigationBarItems(trailing:
                         Button(action: {
                             print("Navigation ItemAdd Cart button pressed...")
                             self.isItemAddCardShown.toggle()
@@ -210,6 +212,7 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
+
     func deleteItem(at indexSet: IndexSet)
     {
         print(listEntry.docId)
@@ -233,6 +236,7 @@ struct ShoppingListItemView : View {
             }
     }
 }
+
     // Adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
