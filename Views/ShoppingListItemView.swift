@@ -24,7 +24,9 @@ struct ShoppingListItemView : View {
     @State var isItemAddCardShown:Bool = false
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
-   
+    
+    @State var isMicCardViewShown:Bool = false
+    var speechData = SpeechData()
     
     var db = Firestore.firestore()
    
@@ -44,7 +46,11 @@ struct ShoppingListItemView : View {
             
                 Button(action: {
                     print("mic button pressed")
-                }) {
+                    withAnimation{
+                        self.isMicCardViewShown.toggle() //toggle miccardview shown flag
+                    }
+                })
+                 {
                 Image(systemName: "mic")
                     .font(Font.system(size:15).weight(.bold)).padding()
                     .frame(width:40,height:40)
@@ -101,9 +107,19 @@ struct ShoppingListItemView : View {
    
     var body: some View
     {
+        //Displaying MicCardView on Mic button click
+        if self.isMicCardViewShown{
+            VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
+            {
+                MicCardView().environmentObject(SpeechData())
+            }
+        }
+      
+        //Displaying Card View if add cart clicked
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
+           
         }
             //List UI
             VStack(alignment: .leading)
@@ -115,14 +131,14 @@ struct ShoppingListItemView : View {
                                items in
                             RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
-                        }//.onDelete(perform: self.deleteItem(at:))
+                        }
                         .id(UUID())
                             
                     }.onAppear(){ fetchItemsFromDB() }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
-                       .navigationBarItems(trailing:
+                      .navigationBarItems(trailing:
                         Button(action: {
-                            print("Navigation ItemAdd button pressed...")
+                            print("Navigation ItemAdd Cart button pressed...")
                             self.isItemAddCardShown.toggle()
                             self.isAddCartIconClicked.toggle()
                             self.isAddItemMode.toggle()
@@ -158,11 +174,6 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-  /*  func deleteItem(at indexSet: IndexSet)
-    {
-        print("Inside delete item function")
-        listEntry.eachListItems.remove(atOffsets: indexSet)
-    } */
     
     // Adds item to DB
     func saveItemToDB(){
