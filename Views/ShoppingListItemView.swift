@@ -26,11 +26,7 @@ struct ShoppingListItemView : View {
     @State var isAddItemMode:Bool = false
     
     @State var isMicCardViewShown:Bool = false
-    
     var speechData = SpeechData()
-   // @State var micViewData : MicCardView
-   // var speech : Speech
-   
     
     var db = Firestore.firestore()
    
@@ -51,9 +47,8 @@ struct ShoppingListItemView : View {
                 Button(action: {
                     print("mic button pressed")
                     withAnimation{
-                        self.isMicCardViewShown.toggle() //toggle miccardview flag
+                        self.isMicCardViewShown.toggle() //toggle miccardview shown flag
                     }
-                   
                 })
                  {
                 Image(systemName: "mic")
@@ -116,11 +111,11 @@ struct ShoppingListItemView : View {
         if self.isMicCardViewShown{
             VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
             {
-                //MicCardView(speechData: speechData)
                 MicCardView().environmentObject(SpeechData())
             }
         }
-       
+      
+        //Displaying Card View if add cart clicked
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
@@ -136,7 +131,7 @@ struct ShoppingListItemView : View {
                                items in
                             RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
-                        }//.onDelete(perform: self.deleteItem(at:))
+                        }
                         .id(UUID())
                             
                     }.onAppear(){ fetchItemsFromDB() }
@@ -179,11 +174,6 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-  /*  func deleteItem(at indexSet: IndexSet)
-    {
-        print("Inside delete item function")
-        listEntry.eachListItems.remove(atOffsets: indexSet)
-    } */
     
     // Adds item to DB
     func saveItemToDB(){

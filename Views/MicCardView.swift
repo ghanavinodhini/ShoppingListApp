@@ -14,9 +14,10 @@ struct MicCardView: View {
    
     @State var isOkPressed:Bool = false
     @State var spokenText:String = ""
+    //@State var itemViewData : ShoppingListItemView
     
     var body: some View {
-        
+       
         ZStack
         {
             
@@ -42,12 +43,13 @@ struct MicCardView: View {
            
             Button(action: {
                 print("Ok button pressed in mic view")
-                self.isOkPressed.toggle()
-                self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
+                withAnimation{
+                    self.isOkPressed.toggle()
+                    self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
+                }
                 
                 if isOkPressed{
                     self.presentationMode.wrappedValue.dismiss()
-                  /*  NavigationLink(destination:ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))) {}*/
                 }
                 
             }) {
