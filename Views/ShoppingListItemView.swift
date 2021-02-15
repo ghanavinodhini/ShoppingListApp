@@ -27,6 +27,11 @@ struct ShoppingListItemView : View {
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
     @State var itemName : String = ""
+
+    
+    @State var isMicCardViewShown:Bool = false
+    var speechData = SpeechData()
+ 
     var db = Firestore.firestore()
     
     //Text field for adding new item
@@ -45,7 +50,11 @@ struct ShoppingListItemView : View {
             
                 Button(action: {
                     print("mic button pressed")
-                }) {
+                    withAnimation{
+                        self.isMicCardViewShown.toggle() //toggle miccardview shown flag
+                    }
+                })
+                 {
                 Image(systemName: "mic")
                     .font(Font.system(size:15).weight(.bold)).padding()
                     .frame(width:40,height:40)
@@ -102,6 +111,15 @@ struct ShoppingListItemView : View {
    
     var body: some View
     {
+        //Displaying MicCardView on Mic button click
+        if self.isMicCardViewShown{
+            VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
+            {
+                MicCardView().environmentObject(SpeechData())
+            }
+        }
+      
+        //Displaying Card View if add cart clicked
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
@@ -137,7 +155,7 @@ struct ShoppingListItemView : View {
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                        .navigationBarItems(trailing:
                         Button(action: {
-                            print("Navigation ItemAdd button pressed...")
+                            print("Navigation ItemAdd Cart button pressed...")
                             self.isItemAddCardShown.toggle()
                             self.isAddCartIconClicked.toggle()
                             self.isAddItemMode.toggle()
