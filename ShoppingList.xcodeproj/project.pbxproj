@@ -17,6 +17,7 @@
 		DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D92925BC98E600F22D63 /* ModelData.swift */; };
 		DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D95625C1602F00F22D63 /* MyListsView.swift */; };
 		DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */; };
+		DA891DEA25DBC0300023DC33 /* SaveSpokenTextData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA891DE925DBC0300023DC33 /* SaveSpokenTextData.swift */; };
 		E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */; };
 		E25C7B0425D456DF0080240E /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B0325D456DF0080240E /* Items.swift */; };
 		E25C7B4325D74E8A0080240E /* EditShoppingListItemAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */; };
@@ -68,6 +69,7 @@
 		DA71D92925BC98E600F22D63 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
 		DA71D95625C1602F00F22D63 /* MyListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListsView.swift; sourceTree = "<group>"; };
 		DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingMenuView.swift; sourceTree = "<group>"; };
+		DA891DE925DBC0300023DC33 /* SaveSpokenTextData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSpokenTextData.swift; sourceTree = "<group>"; };
 		DE6069F49CBA3BA2DCEF7C7E /* Pods-ShoppingList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShoppingList.release.xcconfig"; path = "Target Support Files/Pods-ShoppingList/Pods-ShoppingList.release.xcconfig"; sourceTree = "<group>"; };
 		E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListAlertView.swift; sourceTree = "<group>"; };
 		E25C7B0325D456DF0080240E /* Items.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				DA71D92925BC98E600F22D63 /* ModelData.swift */,
 				E25C7B0325D456DF0080240E /* Items.swift */,
 				DA00B72625D84CAD00039061 /* SpeechData.swift */,
+				DA891DE925DBC0300023DC33 /* SaveSpokenTextData.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,
 				DA00B70825D6F20500039061 /* MicCardView.swift in Sources */,
 				E28060D125C8B4E700BB9FD7 /* ShoppingList.swift in Sources */,
+				DA891DEA25DBC0300023DC33 /* SaveSpokenTextData.swift in Sources */,
 				E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */,
 				DA00B72725D84CAD00039061 /* SpeechData.swift in Sources */,
 				E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */,

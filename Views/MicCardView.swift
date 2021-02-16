@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MicCardView: View {
+/*struct MicCardView: View {
     
     @EnvironmentObject var speechData : SpeechData
     @Environment(\.presentationMode) var presentationMode
@@ -79,4 +79,4 @@ struct MicCardView_Previews: PreviewProvider {
     static var previews: some View {
         MicCardView().environmentObject(speechData)
     }
-}
+}*/

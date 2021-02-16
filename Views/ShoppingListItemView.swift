@@ -115,7 +115,8 @@ struct ShoppingListItemView : View {
         if self.isMicCardViewShown{
             VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
             {
-                MicCardView().environmentObject(SpeechData())
+                //MicCardView().environmentObject(SpeechData())
+                MicView(listEntry: listEntry).environmentObject(SpeechData())
             }
         }
       
@@ -398,6 +399,98 @@ struct RowView: View{
                 }
             }
     }
+}
+
+struct MicView : View{
+    @State var listEntry : ShoppingListEntry
+    
+    @EnvironmentObject var speechData : SpeechData
+   
+    @Environment(\.presentationMode) var presentationMode
+   
+    @State var isOkPressed:Bool = false
+    @State var spokenText:String = ""
+    var db = Firestore.firestore()
+    
+    var body: some View {
+        
+        ZStack
+        {
+            
+            VStack{
+                
+                HStack{
+                    Button(action: { self.presentationMode.wrappedValue.dismiss()})
+                    {
+                       /* Image(systemName: "xmark")
+                            .clipShape(Circle())*/
+                        Text("Close".uppercased()).fontWeight(.heavy).foregroundColor(.white).fixedSize()
+                    }.frame(width: 80, height: 50)
+                    .background(Color.blue)
+                    .padding(.top,10)
+                }
+           
+        }
+            VStack{
+            //Prints voice text
+                Text("\(self.speechData.speech.outputText)")
+                .font(.title)
+                .padding(.top,20)
+           
+            Button(action: {
+                print("Ok button pressed in mic view inside itemview file's struct")
+                print("List doc id inside item file's MicView struct: \(self.listEntry.docId!)")
+                withAnimation{
+                    self.isOkPressed.toggle()
+                    self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
+                }
+                
+                if isOkPressed{
+                    self.presentationMode.wrappedValue.dismiss()
+                    addSpokenTextToList()
+                }
+                
+            }) {
+                Text("Ok".uppercased())
+                    .fontWeight(.heavy)
+                    .frame(width:50,height:50)
+                    .foregroundColor(.white)
+                    .accentColor(Color.white)
+                
+            }.padding(.vertical,20)
+            .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/))
+            .cornerRadius(10)
+            
+            //Gets speech button
+              self.speechData.getButton()
+            
+        }
+        }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        
+    }
+    
+    func addSpokenTextToList(){
+        print("Inside ass Spoken function in Mic view struct")
+        let newSpokenItemEntry = Items(itemName: self.spokenText, itemQty: "0", itemQtyType: "KG", itemIsShopped: false)
+        self.listEntry.eachListItems.append(newSpokenItemEntry)
+        
+        saveSpokenTextToDB()
+        
+    }
+    
+    func saveSpokenTextToDB(){
+        print("Inside save function in Mic View struct")
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":self.spokenText, "Item Qty": "0", "Item Qty Type": "KG", "Item IsShopped": false]){ error in
+            if let error = error{
+                print("Error saving document: \(error)")
+            }else{
+               print("Data is inserted")
+            }
+            
+        }
+    }
+    
 }
 
 
