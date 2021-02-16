@@ -27,6 +27,7 @@ struct EditShoppingListItemAlertView: View {
                 .font(.headline)
             TextField("", text: $shoppingListItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack{
             HStack{
             Text("Qty")
             TextField("Qty", text:self.$itemQty)
@@ -35,19 +36,22 @@ struct EditShoppingListItemAlertView: View {
                 .foregroundColor(.black)
                 .fixedSize()
                 Spacer()
-                Text("Qty Type")
+                Text("Type")
+                    .font(.subheadline)
                 TextField("QtyType", text:self.$itemQtyType)
                     .keyboardType(.numbersAndPunctuation)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .foregroundColor(.black)
                     .fixedSize()
             }
+                Divider()
             HStack(alignment: .center) {
                 Button("Cancel") {
                     self.isShown = false
                     self.onCancel()
                 }.foregroundColor(.red)
                 .frame(width: 55, height: 50, alignment: .center)
+                Divider()
                 Button("Update") {
                     self.isShown = false
                     self.onAdd(self.shoppingListItem)
@@ -56,11 +60,12 @@ struct EditShoppingListItemAlertView: View {
                     self.shoppingListItem = ""
                     self.itemQty = ""
                     self.itemQtyType = ""
-                }.disabled(shoppingListItem.isEmpty)
+                }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
+            }
             }
         }
         .padding()
-        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.2)
+        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.25)
         .background(Color(#colorLiteral(red: 0.9268686175, green: 0.9416290522, blue: 0.9456014037, alpha: 1)))
         .clipShape(RoundedRectangle(cornerRadius: 20.0, style: .continuous))
         .offset(y: isShown ? 0 : screenSize.height)

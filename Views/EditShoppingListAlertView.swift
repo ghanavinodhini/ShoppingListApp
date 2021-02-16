@@ -41,7 +41,7 @@ struct EditShoppingListAlertView: View {
             }
         }
         .padding()
-        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.2)
+        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.175)
         .background(Color(#colorLiteral(red: 0.9268686175, green: 0.9416290522, blue: 0.9456014037, alpha: 1)))
         .clipShape(RoundedRectangle(cornerRadius: 20.0, style: .continuous))
         .offset(y: isShown ? 0 : screenSize.height)
