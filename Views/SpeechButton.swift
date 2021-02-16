@@ -16,6 +16,7 @@ struct SpeechButton: View {
     
     
     @EnvironmentObject var speechData : SpeechData
+  
    
     var body: some View {
         VStack{

@@ -30,7 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let contentView = ContentView().environmentObject(userData)
             
             let speechData = SpeechData()
-            let micView = MicCardView().environmentObject(speechData)
+           // let micView = MicCardView().environmentObject(speechData)
+            let micView = MicView(listEntry: ShoppingListEntry(listName: "Good Day")).environmentObject(speechData)
             
             window.rootViewController = UIHostingController(rootView: contentView)
             
