@@ -27,7 +27,7 @@ struct ShoppingListItemView : View {
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
     @State var itemName : String = ""
-
+    @State var itemQtyType:String = ""
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
@@ -41,7 +41,7 @@ struct ShoppingListItemView : View {
             ZStack(){
             Rectangle().foregroundColor(Color(.white))
                 .cornerRadius(5)
-                .frame(width: UIScreen.main.bounds.width - 35,height:40)
+                .frame(width: UIScreen.main.bounds.width - 60,height:40)
             HStack{
                 TextField("Enter New Item",text:self.$newItem)
                     .padding().foregroundColor(.black)
@@ -57,7 +57,7 @@ struct ShoppingListItemView : View {
                  {
                 Image(systemName: "mic")
                     .font(Font.system(size:15).weight(.bold)).padding()
-                    .frame(width:40,height:40)
+                    .frame(width:30,height:30)
                     .foregroundColor(.white)
                     .background(Color(.systemIndigo))
                     .cornerRadius(5)
@@ -70,7 +70,7 @@ struct ShoppingListItemView : View {
                     TextField("Qty", text:self.$newItemQty)
                         .keyboardType(.numbersAndPunctuation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .foregroundColor(.blue)
+                        .foregroundColor(.black)
                         .fixedSize()
                 Spacer()
                 
@@ -86,18 +86,32 @@ struct ShoppingListItemView : View {
                     .pickerStyle(WheelPickerStyle())
                     .padding()
                 }.padding(.leading, 60)
-                
+                HStack{
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
                         .background(Color(.darkGray))
                         .foregroundColor(.white)
                         .font(.title2)
-                        .padding(.bottom,50)
+                        //.padding(.bottom,50)
+                        .cornerRadius(10)
                  })
+                    Button(action: {
+                        self.isItemAddCardShown.toggle()
+                        self.isAddCartIconClicked.toggle()
+                        self.isAddItemMode.toggle()
+                    }) {
+                         Text("Close")
+                            .background(Color(.darkGray))
+                            .foregroundColor(.white)
+                            .font(.title2)
+                          //  .padding(.bottom,50)
+                            .cornerRadius(10)
+                     }
+                }
             }.padding()
               
         }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
-        .background(Color(.systemTeal))
+        .background(Color(.systemGreen))
         .cornerRadius(10)
         .shadow(radius:8)
         
@@ -168,7 +182,7 @@ struct ShoppingListItemView : View {
         //show alert to update Item name
         EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
-        }, itemQty: self.$newItemQty)
+        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
     //update Item name in DB
     func updateShoppingListItemsInDB(){
@@ -176,7 +190,7 @@ struct ShoppingListItemView : View {
            //guard let itemDocumentId = self.item.itemDocid else {return}
            itemName = self.item.itemName
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
-            .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty])
+            .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
            { error in
                if let error = error{
                    print("error")

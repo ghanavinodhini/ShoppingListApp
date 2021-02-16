@@ -37,7 +37,7 @@ struct EditShoppingListAlertView: View {
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
-                }
+                }.disabled(listName.isEmpty)
             }
         }
         .padding()
