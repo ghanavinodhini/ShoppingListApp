@@ -104,7 +104,7 @@ struct ShoppingListItemView : View {
         //Alert if no values entered in textfield
         .alert(isPresented: self.$showErrorMessage)
         {
-            Alert(title: Text("Error"), message: Text("Please enter some Item!"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Error"), message: Text("Please input some Item!"), dismissButton: .default(Text("OK")))
         }
     }
     
@@ -115,7 +115,8 @@ struct ShoppingListItemView : View {
         if self.isMicCardViewShown{
             VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
             {
-                MicCardView().environmentObject(SpeechData())
+                //MicCardView().environmentObject(SpeechData())
+                MicView(listEntry: listEntry).environmentObject(SpeechData())
             }
         }
       
@@ -215,13 +216,13 @@ struct ShoppingListItemView : View {
 
     func deleteItem(at indexSet: IndexSet)
     {
-        print(listEntry.docId)
+       
         print("Inside delete item function")
              indexSet.forEach { index in
                  let listItemDocId = listEntry.eachListItems[index]
              guard let currentUser = Auth.auth().currentUser?.uid else { return }
                 print(currentUser)
-        print("Inside delete item function")
+       
                 db.collection("Users").document(currentUser).collection("Lists")
                     .document(listEntry.docId!)
                     .collection("Items")
@@ -343,8 +344,8 @@ struct RowView: View{
                     Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemQty).font(.body)
                 entry.itemIsShopped ?
-                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
-                    Text(self.entry.itemQtyType).font(.body)
+                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).padding() :
+                    Text(self.entry.itemQtyType).font(.body).padding()
                 
                 //Delete item button
                 /*Button(action:{deleteItemFromDB()})
@@ -398,6 +399,118 @@ struct RowView: View{
                 }
             }
     }
+}
+
+//Struct for MicView
+struct MicView : View{
+    @State var listEntry : ShoppingListEntry
+    @EnvironmentObject var speechData : SpeechData
+    @Environment(\.presentationMode) var presentationMode
+   
+    @State var isOkPressed:Bool = false
+    @State var spokenText:String = ""
+    
+    @State var spokenItem:String = ""
+    @State var spokenQty:String = ""
+    @State var spokenQtyType:String = ""
+    
+    var db = Firestore.firestore()
+    
+    var body: some View {
+        
+        ZStack
+        {
+            
+            VStack{
+                
+                HStack{
+                    Button(action: { self.presentationMode.wrappedValue.dismiss()})
+                    {
+                       /* Image(systemName: "xmark")
+                            .clipShape(Circle())*/
+                        Text("Close".uppercased()).fontWeight(.heavy).foregroundColor(.white).fixedSize()
+                    }.frame(width: 80, height: 50)
+                    .background(Color.blue)
+                    .padding(.top,10)
+                }
+           
+        }
+            VStack{
+            //Prints voice text
+                Text("\(self.speechData.speech.outputText)")
+                .font(.title)
+                .padding(.top,20)
+           
+            Button(action: {
+                print("Ok button pressed in mic view inside itemview file's struct")
+                print("List doc id inside item file's MicView struct: \(self.listEntry.docId!)")
+                withAnimation{
+                    self.isOkPressed.toggle()
+                    self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
+                }
+                
+                if isOkPressed{
+                    //Split spoken text
+                    splitSpokenText(self.spokenText)
+                    addSpokenTextToList()
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+                
+            }) {
+                Text("Ok".uppercased())
+                    .fontWeight(.heavy)
+                    .frame(width:50,height:50)
+                    .foregroundColor(.white)
+                    .accentColor(Color.white)
+                
+            }.padding(.vertical,20)
+            .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/))
+            .cornerRadius(10)
+            
+            //Gets speech button
+              self.speechData.getButton()
+            
+        }
+        }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+}
+    
+    //Functions splits spoken text and stores in variables
+    func splitSpokenText(_ spokenText:String)
+    {
+        print("Inside split text function in Mic View")
+        
+        let spokenWords = self.spokenText.components(separatedBy: " ")
+        print("Spoken text inside split function: \(spokenText)")
+        print("Words array inside split function: \(spokenWords)")
+            self.spokenItem = spokenWords[0]
+            self.spokenQty = spokenWords[1]
+            self.spokenQtyType = spokenWords[2]
+    }
+    
+    //Function adds spoken text to Items array
+    func addSpokenTextToList(){
+        print("Inside ass Spoken function in Mic view struct")
+        let newSpokenItemEntry = Items(itemName: self.spokenItem, itemQty: self.spokenQty, itemQtyType: self.spokenQtyType, itemIsShopped: false)
+        self.listEntry.eachListItems.append(newSpokenItemEntry)
+        
+        saveSpokenTextToDB()
+        
+    }
+    
+    //Functions saves spoken text to DB
+    func saveSpokenTextToDB(){
+        print("Inside save function in Mic View struct")
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":self.spokenItem, "Item Qty": self.spokenQty, "Item Qty Type": self.spokenQtyType, "Item IsShopped": false]){ error in
+            if let error = error{
+                print("Error saving document: \(error)")
+            }else{
+               print("Data is inserted")
+            }
+            
+        }
+    }
+    
 }
 
 
