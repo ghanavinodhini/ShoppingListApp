@@ -469,6 +469,7 @@ struct MicView : View{
         
     }
     
+    //Function adds spoken text to Items array
     func addSpokenTextToList(){
         print("Inside ass Spoken function in Mic view struct")
         let newSpokenItemEntry = Items(itemName: self.spokenText, itemQty: "0", itemQtyType: "KG", itemIsShopped: false)
@@ -478,6 +479,7 @@ struct MicView : View{
         
     }
     
+    //Functions saves spoken text to DB
     func saveSpokenTextToDB(){
         print("Inside save function in Mic View struct")
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
