@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+
 struct EditShoppingListItemAlertView: View {
     
     let screenSize = UIScreen.main.bounds
@@ -17,8 +18,7 @@ struct EditShoppingListItemAlertView: View {
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
-    //@State var itemQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
-//    @State var selectedPickerValue = 0
+    @Binding var itemQtyType:String
     
     var body: some View {
         
@@ -27,6 +27,7 @@ struct EditShoppingListItemAlertView: View {
                 .font(.headline)
             TextField("", text: $shoppingListItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack{
             HStack{
             Text("Qty")
             TextField("Qty", text:self.$itemQty)
@@ -35,36 +36,36 @@ struct EditShoppingListItemAlertView: View {
                 .foregroundColor(.black)
                 .fixedSize()
                 Spacer()
-                /*Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
-                                               ForEach(0 ..< itemQtyType.count) {
-                                                  Text(self.itemQtyType[$0])
-                                               }
-                                   }.frame(height: 5)
-                                   .frame(width: 5)
-                                   .scaledToFit()
-                                   .scaleEffect(CGSize(width: 0.5, height: 0.8))
-                                   .foregroundColor(.white)
-                                   .pickerStyle(WheelPickerStyle())
-                                   .padding()*/
+                Text("Type")
+                    .font(.subheadline)
+                TextField("QtyType", text:self.$itemQtyType)
+                    .keyboardType(.numbersAndPunctuation)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .foregroundColor(.black)
+                    .fixedSize()
             }
+                Divider()
             HStack(alignment: .center) {
                 Button("Cancel") {
                     self.isShown = false
                     self.onCancel()
                 }.foregroundColor(.red)
                 .frame(width: 55, height: 50, alignment: .center)
+                Divider()
                 Button("Update") {
                     self.isShown = false
                     self.onAdd(self.shoppingListItem)
                     self.onAdd(self.itemQty)
-               //     self.onAdd(self.itemQtyType[selectedPickerValue])
+                   self.onAdd(self.itemQtyType)
                     self.shoppingListItem = ""
                     self.itemQty = ""
-                }
+                    self.itemQtyType = ""
+                }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
+            }
             }
         }
         .padding()
-        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.3)
+        .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.25)
         .background(Color(#colorLiteral(red: 0.9268686175, green: 0.9416290522, blue: 0.9456014037, alpha: 1)))
         .clipShape(RoundedRectangle(cornerRadius: 20.0, style: .continuous))
         .offset(y: isShown ? 0 : screenSize.height)
@@ -76,6 +77,6 @@ struct EditShoppingListItemAlertView: View {
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""), itemQty: .constant(""))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
     }
 }
