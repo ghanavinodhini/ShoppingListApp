@@ -514,13 +514,28 @@ struct MicView : View{
     func splitSpokenText(_ spokenText:String)
     {
         print("Inside split text function in Mic View")
-        
         let spokenWords = self.spokenText.components(separatedBy: " ")
+        
         print("Spoken text inside split function: \(spokenText)")
         print("Words array inside split function: \(spokenWords)")
+        print("Spoken text no. of words: \(spokenWords.count)")
+        
+        switch spokenWords.count
+        {
+        case 3:
             self.spokenItem = spokenWords[0]
             self.spokenQty = spokenWords[1]
             self.spokenQtyType = spokenWords[2]
+        case 2:
+            self.spokenItem = spokenWords[0]
+            self.spokenQty = spokenWords[1]
+            self.spokenQtyType = "KG"
+        default:
+            self.spokenItem = spokenWords[0]
+            self.spokenQty = "0"
+            self.spokenQtyType = "KG"
+        }
+           
     }
     
     //Function adds spoken text to Items array
