@@ -31,8 +31,9 @@ struct ShoppingListItemView : View {
     @State var itemQtyType:String = ""
     
     @State var isMicCardViewShown:Bool = false
+    
+    @State var item1 : String = "Morning"
     var speechData = SpeechData()
- 
     var db = Firestore.firestore()
     
     //Text field for adding new item
@@ -156,20 +157,26 @@ struct ShoppingListItemView : View {
                         .contextMenu{
                             Button(action: {
                                 itemDocId = items.itemDocid!
+                                self.item1 = items.itemName
+                                print("edit: \(item1)")
                                 self.ediShoppingListItemAlert = true
                             }) {
                                 Text("Edit")
                                 
                             }
                             Button(action: {
+                                print("cancel: \(item1)")
                             }) {
+                                
                                 Text("Cancel")
                             }
                         }
                     }.onDelete(perform: self.deleteItem)
                     .id(UUID())
 
-                    }.onAppear(){ fetchItemsFromDB() }
+                    }.onAppear(){ fetchItemsFromDB()
+                        print(item1)
+                    }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                       .navigationBarItems(trailing:
                         Button(action: {
@@ -179,14 +186,18 @@ struct ShoppingListItemView : View {
                             self.isAddItemMode.toggle()
                             print("ListName:\(self.listEntry.listName)")
                             print("List docID: \(self.$listEntry.docId)")
+                            print(item1)
                         }) {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         }.opacity(self.isAddItemMode ? 0 : 1))
+                
             }
         //show alert to update Item name
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
+       var shoppingListItem = "$\(self.$item1)"
+        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : "$\(self.$item1)", onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
+        
     }
     //update Item name in DB
     func updateShoppingListItemsInDB(){
@@ -531,6 +542,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", item1: "")
     }
 }

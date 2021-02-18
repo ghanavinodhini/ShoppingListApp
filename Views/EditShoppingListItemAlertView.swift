@@ -14,7 +14,7 @@ struct EditShoppingListItemAlertView: View {
     let screenSize = UIScreen.main.bounds
     var title: String = ""
     @Binding var isShown: Bool
-    @Binding var shoppingListItem: String
+    @State var shoppingListItem: String = "Hello"
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
@@ -57,10 +57,10 @@ struct EditShoppingListItemAlertView: View {
                     self.onAdd(self.shoppingListItem)
                     self.onAdd(self.itemQty)
                    self.onAdd(self.itemQtyType)
-                    self.shoppingListItem = ""
-                    self.itemQty = ""
-                    self.itemQtyType = ""
-                }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
+                 //   self.shoppingListItem = ""
+                  //  self.itemQty = ""
+                    //self.itemQtyType = ""
+                }
             }
             }
         }
@@ -77,6 +77,6 @@ struct EditShoppingListItemAlertView: View {
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""))
     }
 }
