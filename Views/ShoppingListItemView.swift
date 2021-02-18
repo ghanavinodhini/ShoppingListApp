@@ -11,7 +11,7 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
-    @EnvironmentObject var userModel : ModelData
+    @EnvironmentObject var userModel : UserModelData
     @State var listEntry : ShoppingListEntry
     
     @State var item : Items
@@ -152,7 +152,7 @@ struct ShoppingListItemView : View {
                            {
                                items in
                             {
-                            RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
+                            ItemRowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
                     }()
                         .contextMenu{
@@ -320,7 +320,7 @@ struct ShoppingListItemView : View {
 
     
     
-struct RowView: View{
+struct ItemRowView: View{
     @State var entry: Items
     @Binding var listEntry : ShoppingListEntry
     @Binding var isAddCartIconClicked:Bool
@@ -505,7 +505,7 @@ struct MicView : View{
         //Alert if no values entered in textfield
         .alert(isPresented: self.$showInputVoiceErrorMessage)
         {
-            Alert(title: Text("Error"), message: Text("Please input some Item!"), dismissButton: .default(Text("OK")))
+            Alert(title: Text("Error"), message: Text("Please input some Item by clicking on Mic button!Input item as (ItemName, Qty, Qtytype): Eg: Salt hundred grams"), dismissButton: .default(Text("OK")))
         }
         
 }
@@ -522,6 +522,10 @@ struct MicView : View{
         
         switch spokenWords.count
         {
+        case 4:
+            self.spokenItem = spokenWords[0] + spokenWords[1]
+            self.spokenQty = spokenWords[2]
+            self.spokenQtyType = spokenWords[3]
         case 3:
             self.spokenItem = spokenWords[0]
             self.spokenQty = spokenWords[1]

@@ -8,10 +8,10 @@
 import SwiftUI
 import Firebase
 
-struct ContentView: View {
+struct AuthenticationView: View {
     
    // @State var userModel = ModelData()
-    @EnvironmentObject var userModel : ModelData
+    @EnvironmentObject var userModel : UserModelData
     var body: some View {
         
         LoginView(userModel: userModel)
@@ -19,16 +19,16 @@ struct ContentView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        AuthenticationView()
     }
 }
 
 //Login View
 struct LoginView : View {
       
-      @ObservedObject var userModel : ModelData
+      @ObservedObject var userModel : UserModelData
       
       var body: some View{
           
@@ -131,7 +131,7 @@ struct LoginView : View {
 //SignUp View
 struct SignUpView : View {
     
-    @ObservedObject var userModel : ModelData
+    @ObservedObject var userModel : UserModelData
     @Environment(\.presentationMode) var presentationMode
     var body: some View{
         

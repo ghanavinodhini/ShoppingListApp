@@ -10,7 +10,7 @@ import Firebase
 
 
 struct MyListsView: View {
-    @ObservedObject var userModel : ModelData
+    @ObservedObject var userModel : UserModelData
     @State var showMenu = false
     
     var body: some View {
@@ -155,6 +155,6 @@ struct MainView : View
 
 struct MyListsView_Previews: PreviewProvider {
     static var previews: some View {
-        MyListsView(userModel: ModelData())
+        MyListsView(userModel: UserModelData())
     }
 }

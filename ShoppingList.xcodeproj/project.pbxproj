@@ -13,7 +13,7 @@
 		DA00B72225D8436F00039061 /* SpeechButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00B72125D8436F00039061 /* SpeechButton.swift */; };
 		DA00B72725D84CAD00039061 /* SpeechData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA00B72625D84CAD00039061 /* SpeechData.swift */; };
 		DA71D8F925BC885D00F22D63 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */; };
-		DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D92925BC98E600F22D63 /* ModelData.swift */; };
+		DA71D92A25BC98E600F22D63 /* UserModelData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D92925BC98E600F22D63 /* UserModelData.swift */; };
 		DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D95625C1602F00F22D63 /* MyListsView.swift */; };
 		DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */; };
 		E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */; };
@@ -26,7 +26,7 @@
 		E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */; };
 		E2C2BECB25BAF00400A1D5A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */; };
 		E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */; };
-		E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */; };
+		E2C2BECF25BAF00400A1D5A4 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECE25BAF00400A1D5A4 /* AuthenticationView.swift */; };
 		E2C2BED125BAF00900A1D5A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C2BED025BAF00900A1D5A4 /* Assets.xcassets */; };
 		E2C2BED425BAF00900A1D5A4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2C2BED325BAF00900A1D5A4 /* Preview Assets.xcassets */; };
 		E2C2BED725BAF00900A1D5A4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E2C2BED525BAF00900A1D5A4 /* LaunchScreen.storyboard */; };
@@ -63,7 +63,7 @@
 		DA00B72125D8436F00039061 /* SpeechButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechButton.swift; sourceTree = "<group>"; };
 		DA00B72625D84CAD00039061 /* SpeechData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechData.swift; sourceTree = "<group>"; };
 		DA71D8F825BC885D00F22D63 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		DA71D92925BC98E600F22D63 /* ModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelData.swift; sourceTree = "<group>"; };
+		DA71D92925BC98E600F22D63 /* UserModelData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModelData.swift; sourceTree = "<group>"; };
 		DA71D95625C1602F00F22D63 /* MyListsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyListsView.swift; sourceTree = "<group>"; };
 		DA71D96425C35EFA00F22D63 /* SlidingMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingMenuView.swift; sourceTree = "<group>"; };
 		DE6069F49CBA3BA2DCEF7C7E /* Pods-ShoppingList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ShoppingList.release.xcconfig"; path = "Target Support Files/Pods-ShoppingList/Pods-ShoppingList.release.xcconfig"; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 		E2C2BEC725BAF00400A1D5A4 /* ShoppingList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E2C2BECE25BAF00400A1D5A4 /* AuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationView.swift; sourceTree = "<group>"; };
 		E2C2BED025BAF00900A1D5A4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E2C2BED325BAF00900A1D5A4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		E2C2BED625BAF00900A1D5A4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 		DA71D91925BC955800F22D63 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E2C2BECE25BAF00400A1D5A4 /* ContentView.swift */,
+				E2C2BECE25BAF00400A1D5A4 /* AuthenticationView.swift */,
 				DA71D95625C1602F00F22D63 /* MyListsView.swift */,
 				E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */,
 				E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */,
@@ -163,7 +163,7 @@
 			children = (
 				E28060CB25C8B4B100BB9FD7 /* ShoppingListEntry.swift */,
 				E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */,
-				DA71D92925BC98E600F22D63 /* ModelData.swift */,
+				DA71D92925BC98E600F22D63 /* UserModelData.swift */,
 				E25C7B0325D456DF0080240E /* Items.swift */,
 				DA00B72625D84CAD00039061 /* SpeechData.swift */,
 			);
@@ -477,7 +477,7 @@
 				E2C2BECB25BAF00400A1D5A4 /* AppDelegate.swift in Sources */,
 				E28060CC25C8B4B100BB9FD7 /* ShoppingListEntry.swift in Sources */,
 				DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */,
-				DA71D92A25BC98E600F22D63 /* ModelData.swift in Sources */,
+				DA71D92A25BC98E600F22D63 /* UserModelData.swift in Sources */,
 				E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */,
 				E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */,
 				E25C7B0425D456DF0080240E /* Items.swift in Sources */,
@@ -487,7 +487,7 @@
 				E28060D125C8B4E700BB9FD7 /* ShoppingList.swift in Sources */,
 				E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */,
 				DA00B72725D84CAD00039061 /* SpeechData.swift in Sources */,
-				E2C2BECF25BAF00400A1D5A4 /* ContentView.swift in Sources */,
+				E2C2BECF25BAF00400A1D5A4 /* AuthenticationView.swift in Sources */,
 				DA00B72225D8436F00039061 /* SpeechButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

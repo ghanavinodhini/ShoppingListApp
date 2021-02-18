@@ -26,8 +26,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             
-            let userData = ModelData()
-            let contentView = ContentView().environmentObject(userData)
+            let userData = UserModelData()
+            let contentView = AuthenticationView().environmentObject(userData)
             
             let speechData = SpeechData()
            // let micView = MicCardView().environmentObject(speechData)
