@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SlidingMenuView: View {
    // @EnvironmentObject var userModel : ModelData
-    @ObservedObject var userModel: ModelData
+    @ObservedObject var userModel: UserModelData
     var body: some View {
        
         VStack()
@@ -29,7 +29,7 @@ struct SlidingMenuView: View {
                  
                     if !userModel.isLogin
                     {
-                        NavigationLink(destination: ContentView()){}
+                        NavigationLink(destination: AuthenticationView()){}
                             
                     }
                 

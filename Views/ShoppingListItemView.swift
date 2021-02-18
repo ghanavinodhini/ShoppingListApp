@@ -11,7 +11,7 @@ import Firebase
 
 struct ShoppingListItemView : View {
     
-    @EnvironmentObject var userModel : ModelData
+    @EnvironmentObject var userModel : UserModelData
     @State var listEntry : ShoppingListEntry
     
     @State var item : Items
@@ -136,12 +136,14 @@ struct ShoppingListItemView : View {
         }
       
         //Displaying Card View if add cart clicked
+       
         if self.isItemAddCardShown
         {
                 newItemAddCard.padding()
            
         }
             //List UI
+        ZStack{
             VStack(alignment: .leading)
             {
                 List
@@ -150,7 +152,7 @@ struct ShoppingListItemView : View {
                            {
                                items in
                             {
-                            RowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
+                            ItemRowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
                            
                     }()
                         .contextMenu{
@@ -182,12 +184,15 @@ struct ShoppingListItemView : View {
                         }) {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         }.opacity(self.isAddItemMode ? 0 : 1))
+            
             }
         //show alert to update Item name
         EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
+}
+        
     //update Item name in DB
     func updateShoppingListItemsInDB(){
            guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -315,7 +320,7 @@ struct ShoppingListItemView : View {
 
     
     
-struct RowView: View{
+struct ItemRowView: View{
     @State var entry: Items
     @Binding var listEntry : ShoppingListEntry
     @Binding var isAddCartIconClicked:Bool
@@ -324,14 +329,15 @@ struct RowView: View{
     
     var body: some View {
         
-        ScrollView{
+       // ScrollView{
+           
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
                     .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.green]),startPoint: .topLeading,endPoint: .bottomTrailing))
                         .padding(.horizontal, 4)
                         .shadow(color: Color.black, radius: 3, x: 3, y: 3)
-
+                    
             HStack(){
                 Button(action: {
                     print("Checkbox clicked")
@@ -359,8 +365,9 @@ struct RowView: View{
                     Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                 Text(self.entry.itemQty).font(.body)
                 entry.itemIsShopped ?
-                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/).padding() :
-                    Text(self.entry.itemQtyType).font(.body).padding()
+                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                    Text(self.entry.itemQtyType).font(.body)
+                    //.padding()
                 
                 //Delete item button
                 /*Button(action:{deleteItemFromDB()})
@@ -373,10 +380,10 @@ struct RowView: View{
                 }.padding()*/
                 
                 
-            }
-            }
+            }.padding(.trailing,5)
             }
         }
+       // }
 }
     //Delete individual item
     func deleteItemFromDB(){
@@ -428,6 +435,7 @@ struct MicView : View{
     @State var spokenItem:String = ""
     @State var spokenQty:String = ""
     @State var spokenQtyType:String = ""
+    @State var showInputVoiceErrorMessage = false
     
     var db = Firestore.firestore()
     
@@ -465,13 +473,20 @@ struct MicView : View{
                 }
                 
                 if isOkPressed{
+                    if self.spokenText.isEmpty{
+                        self.showInputVoiceErrorMessage.toggle()
+                      return
+                    }else{
+                        self.showInputVoiceErrorMessage = false
                     //Split spoken text
                     splitSpokenText(self.spokenText)
                     addSpokenTextToList()
                     self.presentationMode.wrappedValue.dismiss()
                 }
+                }
                 
-            }) {
+            })
+            {
                 Text("Ok".uppercased())
                     .fontWeight(.heavy)
                     .frame(width:50,height:50)
@@ -481,25 +496,50 @@ struct MicView : View{
             }.padding(.vertical,20)
             .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/))
             .cornerRadius(10)
-            
+                
             //Gets speech button
               self.speechData.getButton()
             
         }
         }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        //Alert if no values entered in textfield
+        .alert(isPresented: self.$showInputVoiceErrorMessage)
+        {
+            Alert(title: Text("Error"), message: Text("Please input some Item by clicking on Mic button!Input item as (ItemName, Qty, Qtytype): Eg: Salt hundred grams"), dismissButton: .default(Text("OK")))
+        }
+        
 }
     
     //Functions splits spoken text and stores in variables
     func splitSpokenText(_ spokenText:String)
     {
         print("Inside split text function in Mic View")
-        
         let spokenWords = self.spokenText.components(separatedBy: " ")
+        
         print("Spoken text inside split function: \(spokenText)")
         print("Words array inside split function: \(spokenWords)")
+        print("Spoken text no. of words: \(spokenWords.count)")
+        
+        switch spokenWords.count
+        {
+        case 4:
+            self.spokenItem = spokenWords[0] + spokenWords[1]
+            self.spokenQty = spokenWords[2]
+            self.spokenQtyType = spokenWords[3]
+        case 3:
             self.spokenItem = spokenWords[0]
             self.spokenQty = spokenWords[1]
             self.spokenQtyType = spokenWords[2]
+        case 2:
+            self.spokenItem = spokenWords[0]
+            self.spokenQty = spokenWords[1]
+            self.spokenQtyType = "KG"
+        default:
+            self.spokenItem = spokenWords[0]
+            self.spokenQty = "0"
+            self.spokenQtyType = "KG"
+        }
+           
     }
     
     //Function adds spoken text to Items array

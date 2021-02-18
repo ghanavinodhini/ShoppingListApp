@@ -10,9 +10,7 @@ import Firebase
 
 
 
-// MVVM Model
-
-class ModelData : ObservableObject
+class UserModelData : ObservableObject
 {
     @Published var userName_SignUp = ""
     @Published var email = ""
