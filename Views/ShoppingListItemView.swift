@@ -31,8 +31,7 @@ struct ShoppingListItemView : View {
     @State var itemQtyType:String = ""
     
     @State var isMicCardViewShown:Bool = false
-    @State var shoppingListItemAlert: EditShoppingListItemAlertView
-    @State var item1 : String = "Morning"
+
     var speechData = SpeechData()
     var db = Firestore.firestore()
     
@@ -157,15 +156,14 @@ struct ShoppingListItemView : View {
                         .contextMenu{
                             Button(action: {
                                 itemDocId = items.itemDocid!
-                                self.item1 = items.itemName
-                                print("edit: \(item1)")
+        
                                 self.ediShoppingListItemAlert = true
                             }) {
                                 Text("Edit")
                                 
                             }
                             Button(action: {
-                                print("cancel: \(item1)")
+        
                             }) {
                                 
                                 Text("Cancel")
@@ -175,7 +173,7 @@ struct ShoppingListItemView : View {
                     .id(UUID())
 
                     }.onAppear(){ fetchItemsFromDB()
-                        print(item1)
+        
                     }
                         .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
                       .navigationBarItems(trailing:
@@ -186,7 +184,7 @@ struct ShoppingListItemView : View {
                             self.isAddItemMode.toggle()
                             print("ListName:\(self.listEntry.listName)")
                             print("List docID: \(self.$listEntry.docId)")
-                            print(item1)
+        
                         }) {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         }.opacity(self.isAddItemMode ? 0 : 1))
@@ -194,7 +192,7 @@ struct ShoppingListItemView : View {
         //show alert to update Item name
        //var shoppingListItem = "$\(self.$item1)"
        
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : self.item.itemName, onAdd: {_ in
+        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : self.$item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
        
@@ -542,6 +540,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", shoppingListItemAlert: EditShoppingListItemAlertView(isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant("")))
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
     }
 }

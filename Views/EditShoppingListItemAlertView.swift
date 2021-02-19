@@ -14,7 +14,7 @@ struct EditShoppingListItemAlertView: View {
     let screenSize = UIScreen.main.bounds
     var title: String = ""
     @Binding var isShown: Bool
-    @State var shoppingListItem: String
+    @Binding var shoppingListItem: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
@@ -85,6 +85,6 @@ struct EditShoppingListItemAlertView: View {
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant("") )
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant("") )
     }
 }
