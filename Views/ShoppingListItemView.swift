@@ -31,7 +31,7 @@ struct ShoppingListItemView : View {
     @State var itemQtyType:String = ""
     
     @State var isMicCardViewShown:Bool = false
-    
+    @State var shoppingListItemAlert: EditShoppingListItemAlertView
     @State var item1 : String = "Morning"
     var speechData = SpeechData()
     var db = Firestore.firestore()
@@ -190,14 +190,16 @@ struct ShoppingListItemView : View {
                         }) {
                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                         }.opacity(self.isAddItemMode ? 0 : 1))
-                
             }
         //show alert to update Item name
-       var shoppingListItem = "$\(self.$item1)"
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : "$\(self.$item1)", onAdd: {_ in
+       //var shoppingListItem = "$\(self.$item1)"
+        ZStack{
+        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : self.item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
-        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
-        
+        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType, item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
+        }.onAppear(){
+            shoppingListItemAlert.shoppingListItem = "Xcode"
+        }
     }
     //update Item name in DB
     func updateShoppingListItemsInDB(){
@@ -542,6 +544,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", item1: "")
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", shoppingListItemAlert: EditShoppingListItemAlertView(isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false)))
     }
 }

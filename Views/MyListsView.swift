@@ -61,7 +61,7 @@ struct MainView : View
                 List(){
                     ForEach(shoppingList.entries) { entry in
                         NavigationLink(
-                            destination: ShoppingListItemView(listEntry: entry, item: item, itemDocId: "", item1: "")){
+                            destination: ShoppingListItemView(listEntry: entry, item: item, itemDocId: "", shoppingListItemAlert: EditShoppingListItemAlertView(isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false)))){
                             ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                             Button(action: {

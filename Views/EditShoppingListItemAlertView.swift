@@ -14,12 +14,12 @@ struct EditShoppingListItemAlertView: View {
     let screenSize = UIScreen.main.bounds
     var title: String = ""
     @Binding var isShown: Bool
-    @State var shoppingListItem: String = "Hello"
+    @State var shoppingListItem: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
     @Binding var itemQtyType:String
-    
+    @State var item : Items 
     var body: some View {
         
         VStack(alignment: .center) {
@@ -27,6 +27,9 @@ struct EditShoppingListItemAlertView: View {
                 .font(.headline)
             TextField("", text: $shoppingListItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .onAppear(){
+                    setContent()
+                }
             VStack{
             HStack{
             Text("Qty")
@@ -74,9 +77,14 @@ struct EditShoppingListItemAlertView: View {
         .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
         
     }
+    
+    func setContent(){
+        print("item: (item.itemName)")
+        self.shoppingListItem = item.itemName
+    }
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
     }
 }
