@@ -193,13 +193,11 @@ struct ShoppingListItemView : View {
             }
         //show alert to update Item name
        //var shoppingListItem = "$\(self.$item1)"
-        ZStack{
+       
         EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem : self.item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
-        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType, item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
-        }.onAppear(){
-            shoppingListItemAlert.shoppingListItem = "Xcode"
-        }
+        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
+       
     }
     //update Item name in DB
     func updateShoppingListItemsInDB(){
@@ -544,6 +542,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", shoppingListItemAlert: EditShoppingListItemAlertView(isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false)))
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", shoppingListItemAlert: EditShoppingListItemAlertView(isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant("")))
     }
 }

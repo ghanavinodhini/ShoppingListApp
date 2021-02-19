@@ -19,7 +19,7 @@ struct EditShoppingListItemAlertView: View {
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
     @Binding var itemQtyType:String
-    @State var item : Items 
+
     var body: some View {
         
         VStack(alignment: .center) {
@@ -79,12 +79,12 @@ struct EditShoppingListItemAlertView: View {
     }
     
     func setContent(){
-        print("item: (item.itemName)")
-        self.shoppingListItem = item.itemName
+       
+       
     }
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant(""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: "", itemQty: .constant(""), itemQtyType: .constant("") )
     }
 }
