@@ -18,7 +18,7 @@ struct ShoppingListItemView : View {
     @State var newItem:String = ""
     @State var showErrorMessage = false
     @State var newItemQty:String = "0"
-    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans","Rolls"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
@@ -32,7 +32,11 @@ struct ShoppingListItemView : View {
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
- 
+    
+    //For autocomplete txtfield
+    var autoCompleteData : [String]
+    @State var isSearchRowSelected:Bool = false
+    
     var db = Firestore.firestore()
     
     //Text field for adding new item
@@ -44,8 +48,28 @@ struct ShoppingListItemView : View {
                 .cornerRadius(5)
                 .frame(width: UIScreen.main.bounds.width - 60,height:40)
             HStack{
-                TextField("Enter New Item",text:self.$newItem)
-                    .padding().foregroundColor(.black)
+                TextField("Enter New Item",text:self.$newItem, onEditingChanged: { isEditing in
+                            self.isSearchRowSelected = false
+                    
+                }).padding().foregroundColor(.black)
+                
+                //Autosuggestion List
+                if self.newItem != ""
+                {
+                    List(self.autoCompleteData.filter{$0.lowercased().contains(self.newItem.lowercased())},id: \.self){ selectedItem in
+                        Text(selectedItem)
+                            .onTapGesture(perform: {
+                            print("selected value: \(selectedItem)")
+                            self.newItem = selectedItem
+                            self.isSearchRowSelected = true
+                            print("SearchText value: \(self.newItem)")
+                        }).foregroundColor(.red)
+                   
+                }.frame(height: 90)
+                    .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show list on item selected
+                
+                }
+                
                 
             Spacer()
             
@@ -68,7 +92,9 @@ struct ShoppingListItemView : View {
             VStack{
                 HStack{
                     Text("Qty:")
-                    TextField("Qty", text:self.$newItemQty)
+                    TextField("Qty", text:self.$newItemQty, onEditingChanged: { isEditing in
+                                self.isSearchRowSelected = true
+                    })
                         .keyboardType(.numbersAndPunctuation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundColor(.black)
@@ -100,6 +126,7 @@ struct ShoppingListItemView : View {
                         self.isItemAddCardShown.toggle()
                         self.isAddCartIconClicked.toggle()
                         self.isAddItemMode.toggle()
+                        self.isSearchRowSelected.toggle()
                     }) {
                          Text("Close")
                             .background(Color(.darkGray))
@@ -111,7 +138,7 @@ struct ShoppingListItemView : View {
                 }
             }.padding()
               
-        }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
+        }.frame(width:  UIScreen.main.bounds.width - 32, height: 230, alignment: .top)
         .background(Color(.systemGreen))
         .cornerRadius(10)
         .shadow(radius:8)
@@ -192,7 +219,9 @@ struct ShoppingListItemView : View {
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
 }
-        
+
+
+   
     //update Item name in DB
     func updateShoppingListItemsInDB(){
            guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -571,6 +600,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", autoCompleteData: autoCompleteData)
     }
 }
