@@ -24,7 +24,7 @@ struct AddNewListAlertView: View {
         formatter.dateStyle = .short
             return formatter
         }
-    
+   
     var body: some View {
         
         VStack(alignment: .center) {
@@ -51,8 +51,18 @@ struct AddNewListAlertView: View {
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
+                    let myList = MainView(entry: ShoppingListEntry(listName: "Bra dag", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
+                    //myList.dueDate = self.dueDate
+                    myList.sendNotification()
                     //self.date = nil
                     //self.dueDate = ""
+                    //let entry = ShoppingListEntry(listName: "")
+                    //let date = dateFormatter.string(from: entry.date)
+                    //let  userModel = UserModelData()
+                   /* if self.dueDate == date {
+                        let localNotificationManager = LocalNotificationManager()
+                        localNotificationManager.sendNotification(title: "Reminder", subtitle: ("\(userModel.currentUserName)you have a shopping list to buy today!!"), body: self.listName, launchIn: 5)
+                    }*/
                 }.disabled(listName.isEmpty)
             }
         }
