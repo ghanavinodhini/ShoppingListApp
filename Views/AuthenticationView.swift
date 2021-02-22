@@ -10,7 +10,6 @@ import Firebase
 
 struct AuthenticationView: View {
     
-   // @State var userModel = ModelData()
     @EnvironmentObject var userModel : UserModelData
     var body: some View {
         
@@ -115,7 +114,6 @@ struct LoginView : View {
         }.fullScreenCover(isPresented: $userModel.isLogin)
         {
             MyListsView(userModel: userModel)
-            //, entry: ListEntry(listTitle: "Bra dag")
             
         }
           // Alerts for Login button validate fields
@@ -133,6 +131,7 @@ struct SignUpView : View {
     
     @ObservedObject var userModel : UserModelData
     @Environment(\.presentationMode) var presentationMode
+    
     var body: some View{
         
         ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {

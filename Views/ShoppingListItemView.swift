@@ -320,31 +320,6 @@ struct ShoppingListItemView : View {
             }
         }
     }
-    //Get All Items For List
-    /*func fetchItemsFromDB(){
-        print("Fetch")
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
-            if let err = err{
-                print("Error getting document: \(err)")
-            }else{
-                for document in snapshot!.documents{
-                    print("\(document.documentID) : \(document.data())")
-                    
-                    let data = document.data()
-                    let itemDocIdData = document.documentID
-                    let itemNameData = data["Item Name"] as? String ?? ""
-                    let itemQtyData = data["Item Qty"] as? String ?? ""
-                    let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
-                    let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
-                    let ItemData = Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
-                    
-                    self.listEntry.eachListItems.append(ItemData)
-                }
-            }
-            
-        }
-    }*/
 }
 
     
@@ -396,23 +371,10 @@ struct ItemRowView: View{
                 entry.itemIsShopped ?
                     Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                     Text(self.entry.itemQtyType).font(.body)
-                    //.padding()
-                
-                //Delete item button
-                /*Button(action:{deleteItemFromDB()})
-                {
-                    //Remove delete icon in Add item mode
-                    if !isAddCartIconClicked
-                    {
-                    Image(systemName: "trash").font(.title).foregroundColor(.white).frame(width:30,height:20)
-                    }
-                }.padding()*/
-                
-                
+                   
             }.padding(.trailing,5)
             }
         }
-       // }
 }
     //Delete individual item
     func deleteItemFromDB(){
@@ -472,20 +434,18 @@ struct MicView : View{
         
         ZStack
         {
-            
-            VStack{
-                
-                HStack{
-                    Button(action: { self.presentationMode.wrappedValue.dismiss()})
+            GeometryReader{ p in
+            VStack(alignment: .leading){
+                    HStack{
+                    Button(action: {self.presentationMode.wrappedValue.dismiss()})
                     {
-                       /* Image(systemName: "xmark")
-                            .clipShape(Circle())*/
-                        Text("Close".uppercased()).fontWeight(.heavy).foregroundColor(.white).fixedSize()
-                    }.frame(width: 80, height: 50)
-                    .background(Color.blue)
-                    .padding(.top,10)
-                }
-           
+                        Image(systemName: "xmark.circle.fill").resizable()
+                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            .frame(width: 30, height: 30)
+                    }
+                    .padding(.leading,20)
+                }.padding(.top,80)
+            }
         }
             VStack{
             //Prints voice text
@@ -531,6 +491,7 @@ struct MicView : View{
             
         }
         }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        
         //Alert if no values entered in textfield
         .alert(isPresented: self.$showInputVoiceErrorMessage)
         {
