@@ -11,7 +11,7 @@ import SwiftUI
 
 
 var autoCompleteData = ["Fruits","Vegetables","Rice","Rice flour","Apple","Oranges","Olives","Watermemlon","Melon","Cucumber","Dhal","Sugar","Salt","Oil","Onions",
-"Tomatoes","Garlic","Ginger","Potatoes","Mint leaves","Coriander","Pineapple","Papaya","Banana","Bedspread","Candles","Drumsticks","Egg","Eraser","Fanta","Fish","Hooks","Helmet","Icetray","Jackfruit","Kale","Kit-kat","Lemon","Nuts","Tea powder","Umbrella","Vaser"]
+"Tomatoes","Garlic","Ginger","Potatoes","Mint leaves","Coriander","Pineapple","Papaya","Banana","Bedspread","Candles","Drumsticks","Egg","Eraser","Fanta","Fish","Hooks","Helmet","Icetray","Jackfruit","Kale","Kit-kat","Lemon","Nuts","Tea powder","Umbrella","Vaser","Beetroot","Spoons","Fork","Knife"]
 
 
 

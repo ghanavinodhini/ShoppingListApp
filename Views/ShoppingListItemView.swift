@@ -53,7 +53,7 @@ struct ShoppingListItemView : View {
                     
                 }).padding().foregroundColor(.black)
                 
-                //Autosuggestion List
+                //AutoSearchsuggestion List
                 if self.newItem != ""
                 {
                     List(self.autoCompleteData.filter{$0.lowercased().contains(self.newItem.lowercased())},id: \.self){ selectedItem in
@@ -66,7 +66,7 @@ struct ShoppingListItemView : View {
                         }).foregroundColor(.red)
                    
                 }.frame(height: 90)
-                    .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show list on item selected
+                    .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show autoSearchlist on item selected
                 
                 }
                 
@@ -116,11 +116,11 @@ struct ShoppingListItemView : View {
                 HStack{
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
-                        .background(Color(.darkGray))
+                        .background(Color(.systemBlue))
                         .foregroundColor(.white)
                         .font(.title2)
                         //.padding(.bottom,50)
-                        .cornerRadius(10)
+                        .cornerRadius(5)
                  })
                     Button(action: {
                         self.isItemAddCardShown.toggle()
@@ -129,11 +129,11 @@ struct ShoppingListItemView : View {
                         self.isSearchRowSelected.toggle()
                     }) {
                          Text("Close")
-                            .background(Color(.darkGray))
+                            .background(Color(.systemBlue))
                             .foregroundColor(.white)
                             .font(.title2)
                           //  .padding(.bottom,50)
-                            .cornerRadius(10)
+                            .cornerRadius(5)
                      }
                 }
             }.padding()
@@ -214,7 +214,7 @@ struct ShoppingListItemView : View {
             
             }
         //show alert to update Item name
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
+            EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
