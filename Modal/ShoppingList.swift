@@ -29,9 +29,10 @@ class ShoppingList : ObservableObject {
             self.entries = documents.map { (queryDocumentSnapshot) -> ShoppingListEntry in
                 let data = queryDocumentSnapshot.data()
                 let listName = data["listName"] as? String ?? ""
+                let dueDate = data["dueDate"] as? String ?? ""
                 let docID = queryDocumentSnapshot.documentID
-                print(docID)
-                return ShoppingListEntry(docId: docID, listName: listName)
+               // print(docID)
+                return ShoppingListEntry(docId: docID, listName: listName, dueDate: dueDate)
                 
             }
         }

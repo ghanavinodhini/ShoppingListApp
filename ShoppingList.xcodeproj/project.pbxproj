@@ -19,11 +19,13 @@
 		E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */; };
 		E25C7B0425D456DF0080240E /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B0325D456DF0080240E /* Items.swift */; };
 		E25C7B4325D74E8A0080240E /* EditShoppingListItemAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */; };
+		E25C7C3025DFF5BC0080240E /* DueDateDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */; };
 		E28060CC25C8B4B100BB9FD7 /* ShoppingListEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060CB25C8B4B100BB9FD7 /* ShoppingListEntry.swift */; };
 		E28060D125C8B4E700BB9FD7 /* ShoppingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */; };
 		E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */; };
 		E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */; };
 		E294FDDC25CB48D30018CEBA /* ShoppingListCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */; };
+		E2B58CFB25E3D84B00C44592 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B58CFA25E3D84B00C44592 /* LocalNotificationManager.swift */; };
 		E2C2BECB25BAF00400A1D5A4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */; };
 		E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */; };
 		E2C2BECF25BAF00400A1D5A4 /* AuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C2BECE25BAF00400A1D5A4 /* AuthenticationView.swift */; };
@@ -70,11 +72,13 @@
 		E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListAlertView.swift; sourceTree = "<group>"; };
 		E25C7B0325D456DF0080240E /* Items.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListItemAlertView.swift; sourceTree = "<group>"; };
+		E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueDateDatePicker.swift; sourceTree = "<group>"; };
 		E28060CB25C8B4B100BB9FD7 /* ShoppingListEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntry.swift; sourceTree = "<group>"; };
 		E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingList.swift; sourceTree = "<group>"; };
 		E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListItemView.swift; sourceTree = "<group>"; };
 		E28060E525C9FEDD00BB9FD7 /* AddNewListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewListAlertView.swift; sourceTree = "<group>"; };
 		E294FDDB25CB48D30018CEBA /* ShoppingListCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListCardView.swift; sourceTree = "<group>"; };
+		E2B58CFA25E3D84B00C44592 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
 		E2C2BEC725BAF00400A1D5A4 /* ShoppingList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShoppingList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2C2BECA25BAF00400A1D5A4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E2C2BECC25BAF00400A1D5A4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -166,6 +170,8 @@
 				DA71D92925BC98E600F22D63 /* UserModelData.swift */,
 				E25C7B0325D456DF0080240E /* Items.swift */,
 				DA00B72625D84CAD00039061 /* SpeechData.swift */,
+				E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */,
+				E2B58CFA25E3D84B00C44592 /* LocalNotificationManager.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -479,8 +485,10 @@
 				DA71D95725C1602F00F22D63 /* MyListsView.swift in Sources */,
 				DA71D92A25BC98E600F22D63 /* UserModelData.swift in Sources */,
 				E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */,
+				E2B58CFB25E3D84B00C44592 /* LocalNotificationManager.swift in Sources */,
 				E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */,
 				E25C7B0425D456DF0080240E /* Items.swift in Sources */,
+				E25C7C3025DFF5BC0080240E /* DueDateDatePicker.swift in Sources */,
 				E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */,
 				E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */,
 				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,

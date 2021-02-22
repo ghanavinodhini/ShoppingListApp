@@ -18,7 +18,7 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    MainView(entry: ShoppingListEntry(listName: "Bra dag"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
+                    MainView(entry: ShoppingListEntry(listName: "Bra dag", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
                         .disabled(self.showMenu ? true:false)
@@ -54,6 +54,15 @@ struct MainView : View
     var db = Firestore.firestore()
     @State var docID : String = ""
     var item:Items
+    // Added for Notification functionality, due date variables
+    @State var dueDate : String = ""
+    @State var showFootnote = false
+    var date : String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        let date = formatter.string(from: entry.date)
+        return date
+    }
     var body: some View
     {
         VStack{
@@ -98,7 +107,13 @@ struct MainView : View
         }
         AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
             saveShoppingListInDB()
-        })
+            // Added for Notification functionality
+            if self.dueDate == date {
+                let localNotificationManager = LocalNotificationManager()
+                localNotificationManager.sendNotification(title: "HI", subtitle: nil, body: "Hello", launchIn: 5)
+            }
+        }, dueDate: $dueDate)
+        
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
         })
@@ -107,7 +122,7 @@ struct MainView : View
     func saveShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
+        db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName, "dueDate": dueDate]) { error in
             if let error = error{
                 print("error")
             } else{

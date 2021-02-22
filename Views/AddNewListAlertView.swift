@@ -15,7 +15,15 @@ struct AddNewListAlertView: View {
     @Binding var listName: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
-    
+    // Added for Notification functionality, date picker variables
+    @Binding var dueDate : String
+    @State var date : Date?
+    @State var dueDateDatePicker = Date()
+    var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+        formatter.dateStyle = .short
+            return formatter
+        }
     
     var body: some View {
         
@@ -25,7 +33,12 @@ struct AddNewListAlertView: View {
                 .font(.headline)
             TextField("", text: $listName)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-            
+            // Added for Notification functionality , Date Picker layout
+            HStack{
+               Text("DueDate")
+            DueDateDatePicker(placeholder: "", date: self.$date)
+            }.navigationBarItems(leading: Button(action: self.onCancel) { Text("Cancel") })
+            Divider()
             HStack(alignment: .center) {
                 Button("Cancel") {
                     self.isShown = false
@@ -34,10 +47,13 @@ struct AddNewListAlertView: View {
                 
                 Divider()
                 Button("Add") {
+                    self.dueDate = dateFormatter.string(from: self.date!)
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
-                }
+                    //self.date = nil
+                    //self.dueDate = ""
+                }.disabled(listName.isEmpty)
             }
         }
         .padding()
@@ -54,6 +70,6 @@ struct AddNewListAlertView: View {
 
 struct AddNewListAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""))
+        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
     }
 }
