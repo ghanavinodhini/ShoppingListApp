@@ -28,6 +28,8 @@ class UserModelData : ObservableObject
     //Current User Name
     @Published var currentUserName = ""
    
+    let db = Firestore.firestore()
+    
     
     // Login
     func login()
@@ -93,13 +95,13 @@ class UserModelData : ObservableObject
     {
         print("Inside upload user info")
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        let db = Firestore.firestore()
+        //let db = Firestore.firestore()
         db.collection("Users").document(currentUser).setData(["UserName":userName,"UserEmail":userEmail])
     }
     
     //Retrieve user info from Firebase
     func getCurrentUserInfo(){
-        let db = Firestore.firestore()
+        //let db = Firestore.firestore()
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser)
             .addSnapshotListener{(snap,err) in

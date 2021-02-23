@@ -18,7 +18,7 @@ struct ShoppingListItemView : View {
     @State var newItem:String = ""
     @State var showErrorMessage = false
     @State var newItemQty:String = "0"
-    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans","Rolls"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
@@ -32,7 +32,11 @@ struct ShoppingListItemView : View {
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
- 
+    
+    //For autocomplete txtfield
+    var autoCompleteData : [String]
+    @State var isSearchRowSelected:Bool = false
+    
     var db = Firestore.firestore()
     
     //Text field for adding new item
@@ -44,8 +48,28 @@ struct ShoppingListItemView : View {
                 .cornerRadius(5)
                 .frame(width: UIScreen.main.bounds.width - 60,height:40)
             HStack{
-                TextField("Enter New Item",text:self.$newItem)
-                    .padding().foregroundColor(.black)
+                TextField("Enter New Item",text:self.$newItem, onEditingChanged: { isEditing in
+                            self.isSearchRowSelected = false
+                    
+                }).padding().foregroundColor(.black)
+                
+                //AutoSearchsuggestion List
+                if self.newItem != ""
+                {
+                    List(self.autoCompleteData.filter{$0.lowercased().contains(self.newItem.lowercased())},id: \.self){ selectedItem in
+                        Text(selectedItem)
+                            .onTapGesture(perform: {
+                            print("selected value: \(selectedItem)")
+                            self.newItem = selectedItem
+                            self.isSearchRowSelected = true
+                            print("SearchText value: \(self.newItem)")
+                        }).foregroundColor(.red)
+                   
+                }.frame(height: 90)
+                    .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show autoSearchlist on item selected
+                
+                }
+                
                 
             Spacer()
             
@@ -68,7 +92,9 @@ struct ShoppingListItemView : View {
             VStack{
                 HStack{
                     Text("Qty:")
-                    TextField("Qty", text:self.$newItemQty)
+                    TextField("Qty", text:self.$newItemQty, onEditingChanged: { isEditing in
+                                self.isSearchRowSelected = true
+                    })
                         .keyboardType(.numbersAndPunctuation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .foregroundColor(.black)
@@ -90,28 +116,29 @@ struct ShoppingListItemView : View {
                 HStack{
                 Button(action: self.addNewItem, label: {
                      Text("ADD")
-                        .background(Color(.darkGray))
+                        .background(Color(.systemBlue))
                         .foregroundColor(.white)
                         .font(.title2)
                         //.padding(.bottom,50)
-                        .cornerRadius(10)
+                        .cornerRadius(5)
                  })
                     Button(action: {
                         self.isItemAddCardShown.toggle()
                         self.isAddCartIconClicked.toggle()
                         self.isAddItemMode.toggle()
+                        self.isSearchRowSelected.toggle()
                     }) {
                          Text("Close")
-                            .background(Color(.darkGray))
+                            .background(Color(.systemBlue))
                             .foregroundColor(.white)
                             .font(.title2)
                           //  .padding(.bottom,50)
-                            .cornerRadius(10)
+                            .cornerRadius(5)
                      }
                 }
             }.padding()
               
-        }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
+        }.frame(width:  UIScreen.main.bounds.width - 32, height: 230, alignment: .top)
         .background(Color(.systemGreen))
         .cornerRadius(10)
         .shadow(radius:8)
@@ -187,12 +214,14 @@ struct ShoppingListItemView : View {
             
             }
         //show alert to update Item name
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
+            EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
 }
-        
+
+
+   
     //update Item name in DB
     func updateShoppingListItemsInDB(){
            guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -291,31 +320,6 @@ struct ShoppingListItemView : View {
             }
         }
     }
-    //Get All Items For List
-    /*func fetchItemsFromDB(){
-        print("Fetch")
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
-            if let err = err{
-                print("Error getting document: \(err)")
-            }else{
-                for document in snapshot!.documents{
-                    print("\(document.documentID) : \(document.data())")
-                    
-                    let data = document.data()
-                    let itemDocIdData = document.documentID
-                    let itemNameData = data["Item Name"] as? String ?? ""
-                    let itemQtyData = data["Item Qty"] as? String ?? ""
-                    let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
-                    let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
-                    let ItemData = Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
-                    
-                    self.listEntry.eachListItems.append(ItemData)
-                }
-            }
-            
-        }
-    }*/
 }
 
     
@@ -367,23 +371,10 @@ struct ItemRowView: View{
                 entry.itemIsShopped ?
                     Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                     Text(self.entry.itemQtyType).font(.body)
-                    //.padding()
-                
-                //Delete item button
-                /*Button(action:{deleteItemFromDB()})
-                {
-                    //Remove delete icon in Add item mode
-                    if !isAddCartIconClicked
-                    {
-                    Image(systemName: "trash").font(.title).foregroundColor(.white).frame(width:30,height:20)
-                    }
-                }.padding()*/
-                
-                
+                   
             }.padding(.trailing,5)
             }
         }
-       // }
 }
     //Delete individual item
     func deleteItemFromDB(){
@@ -443,20 +434,18 @@ struct MicView : View{
         
         ZStack
         {
-            
-            VStack{
-                
-                HStack{
-                    Button(action: { self.presentationMode.wrappedValue.dismiss()})
+            GeometryReader{ p in
+            VStack(alignment: .leading){
+                    HStack{
+                    Button(action: {self.presentationMode.wrappedValue.dismiss()})
                     {
-                       /* Image(systemName: "xmark")
-                            .clipShape(Circle())*/
-                        Text("Close".uppercased()).fontWeight(.heavy).foregroundColor(.white).fixedSize()
-                    }.frame(width: 80, height: 50)
-                    .background(Color.blue)
-                    .padding(.top,10)
-                }
-           
+                        Image(systemName: "xmark.circle.fill").resizable()
+                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            .frame(width: 30, height: 30)
+                    }
+                    .padding(.leading,20)
+                }.padding(.top,80)
+            }
         }
             VStack{
             //Prints voice text
@@ -502,6 +491,7 @@ struct MicView : View{
             
         }
         }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        
         //Alert if no values entered in textfield
         .alert(isPresented: self.$showInputVoiceErrorMessage)
         {
@@ -571,6 +561,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", autoCompleteData: autoCompleteData)
     }
 }
