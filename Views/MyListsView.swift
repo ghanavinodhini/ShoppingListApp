@@ -107,32 +107,12 @@ struct MainView : View
         }
         AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
             saveShoppingListInDB()
-            // Added for Notification functionality
-            /*if self.dueDate == date {
-                let localNotificationManager = LocalNotificationManager()
-                localNotificationManager.sendNotification(title: "HI", subtitle: nil, body: "Hello", launchIn: 5)
-            }*/
-            let addNewAlert = AddNewListAlertView(isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
-            print(self.dueDate)
-            print(addNewAlert.dueDate)
-            self.dueDate = addNewAlert.dueDate
         }, dueDate: $dueDate)
         
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
-        })
+        }, dueDate: $dueDate)
        
-    }
-    func sendNotification(){
-        print("sendNotifi")
-        let  userModel = UserModelData()
-        //let addNewAlert = AddNewListAlertView(isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
-        //self.dueDate = addNewAlert.dueDate
-        //print(self.dueDate)
-        if self.dueDate == date {
-             let localNotificationManager = LocalNotificationManager()
-             localNotificationManager.sendNotification(title: "Reminder", subtitle: ("\(userModel.currentUserName)you have a shopping list to buy today!!"), body: self.listName, launchIn: 3)
-         }
     }
     func saveShoppingListInDB(){
         
@@ -149,12 +129,12 @@ struct MainView : View
     func updateShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName, "dueDate": dueDate])
         { error in
             if let error = error{
                 print("error")
             } else{
-                print ("Data is inserted")
+                print ("Data is updated")
             }
         }
     }

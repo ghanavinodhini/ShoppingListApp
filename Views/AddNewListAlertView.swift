@@ -6,6 +6,7 @@
 //
 import Foundation
 import SwiftUI
+import Firebase
 
 struct AddNewListAlertView: View {
     
@@ -18,12 +19,14 @@ struct AddNewListAlertView: View {
     // Added for Notification functionality, date picker variables
     @Binding var dueDate : String
     @State var date : Date?
-    @State var dueDateDatePicker = Date()
+    @State var dueDatePicker = Date()
     var dateFormatter: DateFormatter {
             let formatter = DateFormatter()
         formatter.dateStyle = .short
             return formatter
         }
+    @State var notificationListName: String = ""
+    @State var notificationCurrentUser: String = ""
    
     var body: some View {
         
@@ -31,13 +34,16 @@ struct AddNewListAlertView: View {
             
             Text(title)
                 .font(.headline)
-            TextField("", text: $listName)
+            TextField("", text: $listName, onEditingChanged: { (changed) in })
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+           
             // Added for Notification functionality , Date Picker layout
             HStack{
+                
                Text("DueDate")
-            DueDateDatePicker(placeholder: "", date: self.$date)
-            }.navigationBarItems(leading: Button(action: self.onCancel) { Text("Cancel") })
+            DueDatePicker(placeholder: "", date: self.$date)
+              
+            }
             Divider()
             HStack(alignment: .center) {
                 Button("Cancel") {
@@ -47,23 +53,13 @@ struct AddNewListAlertView: View {
                 
                 Divider()
                 Button("Add") {
+                    self.notificationListName = self.listName
                     self.dueDate = dateFormatter.string(from: self.date!)
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
-                    let myList = MainView(entry: ShoppingListEntry(listName: "Bra dag", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
-                    //myList.dueDate = self.dueDate
-                    myList.sendNotification()
-                    //self.date = nil
-                    //self.dueDate = ""
-                    //let entry = ShoppingListEntry(listName: "")
-                    //let date = dateFormatter.string(from: entry.date)
-                    //let  userModel = UserModelData()
-                   /* if self.dueDate == date {
-                        let localNotificationManager = LocalNotificationManager()
-                        localNotificationManager.sendNotification(title: "Reminder", subtitle: ("\(userModel.currentUserName)you have a shopping list to buy today!!"), body: self.listName, launchIn: 5)
-                    }*/
-                }.disabled(listName.isEmpty)
+                    getCurrentUserInfo()
+                }.disabled(listName.isEmpty || date == nil )
             }
         }
         .padding()
@@ -76,10 +72,55 @@ struct AddNewListAlertView: View {
         .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
         
     }
+    // get current user name from db to show in notification
+    func getCurrentUserInfo(){
+        let db = Firestore.firestore()
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser)
+            .addSnapshotListener{(snap,err) in
+            if err != nil{
+                print("Error fetching data from firebase")
+                return
+            }
+                if let data = snap?.data(){
+                    self.notificationCurrentUser = (data["UserName"] as? String)!
+                    print("Current Name: \(self.notificationCurrentUser)")
+                    sendNotification()
+                }
+        }
+    }
+    // to show local notification when shopping list is there to buy for current date.
+    func sendNotification(){
+       let center = UNUserNotificationCenter.current()
+        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
+        }
+        let entry = ShoppingListEntry(listName: "")
+        var date : String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        let date = formatter.string(from: entry.date)
+        return date
+    }
+        if self.dueDate == date {
+        let content = UNMutableNotificationContent()
+            content.title = ("Hello \(self.notificationCurrentUser)")
+            content.subtitle = "You have one shopping list to purchase today!"
+            content.body = notificationListName
+        let date = Date().addingTimeInterval(10)
+        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+        let uuidString = UUID().uuidString
+        
+        let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
+        center.add(request) { (error) in
+            // Check the error parameter and handle any errors
+        }
+    }
+}
 }
 
 struct AddNewListAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
+        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""), notificationListName: "")
     }
 }

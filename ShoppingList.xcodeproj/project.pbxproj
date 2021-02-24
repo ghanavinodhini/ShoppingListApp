@@ -19,7 +19,7 @@
 		E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */; };
 		E25C7B0425D456DF0080240E /* Items.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B0325D456DF0080240E /* Items.swift */; };
 		E25C7B4325D74E8A0080240E /* EditShoppingListItemAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */; };
-		E25C7C3025DFF5BC0080240E /* DueDateDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */; };
+		E25C7C3025DFF5BC0080240E /* DueDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C7C2F25DFF5BC0080240E /* DueDatePicker.swift */; };
 		E28060CC25C8B4B100BB9FD7 /* ShoppingListEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060CB25C8B4B100BB9FD7 /* ShoppingListEntry.swift */; };
 		E28060D125C8B4E700BB9FD7 /* ShoppingList.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */; };
 		E28060DE25C8C23100BB9FD7 /* ShoppingListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */; };
@@ -72,7 +72,7 @@
 		E25C7A9325D13A850080240E /* EditShoppingListAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListAlertView.swift; sourceTree = "<group>"; };
 		E25C7B0325D456DF0080240E /* Items.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Items.swift; sourceTree = "<group>"; };
 		E25C7B4225D74E880080240E /* EditShoppingListItemAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditShoppingListItemAlertView.swift; sourceTree = "<group>"; };
-		E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueDateDatePicker.swift; sourceTree = "<group>"; };
+		E25C7C2F25DFF5BC0080240E /* DueDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueDatePicker.swift; sourceTree = "<group>"; };
 		E28060CB25C8B4B100BB9FD7 /* ShoppingListEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListEntry.swift; sourceTree = "<group>"; };
 		E28060D025C8B4E700BB9FD7 /* ShoppingList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingList.swift; sourceTree = "<group>"; };
 		E28060DD25C8C23000BB9FD7 /* ShoppingListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingListItemView.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				DA71D92925BC98E600F22D63 /* UserModelData.swift */,
 				E25C7B0325D456DF0080240E /* Items.swift */,
 				DA00B72625D84CAD00039061 /* SpeechData.swift */,
-				E25C7C2F25DFF5BC0080240E /* DueDateDatePicker.swift */,
+				E25C7C2F25DFF5BC0080240E /* DueDatePicker.swift */,
 				E2B58CFA25E3D84B00C44592 /* LocalNotificationManager.swift */,
 			);
 			path = Modal;
@@ -488,7 +488,7 @@
 				E2B58CFB25E3D84B00C44592 /* LocalNotificationManager.swift in Sources */,
 				E2C2BECD25BAF00400A1D5A4 /* SceneDelegate.swift in Sources */,
 				E25C7B0425D456DF0080240E /* Items.swift in Sources */,
-				E25C7C3025DFF5BC0080240E /* DueDateDatePicker.swift in Sources */,
+				E25C7C3025DFF5BC0080240E /* DueDatePicker.swift in Sources */,
 				E28060E625C9FEDF00BB9FD7 /* AddNewListAlertView.swift in Sources */,
 				E25C7A9425D13A850080240E /* EditShoppingListAlertView.swift in Sources */,
 				DA71D96525C35EFA00F22D63 /* SlidingMenuView.swift in Sources */,

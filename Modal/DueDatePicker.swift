@@ -1,5 +1,5 @@
 //
-//  DueDateDatePicker.swift
+//  DueDatePicker.swift
 //  ShoppingList
 //
 //  Created by Jayabharathi Jayaraman on 2021-02-19.
@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-struct DueDateDatePicker: UIViewRepresentable {
+struct DueDatePicker: UIViewRepresentable {
     private let textField = UITextField()
     private let datePicker = UIDatePicker()
     private let helper = Helper()
