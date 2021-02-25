@@ -20,13 +20,12 @@ struct EditShoppingListAlertView: View {
     // Added for Notification functionality, date picker variables
     @Binding var dueDate : String
     @State var date : Date?
-    @State var dueDatePicker = Date()
     var dateFormatter: DateFormatter {
-            let formatter = DateFormatter()
+        let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
-            return formatter
-        }
+        return formatter
+    }
     @State var notificationListName: String = ""
     @State var notificationCurrentUser: String = ""
     
@@ -41,10 +40,8 @@ struct EditShoppingListAlertView: View {
             
             // Added for Notification functionality , Date Picker layout
             HStack{
-                
-               Text("DueDate")
-            DueDatePicker(placeholder: "", date: self.$date)
-              
+                Text("DueDate")
+                DueDatePicker(placeholder: "", date: self.$date)
             }
             Divider()
             HStack(alignment: .center) {
@@ -56,12 +53,22 @@ struct EditShoppingListAlertView: View {
                 Divider()
                 Button("Update") {
                     self.notificationListName = self.listName
-                   self.dueDate = dateFormatter.string(from: self.date!)
+                    self.dueDate = dateFormatter.string(from: self.date!)
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
                     getCurrentUserInfo()
                 }.disabled(listName.isEmpty || date == nil )
+            }
+        }
+        .onAppear(){
+            //Asking for user authorization
+            UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.sound]){ success,error in
+                if success{
+                    print("Authorization Success")
+                }else if let error = error{
+                    print(error.localizedDescription)
+                }
             }
         }
         .padding()
@@ -72,7 +79,7 @@ struct EditShoppingListAlertView: View {
         .animation(.spring())
         
         .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
-    
+        
     }
     // get current user name from db to show in notification
     func getCurrentUserInfo(){
@@ -80,45 +87,36 @@ struct EditShoppingListAlertView: View {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser)
             .addSnapshotListener{(snap,err) in
-            if err != nil{
-                print("Error fetching data from firebase")
-                return
-            }
+                if err != nil{
+                    print("Error fetching data from firebase")
+                    return
+                }
                 if let data = snap?.data(){
                     self.notificationCurrentUser = (data["UserName"] as? String)!
-                    print("Current Name: \(self.notificationCurrentUser)")
+                    print("UserName: \(self.notificationCurrentUser)")
                     sendNotification()
                 }
-        }
+            }
     }
     // to show local notification when shopping list is there to buy for current date.
     func sendNotification(){
-       let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-        }
-        let entry = ShoppingListEntry(listName: "")
-        var date : String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        let date = formatter.string(from: entry.date)
-        return date
-    }
-        if self.date == entry.date {
         let content = UNMutableNotificationContent()
-            content.title = ("Hello \(self.notificationCurrentUser)")
-            content.subtitle = "You have one shopping list to purchase today!"
-            content.body = notificationListName
-        let date = Date().addingTimeInterval(10)
+        content.title = ("Hello \(self.notificationCurrentUser)")
+        content.subtitle = "You have one shopping list to purchase today!"
+        content.body = notificationListName
+        content.sound = UNNotificationSound.default
+        let date = self.date!.addingTimeInterval(10)
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let uuidString = UUID().uuidString
         
         let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
-        center.add(request) { (error) in
-            // Check the error parameter and handle any errors
-        }
+        UNUserNotificationCenter.current().add(request,withCompletionHandler: {error in
+            if error != nil{
+                print(" Error showing notification")
+            }
+        })
     }
-}
 }
 
 struct EditShoppingListAlertView_Previews: PreviewProvider {

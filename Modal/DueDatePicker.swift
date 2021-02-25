@@ -22,9 +22,11 @@ struct DueDatePicker: UIViewRepresentable {
     var backgroundColor: UIColor = .white
     @Binding public var date: Date?
     func makeUIView(context: Context) ->  UITextField {
+        let now = Date()
         self.datePicker.datePickerMode = .dateAndTime
         self.datePicker.preferredDatePickerStyle = .wheels
         self.datePicker.addTarget(self.helper, action: #selector(self.helper.dateValueChanged), for: .valueChanged)
+        self.datePicker.minimumDate = now
         self.textField.text = ""
         self.textField.placeholder = self.placeholder
         self.textField.inputView = self.datePicker

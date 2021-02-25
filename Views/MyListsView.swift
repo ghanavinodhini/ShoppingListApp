@@ -57,12 +57,6 @@ struct MainView : View
     // Added for Notification functionality, due date variables
     @State var dueDate : String
     @State var showFootnote = false
-    /*var date : String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        let date = formatter.string(from: entry.date)
-        return date
-    }*/
     var body: some View
     {
         VStack{
@@ -112,7 +106,7 @@ struct MainView : View
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
         }, dueDate: .constant(""))
-       
+        
     }
     func saveShoppingListInDB(){
         
@@ -141,26 +135,26 @@ struct MainView : View
     func deleteListInDB(at indexSet: IndexSet) {
         indexSet.forEach { index in
             let shoppingListDocId = shoppingList.entries[index]
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+            guard let currentUser = Auth.auth().currentUser?.uid else { return }
             db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).delete{
-            error in
-            if let error = error{
-                print(error.localizedDescription)
-            } else {
-                print("deleteSuccess")
+                error in
+                if let error = error{
+                    print(error.localizedDescription)
+                } else {
+                    print("deleteSuccess")
+                }
             }
-        }
             // Delete the Items of the Shopping list
             /*db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).collection("Item").document("sBNYoe4a9zXBVDP96Zs6").delete{
-            error in
-            if let error = error{
-                print(error.localizedDescription)
-            } else {
-                print("deleteSuccess")
-            }
-        }*/
+             error in
+             if let error = error{
+             print(error.localizedDescription)
+             } else {
+             print("deleteSuccess")
+             }
+             }*/
+        }
     }
-}
 }
 
 struct MyListsView_Previews: PreviewProvider {
