@@ -14,7 +14,7 @@ struct EditShoppingListItemAlertView: View {
     let screenSize = UIScreen.main.bounds
     var title: String = ""
     @Binding var isShown: Bool
-    @Binding var shoppingListItem: String
+    @Binding var shoppingListEditItem: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     @Binding var itemQty:String 
@@ -25,7 +25,7 @@ struct EditShoppingListItemAlertView: View {
         VStack(alignment: .center) {
             Text(title)
                 .font(.headline)
-            TextField("", text: $shoppingListItem)
+            TextField("", text: $shoppingListEditItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             VStack{
                 HStack{
@@ -54,13 +54,13 @@ struct EditShoppingListItemAlertView: View {
                     Divider()
                     Button("Update") {
                         self.isShown = false
-                        self.onAdd(self.shoppingListItem)
+                        self.onAdd(self.shoppingListEditItem)
                         self.onAdd(self.itemQty)
                         self.onAdd(self.itemQtyType)
-                        self.shoppingListItem = ""
+                        self.shoppingListEditItem = ""
                         self.itemQty = ""
                         self.itemQtyType = ""
-                    }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
+                    }.disabled(shoppingListEditItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
                 }
             }
         }
@@ -77,6 +77,6 @@ struct EditShoppingListItemAlertView: View {
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
+        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListEditItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
     }
 }

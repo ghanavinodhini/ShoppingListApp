@@ -134,9 +134,24 @@ struct SignUpView : View {
     
     var body: some View{
         
-        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top), content: {
-            
+        ZStack{
             VStack{
+                
+                //Display close button in signup view right corner
+                HStack{
+                    Spacer()
+                //Toggle isSignup on click,
+                Button(action: {userModel.isSignUp.toggle()}){
+                Image(systemName: "xmark.circle.fill").resizable()
+                        .frame(width: 30, height: 30)
+                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                        .padding()
+                                        
+                }
+                    .padding(.trailing,10)
+                    .padding(.top,10)
+            }
+
                 
                 ZStack{
                     //For small devices
@@ -174,7 +189,7 @@ struct SignUpView : View {
                     Divider().background(Color.white.opacity(0.5))
                     HStack(spacing: 15){
                         Image(systemName: "eye.slash.fill")
-                        TextField("Enter Password",text:$userModel.password_SignUp)
+                        TextField("Enter Password(max 8 chars)",text:$userModel.password_SignUp)
                     }
                     Divider().background(Color.white.opacity(0.5))
                     HStack(spacing: 15){
@@ -198,15 +213,7 @@ struct SignUpView : View {
                 }.padding(.vertical,20)
                     Spacer()
             }
-            //Toggle isSignup on click,  //Display close button in signup view
-            Button(action: {userModel.isSignUp.toggle()}){
-                Image(systemName: "xmark")
-                    .padding()
-                    .clipShape(Circle())
-            }
-            .padding(.trailing)
-            .padding(.top,10)
-        })
+        }
     
         // Alerts Signup success
         .alert(isPresented: $userModel.alert, content: {
