@@ -171,7 +171,10 @@
 				E25C7B0325D456DF0080240E /* Items.swift */,
 				DA00B72625D84CAD00039061 /* SpeechData.swift */,
 				DA7302D025E15F770021D36F /* AutocompleteData.swift */,
+<<<<<<< HEAD
 				E25C7C2F25DFF5BC0080240E /* DueDatePicker.swift */,
+=======
+>>>>>>> origin/main
 			);
 			path = Modal;
 			sourceTree = "<group>";

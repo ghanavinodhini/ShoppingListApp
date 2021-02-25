@@ -28,40 +28,40 @@ struct EditShoppingListItemAlertView: View {
             TextField("", text: $shoppingListItem)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
             VStack{
-            HStack{
-            Text("Qty")
-            TextField("Qty", text:self.$itemQty)
-                .keyboardType(.numbersAndPunctuation)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .foregroundColor(.black)
-                .fixedSize()
-                Spacer()
-                Text("Type")
-                    .font(.subheadline)
-                TextField("QtyType", text:self.$itemQtyType)
-                    .keyboardType(.numbersAndPunctuation)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .foregroundColor(.black)
-                    .fixedSize()
-            }
+                HStack{
+                    Text("Qty")
+                    TextField("Qty", text:self.$itemQty)
+                        .keyboardType(.numbersAndPunctuation)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .foregroundColor(.black)
+                        .fixedSize()
+                    Spacer()
+                    Text("Type")
+                        .font(.subheadline)
+                    TextField("QtyType", text:self.$itemQtyType)
+                        .keyboardType(.numbersAndPunctuation)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .foregroundColor(.black)
+                        .fixedSize()
+                }
                 Divider()
-            HStack(alignment: .center) {
-                Button("Cancel") {
-                    self.isShown = false
-                    self.onCancel()
-                }.foregroundColor(.red)
-                .frame(width: 55, height: 50, alignment: .center)
-                Divider()
-                Button("Update") {
-                    self.isShown = false
-                    self.onAdd(self.shoppingListItem)
-                    self.onAdd(self.itemQty)
-                   self.onAdd(self.itemQtyType)
-                    self.shoppingListItem = ""
-                    self.itemQty = ""
-                    self.itemQtyType = ""
-                }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
-            }
+                HStack(alignment: .center) {
+                    Button("Cancel") {
+                        self.isShown = false
+                        self.onCancel()
+                    }.foregroundColor(.red)
+                    .frame(width: 55, height: 50, alignment: .center)
+                    Divider()
+                    Button("Update") {
+                        self.isShown = false
+                        self.onAdd(self.shoppingListItem)
+                        self.onAdd(self.itemQty)
+                        self.onAdd(self.itemQtyType)
+                        self.shoppingListItem = ""
+                        self.itemQty = ""
+                        self.itemQtyType = ""
+                    }.disabled(shoppingListItem.isEmpty || itemQty.isEmpty || itemQtyType.isEmpty)
+                }
             }
         }
         .padding()

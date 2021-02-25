@@ -18,7 +18,7 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    MainView(entry: ShoppingListEntry(listName: "Bra dag"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false))
+                    MainView(entry: ShoppingListEntry(listName: "Bra dag", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
                         .disabled(self.showMenu ? true:false)
@@ -54,6 +54,9 @@ struct MainView : View
     var db = Firestore.firestore()
     @State var docID : String = ""
     var item:Items
+    // Added for Notification functionality, due date variables
+    @State var dueDate : String
+    @State var showFootnote = false
     var body: some View
     {
         VStack{
@@ -98,16 +101,17 @@ struct MainView : View
         }
         AddNewListAlertView(title: "Enter name of the list", isShown: $addNewListAlert, listName: $listName, onAdd: {_ in
             saveShoppingListInDB()
-        })
+        }, dueDate: $dueDate)
+        
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
-        })
+        }, dueDate: .constant(""))
+        
     }
-    
     func saveShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName]) { error in
+        db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName, "dueDate": dueDate]) { error in
             if let error = error{
                 print("error")
             } else{
@@ -119,38 +123,38 @@ struct MainView : View
     func updateShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName])
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName, "dueDate": dueDate])
         { error in
             if let error = error{
                 print("error")
             } else{
-                print ("Data is inserted")
+                print ("Data is updated")
             }
         }
     }
     func deleteListInDB(at indexSet: IndexSet) {
         indexSet.forEach { index in
             let shoppingListDocId = shoppingList.entries[index]
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+            guard let currentUser = Auth.auth().currentUser?.uid else { return }
             db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).delete{
-            error in
-            if let error = error{
-                print(error.localizedDescription)
-            } else {
-                print("deleteSuccess")
+                error in
+                if let error = error{
+                    print(error.localizedDescription)
+                } else {
+                    print("deleteSuccess")
+                }
             }
-        }
             // Delete the Items of the Shopping list
             /*db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).collection("Item").document("sBNYoe4a9zXBVDP96Zs6").delete{
-            error in
-            if let error = error{
-                print(error.localizedDescription)
-            } else {
-                print("deleteSuccess")
-            }
-        }*/
+             error in
+             if let error = error{
+             print(error.localizedDescription)
+             } else {
+             print("deleteSuccess")
+             }
+             }*/
+        }
     }
-}
 }
 
 struct MyListsView_Previews: PreviewProvider {
