@@ -13,6 +13,8 @@ struct DueDatePicker: UIViewRepresentable {
     private let helper = Helper()
     private let dateFormatter : DateFormatter = {
         let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .short
+        dateFormatter.timeStyle = .short
         dateFormatter.dateFormat = "yyyy/MM/dd"
         return dateFormatter
     }()
@@ -20,7 +22,7 @@ struct DueDatePicker: UIViewRepresentable {
     var backgroundColor: UIColor = .white
     @Binding public var date: Date?
     func makeUIView(context: Context) ->  UITextField {
-        self.datePicker.datePickerMode = .date
+        self.datePicker.datePickerMode = .dateAndTime
         self.datePicker.preferredDatePickerStyle = .wheels
         self.datePicker.addTarget(self.helper, action: #selector(self.helper.dateValueChanged), for: .valueChanged)
         self.textField.text = ""
@@ -77,5 +79,3 @@ struct DueDatePicker: UIViewRepresentable {
     }
     
 }
-	
-

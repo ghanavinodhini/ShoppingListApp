@@ -55,14 +55,14 @@ struct MainView : View
     @State var docID : String = ""
     var item:Items
     // Added for Notification functionality, due date variables
-    @State var dueDate : String = ""
+    @State var dueDate : String
     @State var showFootnote = false
-    var date : String {
+    /*var date : String {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         let date = formatter.string(from: entry.date)
         return date
-    }
+    }*/
     var body: some View
     {
         VStack{
@@ -111,7 +111,7 @@ struct MainView : View
         
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
-        }, dueDate: $dueDate)
+        }, dueDate: .constant(""))
        
     }
     func saveShoppingListInDB(){

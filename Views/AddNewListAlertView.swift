@@ -17,12 +17,14 @@ struct AddNewListAlertView: View {
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
     // Added for Notification functionality, date picker variables
-    @Binding var dueDate : String
+   @Binding var dueDate : String
     @State var date : Date?
     @State var dueDatePicker = Date()
+    //@State var dueDatePicker = Date()
     var dateFormatter: DateFormatter {
             let formatter = DateFormatter()
         formatter.dateStyle = .short
+        formatter.timeStyle = .short
             return formatter
         }
     @State var notificationListName: String = ""
@@ -40,9 +42,9 @@ struct AddNewListAlertView: View {
             // Added for Notification functionality , Date Picker layout
             HStack{
                 
-               Text("DueDate")
+              // Text("DueDate")
             DueDatePicker(placeholder: "", date: self.$date)
-              
+         //       DatePicker("DueDate", selection: $dueDatePicker, in: Date()...)
             }
             Divider()
             HStack(alignment: .center) {
@@ -53,14 +55,25 @@ struct AddNewListAlertView: View {
                 
                 Divider()
                 Button("Add") {
+                    print("due\(dueDatePicker)")
                     self.notificationListName = self.listName
                     self.dueDate = dateFormatter.string(from: self.date!)
                     self.isShown = false
                     self.onAdd(self.listName)
                     self.listName = ""
                     getCurrentUserInfo()
-                }.disabled(listName.isEmpty || date == nil )
+                }.disabled(listName.isEmpty || dueDatePicker == nil )
             }
+        }
+        .onAppear(){
+            //Asking for user authorization
+                               UNUserNotificationCenter.current().requestAuthorization(options: [.alert,.sound]){ success,error in
+                                   if success{
+                                       print("ALL Set")
+                                   }else if let error = error{
+                                       print(error.localizedDescription)
+                                   }
+                               }
         }
         .padding()
         .frame(width: screenSize.width * 0.7, height: screenSize.height * 0.2)
@@ -91,36 +104,39 @@ struct AddNewListAlertView: View {
     }
     // to show local notification when shopping list is there to buy for current date.
     func sendNotification(){
-       let center = UNUserNotificationCenter.current()
+        print(self.dueDate)
+       /*let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.alert, .sound]) { (granted, error) in
-        }
-        let entry = ShoppingListEntry(listName: "")
-        var date : String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        let date = formatter.string(from: entry.date)
-        return date
-    }
-        if self.dueDate == date {
+        }*/
+        //let entry = ShoppingListEntry(listName: "")
+       // let date = dateFormatter.string(from: entry.date)
+      
         let content = UNMutableNotificationContent()
             content.title = ("Hello \(self.notificationCurrentUser)")
             content.subtitle = "You have one shopping list to purchase today!"
             content.body = notificationListName
-        let date = Date().addingTimeInterval(10)
+            content.sound = UNNotificationSound.default
+        let date = self.date!.addingTimeInterval(10)
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let uuidString = UUID().uuidString
         
         let request = UNNotificationRequest(identifier: uuidString, content: content, trigger: trigger)
-        center.add(request) { (error) in
+        UNUserNotificationCenter.current().add(request,withCompletionHandler: {error in
+                 if error != nil{
+                                        print("No Notification")
+                                    }
+                                    
+                                })
+        /*center.add(request) { (error) in
             // Check the error parameter and handle any errors
-        }
-    }
+            print("no notifi")
+        }*/
+    
 }
 }
 
 struct AddNewListAlertView_Previews: PreviewProvider {
-    static var previews: some View {
-        AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""), notificationListName: "")
+    static var previews: some View {                          AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""), dueDatePicker: Date(), notificationListName: "")
     }
 }
