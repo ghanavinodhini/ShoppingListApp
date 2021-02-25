@@ -34,7 +34,7 @@ struct SpeechButton: View {
                 Circle() //Big Circle
             .stroke()
             .frame(width: 350, height: 350, alignment: .bottom)
-            .foregroundColor(.gray)
+            .foregroundColor(.black)
             .scaleEffect(animateBigCircle ? 1 : 0.3)
             .opacity(animateSmallCircle ? 0 : 1)
             .animation(Animation.easeInOut(duration: 2).repeatForever(autoreverses: false))
@@ -51,8 +51,8 @@ struct SpeechButton: View {
                     self.animateSmallCircle.toggle()
                 }
                 
-                Image(systemName: "mic.circle")
-                    .frame(width: 100, height: 100, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                Image(systemName: "mic.circle").resizable()
+                    .frame(width: 70, height: 70, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     .foregroundColor(.white)
                     .background(speechData.isRecording ? Circle().foregroundColor(.red).frame(width: 70, height: 70) : Circle().foregroundColor(.blue).frame(width: 70, height: 70))
         }
