@@ -18,7 +18,15 @@ class UserModelData : ObservableObject
     @Published var isSignUp = false
     @Published var isLogin = false
     @Published var email_SignUp = ""
-    @Published var password_SignUp = ""
+    //Set password to accept only 8 chars
+    @Published var password_SignUp = "" {
+        didSet{
+            if password_SignUp.count > 8{
+                password_SignUp = String(password_SignUp.prefix(8))
+            }
+        }
+    }
+
     @Published var reEnterPassword = ""
    
     // Error Alerts

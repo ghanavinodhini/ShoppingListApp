@@ -25,10 +25,12 @@ struct ShoppingListItemView : View {
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
 
+    //Variables for Edit Alert
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
-    @State var itemName : String = ""
+   // @State var itemName : String = ""
     @State var itemQtyType:String = ""
+    @State var shoppingListEditItem:String = ""
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
@@ -44,14 +46,14 @@ struct ShoppingListItemView : View {
        
         VStack{
             ZStack(){
-            Rectangle().foregroundColor(Color(.white))
+                Rectangle().foregroundColor(Color(.white)).padding(.top,20)
                 .cornerRadius(5)
-                .frame(width: UIScreen.main.bounds.width - 60,height:40)
+                .frame(width: UIScreen.main.bounds.width - 60,height:70)
             HStack{
                 TextField("Enter New Item",text:self.$newItem, onEditingChanged: { isEditing in
                             self.isSearchRowSelected = false
                     
-                }).padding().foregroundColor(.black)
+                }).padding(.top,15).foregroundColor(.black)
                 
                 //AutoSearchsuggestion List
                 if self.newItem != ""
@@ -82,12 +84,13 @@ struct ShoppingListItemView : View {
                  {
                 Image(systemName: "mic")
                     .font(Font.system(size:15).weight(.bold)).padding()
-                    .frame(width:30,height:30)
+                    .frame(width:35,height:35)
                     .foregroundColor(.white)
                     .background(Color(.systemIndigo))
                     .cornerRadius(5)
                 }
                 }.padding(.horizontal)
+                .padding(.top,15)
             }
             VStack{
                 HStack{
@@ -119,7 +122,7 @@ struct ShoppingListItemView : View {
                         .background(Color(.systemBlue))
                         .foregroundColor(.white)
                         .font(.title2)
-                        //.padding(.bottom,50)
+                        .padding(.bottom,35)
                         .cornerRadius(5)
                  })
                     Button(action: {
@@ -132,13 +135,13 @@ struct ShoppingListItemView : View {
                             .background(Color(.systemBlue))
                             .foregroundColor(.white)
                             .font(.title2)
-                          //  .padding(.bottom,50)
+                            .padding(.bottom,35)
                             .cornerRadius(5)
                      }
                 }
             }.padding()
               
-        }.frame(width:  UIScreen.main.bounds.width - 32, height: 230, alignment: .top)
+        }.frame(width:  UIScreen.main.bounds.width - 32, height: 250, alignment: .top)
         .background(Color(.systemGreen))
         .cornerRadius(10)
         .shadow(radius:8)
@@ -185,6 +188,14 @@ struct ShoppingListItemView : View {
                         .contextMenu{
                             Button(action: {
                                 itemDocId = items.itemDocid!
+                                self.shoppingListEditItem = items.itemName//Assign existing itemName to state variable
+                                self.newItemQty = items.itemQty
+                                self.itemQtyType = items.itemQtyType
+                                
+                                print("ShoppingListItem: \(self.shoppingListEditItem)")
+                                print("New Item Qty Edit: \(self.newItemQty)")
+                                print("ItemQty TYpe Edit: \(self.itemQtyType)")
+                                
                                 self.ediShoppingListItemAlert = true
                             }) {
                                 Text("Edit")
@@ -214,7 +225,7 @@ struct ShoppingListItemView : View {
             
             }
         //show alert to update Item name
-            EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
+            EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListEditItem: self.$shoppingListEditItem, onAdd: {_ in
             updateShoppingListItemsInDB()
         }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
     }
@@ -226,9 +237,10 @@ struct ShoppingListItemView : View {
     func updateShoppingListItemsInDB(){
            guard let currentUser = Auth.auth().currentUser?.uid else { return }
            //guard let itemDocumentId = self.item.itemDocid else {return}
-           itemName = self.item.itemName
+          // itemName = self.item.itemName
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
-            .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
+           /* .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])*/
+            .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
            { error in
                if let error = error{
                    print("error")

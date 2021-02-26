@@ -69,6 +69,8 @@ struct MainView : View
                         }        .contextMenu{
                             Button(action: {
                                 docID = entry.docId!
+                                self.listName = entry.listName //Assign listname to state variable
+                                print("Current List Name: \(self.listName)")
                                 self.ediShoppingListAlert = true
                             }) {
                                 Text("Edit")
@@ -123,7 +125,7 @@ struct MainView : View
     func updateShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName, "dueDate": dueDate])
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : self.listName, "dueDate": dueDate])
         { error in
             if let error = error{
                 print("error")
