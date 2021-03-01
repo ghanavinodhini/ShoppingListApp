@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct SlidingMenuView: View {
-   // @EnvironmentObject var userModel : ModelData
+    // @EnvironmentObject var userModel : ModelData
     @ObservedObject var userModel: UserModelData
     var body: some View {
-       
+        
         VStack()
         {
             
@@ -19,26 +19,26 @@ struct SlidingMenuView: View {
                 .font(.headline)
                 .padding(.top,100)
             
-           // NavigationView
-           // {
+            // NavigationView
+            // {
             HStack
             {
                 Button(action: userModel.userSignOut) {
                     Image(systemName: "arrow.left.square").foregroundColor(.black).imageScale(.large)
                     Text("Logout").foregroundColor(.black).font(.headline)
-                 
+                    
                     if !userModel.isLogin
                     {
                         NavigationLink(destination: AuthenticationView()){}
-                            
+                        
                     }
-                
+                    
                 }
                 
                 
             }.padding(.top,80)
-                Spacer()
-       // }
+            Spacer()
+            // }
         }.padding()
         .frame(maxWidth: .infinity,alignment: .leading)
         .background(Color.gray)
@@ -48,7 +48,7 @@ struct SlidingMenuView: View {
 }
 
 /*struct SlidingMenuView_Previews: PreviewProvider {
-    static var previews: some View {
-        SlidingMenuView()
-    }
-}*/
+ static var previews: some View {
+ SlidingMenuView()
+ }
+ }*/

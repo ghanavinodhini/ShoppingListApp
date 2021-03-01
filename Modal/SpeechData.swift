@@ -10,7 +10,7 @@ import Speech
 import SwiftUI
 
 struct Speech{
-     var outputText:String = ""
+    var outputText:String = ""
 }
 
 public class SpeechData:ObservableObject
@@ -20,12 +20,12 @@ public class SpeechData:ObservableObject
     @Published var button = SpeechButton()
     @Published var speech = Speech()
     
- let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
- var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
- let authStat = SFSpeechRecognizer.authorizationStatus()
- var recognitionTask: SFSpeechRecognitionTask?
- let audioEngine = AVAudioEngine()
-   //public var outputText:String = ""
+    let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
+    var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+    let authStat = SFSpeechRecognizer.authorizationStatus()
+    var recognitionTask: SFSpeechRecognitionTask?
+    let audioEngine = AVAudioEngine()
+    //public var outputText:String = ""
     
     init(){
         
@@ -35,20 +35,20 @@ public class SpeechData:ObservableObject
             {
                 switch authStatus
                 {
-                    case .authorized:
-                        break
-
-                    case .denied:
-                        break
+                case .authorized:
+                    break
                     
-                    case .restricted:
-                        break
-                      
-                    case .notDetermined:
-                        break
-                      
-                    default:
-                        break
+                case .denied:
+                    break
+                    
+                case .restricted:
+                    break
+                    
+                case .notDetermined:
+                    break
+                    
+                default:
+                    break
                 }
             }
         }// end of auth request
@@ -136,24 +136,24 @@ public class SpeechData:ObservableObject
     func getSpeechStatus()->String{
         
         switch authStat{
+        
+        case .authorized:
+            return "Authorized"
             
-            case .authorized:
-                return "Authorized"
+        case .notDetermined:
+            return "Not yet Determined"
             
-            case .notDetermined:
-                return "Not yet Determined"
+        case .denied:
+            return "Denied - Close the App"
             
-            case .denied:
-                return "Denied - Close the App"
+        case .restricted:
+            return "Restricted - Close the App"
             
-            case .restricted:
-                return "Restricted - Close the App"
+        default:
+            return "ERROR: No Status Defined"
             
-            default:
-                return "ERROR: No Status Defined"
-    
         }// end of switch
         
     } // end of get speech status
-
+    
 }

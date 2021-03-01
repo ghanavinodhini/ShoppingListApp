@@ -121,6 +121,6 @@ struct EditShoppingListAlertView: View {
 
 struct EditShoppingListAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
+        EditShoppingListAlertView(title: "Edit Shopping list", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""))
     }
 }

@@ -18,67 +18,96 @@ struct ShoppingListItemView : View {
     @State var newItem:String = ""
     @State var showErrorMessage = false
     @State var newItemQty:String = "0"
-    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans"]
+    @State var newQtyType = ["KG","Grams","Pcs","Boxes","Packets","Bunches","Bottles","Cans","Rolls"]
     @State var selectedPickerValue = 0
     @State var newItemIsShopped:Bool = false
     @State var isItemAddCardShown:Bool = false
     @State var isAddCartIconClicked:Bool = false
     @State var isAddItemMode:Bool = false
-
+    
+    //Variables for Edit Alert
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
-    @State var itemName : String = ""
+    // @State var itemName : String = ""
     @State var itemQtyType:String = ""
+    @State var shoppingListEditItem:String = ""
     
     @State var isMicCardViewShown:Bool = false
     var speechData = SpeechData()
- 
+    
+    //For autocomplete txtfield
+    var autoCompleteData : [String]
+    @State var isSearchRowSelected:Bool = false
+    
     var db = Firestore.firestore()
     
     //Text field for adding new item
-      var newItemAddCard : some View{
-       
+    var newItemAddCard : some View{
+        
         VStack{
             ZStack(){
-            Rectangle().foregroundColor(Color(.white))
-                .cornerRadius(5)
-                .frame(width: UIScreen.main.bounds.width - 60,height:40)
-            HStack{
-                TextField("Enter New Item",text:self.$newItem)
-                    .padding().foregroundColor(.black)
-                
-            Spacer()
-            
-                Button(action: {
-                    print("mic button pressed")
-                    withAnimation{
-                        self.isMicCardViewShown.toggle() //toggle miccardview shown flag
-                    }
-                })
-                 {
-                Image(systemName: "mic")
-                    .font(Font.system(size:15).weight(.bold)).padding()
-                    .frame(width:30,height:30)
-                    .foregroundColor(.white)
-                    .background(Color(.systemIndigo))
+                Rectangle().foregroundColor(Color(.white)).padding(.top,20)
                     .cornerRadius(5)
-                }
+                    .frame(width: UIScreen.main.bounds.width - 60,height:70)
+                HStack{
+                    TextField("Enter New Item",text:self.$newItem, onEditingChanged: { isEditing in
+                        self.isSearchRowSelected = false
+                        
+                    }).padding(.top,15).foregroundColor(.black)
+                    
+                    //AutoSearchsuggestion List
+                    if self.newItem != ""
+                    {
+                        List(self.autoCompleteData.filter{$0.lowercased().contains(self.newItem.lowercased())},id: \.self){ selectedItem in
+                            Text(selectedItem)
+                                .onTapGesture(perform: {
+                                    print("selected value: \(selectedItem)")
+                                    self.newItem = selectedItem
+                                    self.isSearchRowSelected = true
+                                    print("SearchText value: \(self.newItem)")
+                                }).foregroundColor(.red)
+                            
+                        }.frame(height: 90)
+                        .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show autoSearchlist on item selected
+                        
+                    }
+                    
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        print("mic button pressed")
+                        withAnimation{
+                            self.isMicCardViewShown.toggle() //toggle miccardview shown flag
+                        }
+                    })
+                    {
+                        Image(systemName: "mic")
+                            .font(Font.system(size:15).weight(.bold)).padding()
+                            .frame(width:35,height:35)
+                            .foregroundColor(.white)
+                            .background(Color(.systemIndigo))
+                            .cornerRadius(5)
+                    }
                 }.padding(.horizontal)
+                .padding(.top,15)
             }
             VStack{
                 HStack{
                     Text("Qty:")
-                    TextField("Qty", text:self.$newItemQty)
-                        .keyboardType(.numbersAndPunctuation)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .foregroundColor(.black)
-                        .fixedSize()
-                Spacer()
-                
+                    TextField("Qty", text:self.$newItemQty, onEditingChanged: { isEditing in
+                        self.isSearchRowSelected = true
+                    })
+                    .keyboardType(.numbersAndPunctuation)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .foregroundColor(.black)
+                    .fixedSize()
+                    Spacer()
+                    
                     Picker(selection: $selectedPickerValue, label: Text("Choose Value")) {
-                                ForEach(0 ..< newQtyType.count) {
-                                   Text(self.newQtyType[$0])
-                                }
+                        ForEach(0 ..< newQtyType.count) {
+                            Text(self.newQtyType[$0])
+                        }
                     }.frame(height: 50)
                     .frame(width: 40)
                     .scaledToFit()
@@ -88,30 +117,31 @@ struct ShoppingListItemView : View {
                     .padding()
                 }.padding(.leading, 60)
                 HStack{
-                Button(action: self.addNewItem, label: {
-                     Text("ADD")
-                        .background(Color(.darkGray))
-                        .foregroundColor(.white)
-                        .font(.title2)
-                        //.padding(.bottom,50)
-                        .cornerRadius(10)
-                 })
+                    Button(action: self.addNewItem, label: {
+                        Text("ADD")
+                            .background(Color(.systemBlue))
+                            .foregroundColor(.white)
+                            .font(.title2)
+                            .padding(.bottom,35)
+                            .cornerRadius(5)
+                    })
                     Button(action: {
                         self.isItemAddCardShown.toggle()
                         self.isAddCartIconClicked.toggle()
                         self.isAddItemMode.toggle()
+                        self.isSearchRowSelected.toggle()
                     }) {
-                         Text("Close")
-                            .background(Color(.darkGray))
+                        Text("Close")
+                            .background(Color(.systemBlue))
                             .foregroundColor(.white)
                             .font(.title2)
-                          //  .padding(.bottom,50)
-                            .cornerRadius(10)
-                     }
+                            .padding(.bottom,35)
+                            .cornerRadius(5)
+                    }
                 }
             }.padding()
-              
-        }.frame(width:  UIScreen.main.bounds.width - 32, height: 200, alignment: .top)
+            
+        }.frame(width:  UIScreen.main.bounds.width - 32, height: 250, alignment: .top)
         .background(Color(.systemGreen))
         .cornerRadius(10)
         .shadow(radius:8)
@@ -123,7 +153,7 @@ struct ShoppingListItemView : View {
         }
     }
     
-   
+    
     var body: some View
     {
         //Displaying MicCardView on Mic button click
@@ -134,30 +164,38 @@ struct ShoppingListItemView : View {
                 MicView(listEntry: listEntry).environmentObject(SpeechData())
             }
         }
-      
+        
         //Displaying Card View if add cart clicked
-       
+        
         if self.isItemAddCardShown
         {
-                newItemAddCard.padding()
-           
+            newItemAddCard.padding()
+            
         }
-            //List UI
+        //List UI
         ZStack{
             VStack(alignment: .leading)
             {
                 List
+                {
+                    ForEach(self.listEntry.eachListItems)
                     {
-                        ForEach(self.listEntry.eachListItems)
-                           {
-                               items in
-                            {
+                        items in
+                        {
                             ItemRowView(entry: items, listEntry: $listEntry, isAddCartIconClicked: $isAddCartIconClicked)
-                           
-                    }()
+                            
+                        }()
                         .contextMenu{
                             Button(action: {
                                 itemDocId = items.itemDocid!
+                                self.shoppingListEditItem = items.itemName//Assign existing itemName to state variable
+                                self.newItemQty = items.itemQty
+                                self.itemQtyType = items.itemQtyType
+                                
+                                print("ShoppingListItem: \(self.shoppingListEditItem)")
+                                print("New Item Qty Edit: \(self.newItemQty)")
+                                print("ItemQty TYpe Edit: \(self.itemQtyType)")
+                                
                                 self.ediShoppingListItemAlert = true
                             }) {
                                 Text("Edit")
@@ -170,94 +208,97 @@ struct ShoppingListItemView : View {
                         }
                     }.onDelete(perform: self.deleteItem)
                     .id(UUID())
-
-                    }.onAppear(){ fetchItemsFromDB() }
-                        .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
-                      .navigationBarItems(trailing:
-                        Button(action: {
-                            print("Navigation ItemAdd Cart button pressed...")
-                            self.isItemAddCardShown.toggle()
-                            self.isAddCartIconClicked.toggle()
-                            self.isAddItemMode.toggle()
-                            print("ListName:\(self.listEntry.listName)")
-                            print("List docID: \(self.$listEntry.docId)")
-                        }) {
-                            Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
-                        }.opacity(self.isAddItemMode ? 0 : 1))
-            
+                    
+                }.onAppear(){ fetchItemsFromDB() }
+                .navigationBarTitle("\(self.listEntry.listName)",displayMode: .inline)
+                .navigationBarItems(trailing:
+                                        Button(action: {
+                                            print("Navigation ItemAdd Cart button pressed...")
+                                            self.isItemAddCardShown.toggle()
+                                            self.isAddCartIconClicked.toggle()
+                                            self.isAddItemMode.toggle()
+                                            print("ListName:\(self.listEntry.listName)")
+                                            print("List docID: \(self.$listEntry.docId)")
+                                        }) {
+                                            Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
+                                        }.opacity(self.isAddItemMode ? 0 : 1))
+                
             }
-        //show alert to update Item name
-        EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListItem: self.$item.itemName, onAdd: {_ in
-            updateShoppingListItemsInDB()
-        }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
+            //show alert to update Item name
+            EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListEditItem: self.$shoppingListEditItem, onAdd: {_ in
+                updateShoppingListItemsInDB()
+            }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
+        }
     }
-}
-        
+    
+    
+    
     //update Item name in DB
     func updateShoppingListItemsInDB(){
-           guard let currentUser = Auth.auth().currentUser?.uid else { return }
-           //guard let itemDocumentId = self.item.itemDocid else {return}
-           itemName = self.item.itemName
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        //guard let itemDocumentId = self.item.itemDocid else {return}
+        // itemName = self.item.itemName
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
-            .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
-           { error in
-               if let error = error{
-                   print("error")
-               } else{
-                   print ("Data is updated")
-               }
-           }
-       }
+            /* .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])*/
+            .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
+            { error in
+                if let error = error{
+                    print("error")
+                } else{
+                    print ("Data is updated")
+                }
+            }
+    }
     
     //Function adds item to items list array
-      func addNewItem()
-      {
-          if self.newItem.isEmpty
-          {
-              self.showErrorMessage.toggle()
+    func addNewItem()
+    {
+        if self.newItem.isEmpty
+        {
+            self.showErrorMessage.toggle()
             return
-          }else{
-              self.showErrorMessage = false
-                let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
+        }else{
+            self.showErrorMessage = false
+            let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
             
             self.listEntry.eachListItems.append(newItemEntry)
             
             saveItemToDB()
             clearFields()
             
-          }
-      }
+        }
+    }
     
     func clearFields(){
         self.newItem = ""
         self.newItemQty = "0"
     }
     
-
+    
     func deleteItem(at indexSet: IndexSet)
     {
-       
+        
         print("Inside delete item function")
-             indexSet.forEach { index in
-                 let listItemDocId = listEntry.eachListItems[index]
-             guard let currentUser = Auth.auth().currentUser?.uid else { return }
-                print(currentUser)
-       
-                db.collection("Users").document(currentUser).collection("Lists")
-                    .document(listEntry.docId!)
-                    .collection("Items")
-                    .document(listItemDocId.itemDocid!)
-                    .delete{
-                error in
-                if let error = error{
-                    print(error.localizedDescription)
-                } else {
-                    print("deleteSuccess")
+        indexSet.forEach { index in
+            let listItemDocId = listEntry.eachListItems[index]
+            guard let currentUser = Auth.auth().currentUser?.uid else { return }
+            print(currentUser)
+            
+            db.collection("Users").document(currentUser).collection("Lists")
+                .document(listEntry.docId!)
+                .collection("Items")
+                .document(listItemDocId.itemDocid!)
+                .delete{
+                    error in
+                    if let error = error{
+                        print(error.localizedDescription)
+                    } else {
+                        print("deleteSuccess")
+                    }
                 }
-            }
+        }
     }
-}
-
+    
     // Adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -265,13 +306,13 @@ struct ShoppingListItemView : View {
             if let error = error{
                 print("Error saving document: \(error)")
             }else{
-               print("Data is inserted")
+                print("Data is inserted")
             }
             
         }
     }
     
-// fetchItems using SnapshotListener
+    // fetchItems using SnapshotListener
     func fetchItemsFromDB() {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addSnapshotListener { (querySnapshot, error) in
@@ -291,35 +332,10 @@ struct ShoppingListItemView : View {
             }
         }
     }
-    //Get All Items For List
-    /*func fetchItemsFromDB(){
-        print("Fetch")
-        guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").getDocuments(){ (snapshot, err) in
-            if let err = err{
-                print("Error getting document: \(err)")
-            }else{
-                for document in snapshot!.documents{
-                    print("\(document.documentID) : \(document.data())")
-                    
-                    let data = document.data()
-                    let itemDocIdData = document.documentID
-                    let itemNameData = data["Item Name"] as? String ?? ""
-                    let itemQtyData = data["Item Qty"] as? String ?? ""
-                    let itemQtyTypeData = data["Item Qty Type"] as? String ?? ""
-                    let itemIsShoppedData = data["Item IsShopped"] as? Bool ?? false
-                    let ItemData = Items(itemDocid: itemDocIdData, itemName: itemNameData, itemQty: itemQtyData, itemQtyType: itemQtyTypeData, itemIsShopped: itemIsShoppedData)
-                    
-                    self.listEntry.eachListItems.append(ItemData)
-                }
-            }
-            
-        }
-    }*/
 }
 
-    
-    
+
+
 struct ItemRowView: View{
     @State var entry: Items
     @Binding var listEntry : ShoppingListEntry
@@ -329,62 +345,49 @@ struct ItemRowView: View{
     
     var body: some View {
         
-       // ScrollView{
-           
+        // ScrollView{
+        
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
                     .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.green]),startPoint: .topLeading,endPoint: .bottomTrailing))
-                        .padding(.horizontal, 4)
-                        .shadow(color: Color.black, radius: 3, x: 3, y: 3)
+                    .padding(.horizontal, 4)
+                    .shadow(color: Color.black, radius: 3, x: 3, y: 3)
+                
+                HStack(){
+                    Button(action: {
+                        print("Checkbox clicked")
+                        self.entry.itemIsShopped.toggle()
+                        print("ItemIsShooped value after click: \(self.entry.itemIsShopped)")
+                        guard let itemDocumentId = self.entry.itemDocid else {return}
+                        itemSelectedUpdateInDB(itemDocumentId)
+                        
+                    },label: {
+                        //To check if screen in Add mode to remove checkboxes
+                        if !isAddCartIconClicked{
+                            Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square")
+                                .font(Font.system(size:20))
+                                .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
+                                .padding()
+                        }
+                    })
                     
-            HStack(){
-                Button(action: {
-                    print("Checkbox clicked")
-                    self.entry.itemIsShopped.toggle()
-                    print("ItemIsShooped value after click: \(self.entry.itemIsShopped)")
-                    guard let itemDocumentId = self.entry.itemDocid else {return}
-                    itemSelectedUpdateInDB(itemDocumentId)
+                    //Strikeout item details by checking the checkbox click status
                     
-                },label: {
-                    //To check if screen in Add mode to remove checkboxes
-                    if !isAddCartIconClicked{
-                    Image(systemName: entry.itemIsShopped ? "checkmark.square.fill" : "square")
-                        .font(Font.system(size:20))
-                        .border(/*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/, width: 2)
-                        .padding()
-                    }
-                })
-               
-                //Strikeout item details by checking the checkbox click status
-                
-                entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
-                Text(self.entry.itemName).fontWeight(.bold).font(.body)
-                Spacer()
-                entry.itemIsShopped ?
-                    Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
-                Text(self.entry.itemQty).font(.body)
-                entry.itemIsShopped ?
-                    Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
-                    Text(self.entry.itemQtyType).font(.body)
-                    //.padding()
-                
-                //Delete item button
-                /*Button(action:{deleteItemFromDB()})
-                {
-                    //Remove delete icon in Add item mode
-                    if !isAddCartIconClicked
-                    {
-                    Image(systemName: "trash").font(.title).foregroundColor(.white).frame(width:30,height:20)
-                    }
-                }.padding()*/
-                
-                
-            }.padding(.trailing,5)
+                    entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                        Text(self.entry.itemName).fontWeight(.bold).font(.body)
+                    Spacer()
+                    entry.itemIsShopped ?
+                        Text(self.entry.itemQty).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                        Text(self.entry.itemQty).font(.body)
+                    entry.itemIsShopped ?
+                        Text(self.entry.itemQtyType).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
+                        Text(self.entry.itemQtyType).font(.body)
+                    
+                }.padding(.trailing,5)
             }
         }
-       // }
-}
+    }
     //Delete individual item
     func deleteItemFromDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -396,11 +399,11 @@ struct ItemRowView: View{
         }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocumentId).delete(){
             error in
-                if let error = error{
-                    print("Error deleting document for item selected : \(error)")
-                }else{
-                   print(" Deleted item from DB")
-                }
+            if let error = error{
+                print("Error deleting document for item selected : \(error)")
+            }else{
+                print(" Deleted item from DB")
+            }
         }
         
     }
@@ -408,18 +411,18 @@ struct ItemRowView: View{
     //Update checkbox click status in DB
     func itemSelectedUpdateInDB(_ itemId:String)
     {
-            print("Value of list docId: \(self.listEntry.docId!)")
-            print("Value itemShopped inside function: \(self.entry.itemIsShopped)")
-            print("Item Doc id inside function: \(String(describing: itemId))")
-            
-            guard let currentUser = Auth.auth().currentUser?.uid else { return }
-            db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemId).updateData(["Item IsShopped":self.entry.itemIsShopped]){ error in
-                if let error = error{
-                    print("Error updating document for item selected : \(error)")
-                }else{
-                   print("Updated item document for item selection")
-                }
+        print("Value of list docId: \(self.listEntry.docId!)")
+        print("Value itemShopped inside function: \(self.entry.itemIsShopped)")
+        print("Item Doc id inside function: \(String(describing: itemId))")
+        
+        guard let currentUser = Auth.auth().currentUser?.uid else { return }
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemId).updateData(["Item IsShopped":self.entry.itemIsShopped]){ error in
+            if let error = error{
+                print("Error updating document for item selected : \(error)")
+            }else{
+                print("Updated item document for item selection")
             }
+        }
     }
 }
 
@@ -428,7 +431,7 @@ struct MicView : View{
     @State var listEntry : ShoppingListEntry
     @EnvironmentObject var speechData : SpeechData
     @Environment(\.presentationMode) var presentationMode
-   
+    
     @State var isOkPressed:Bool = false
     @State var spokenText:String = ""
     
@@ -443,72 +446,71 @@ struct MicView : View{
         
         ZStack
         {
-            
-            VStack{
-                
-                HStack{
-                    Button(action: { self.presentationMode.wrappedValue.dismiss()})
-                    {
-                       /* Image(systemName: "xmark")
-                            .clipShape(Circle())*/
-                        Text("Close".uppercased()).fontWeight(.heavy).foregroundColor(.white).fixedSize()
-                    }.frame(width: 80, height: 50)
-                    .background(Color.blue)
-                    .padding(.top,10)
+            GeometryReader{ p in
+                VStack(alignment: .leading){
+                    HStack{
+                        Button(action: {self.presentationMode.wrappedValue.dismiss()})
+                        {
+                            Image(systemName: "xmark.circle.fill").resizable()
+                                .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                                .frame(width: 30, height: 30)
+                        }
+                        .padding(.leading,20)
+                    }.padding(.top,80)
                 }
-           
-        }
+            }
             VStack{
-            //Prints voice text
+                //Prints voice text
                 Text("\(self.speechData.speech.outputText)")
-                .font(.title)
-                .padding(.top,20)
-           
-            Button(action: {
-                print("Ok button pressed in mic view inside itemview file's struct")
-                print("List doc id inside item file's MicView struct: \(self.listEntry.docId!)")
-                withAnimation{
-                    self.isOkPressed.toggle()
-                    self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
-                }
+                    .font(.title)
+                    .padding(.top,20)
                 
-                if isOkPressed{
-                    if self.spokenText.isEmpty{
-                        self.showInputVoiceErrorMessage.toggle()
-                      return
-                    }else{
-                        self.showInputVoiceErrorMessage = false
-                    //Split spoken text
-                    splitSpokenText(self.spokenText)
-                    addSpokenTextToList()
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-                }
+                Button(action: {
+                    print("Ok button pressed in mic view inside itemview file's struct")
+                    print("List doc id inside item file's MicView struct: \(self.listEntry.docId!)")
+                    withAnimation{
+                        self.isOkPressed.toggle()
+                        self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
+                    }
+                    
+                    if isOkPressed{
+                        if self.spokenText.isEmpty{
+                            self.showInputVoiceErrorMessage.toggle()
+                            return
+                        }else{
+                            self.showInputVoiceErrorMessage = false
+                            //Split spoken text
+                            splitSpokenText(self.spokenText)
+                            addSpokenTextToList()
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    }
+                    
+                })
+                {
+                    Text("Ok".uppercased())
+                        .fontWeight(.heavy)
+                        .frame(width:50,height:50)
+                        .foregroundColor(.white)
+                        .accentColor(Color.white)
+                    
+                }.padding(.vertical,20)
+                .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/))
+                .cornerRadius(10)
                 
-            })
-            {
-                Text("Ok".uppercased())
-                    .fontWeight(.heavy)
-                    .frame(width:50,height:50)
-                    .foregroundColor(.white)
-                    .accentColor(Color.white)
+                //Gets speech button
+                self.speechData.getButton()
                 
-            }.padding(.vertical,20)
-            .background(LinearGradient(gradient: Gradient(colors: [Color.green, Color.blue]), startPoint: /*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/, endPoint: /*@START_MENU_TOKEN@*/.trailing/*@END_MENU_TOKEN@*/))
-            .cornerRadius(10)
-                
-            //Gets speech button
-              self.speechData.getButton()
-            
-        }
+            }
         }.edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        
         //Alert if no values entered in textfield
         .alert(isPresented: self.$showInputVoiceErrorMessage)
         {
             Alert(title: Text("Error"), message: Text("Please input some Item by clicking on Mic button!Input item as (ItemName, Qty, Qtytype): Eg: Salt hundred grams"), dismissButton: .default(Text("OK")))
         }
         
-}
+    }
     
     //Functions splits spoken text and stores in variables
     func splitSpokenText(_ spokenText:String)
@@ -539,7 +541,7 @@ struct MicView : View{
             self.spokenQty = "0"
             self.spokenQtyType = "KG"
         }
-           
+        
     }
     
     //Function adds spoken text to Items array
@@ -560,7 +562,7 @@ struct MicView : View{
             if let error = error{
                 print("Error saving document: \(error)")
             }else{
-               print("Data is inserted")
+                print("Data is inserted")
             }
             
         }
@@ -571,6 +573,6 @@ struct MicView : View{
 
 struct ListItemView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "Good day"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "")
+        ShoppingListItemView(listEntry: ShoppingListEntry(listName: "ShppingList Name"), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), itemDocId: "", autoCompleteData: autoCompleteData)
     }
 }

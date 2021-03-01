@@ -11340,7 +11340,6 @@
 		E232733F40E225EA23715C18593D9F36 /* p256-x86_64-table.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "p256-x86_64-table.h"; path = "src/crypto/fipsmodule/ec/p256-x86_64-table.h"; sourceTree = "<group>"; };
 		E234116362C7215143BE63816945FFE4 /* protocol.upb.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; name = protocol.upb.c; path = "src/core/ext/upb-generated/envoy/api/v2/core/protocol.upb.c"; sourceTree = "<group>"; };
 		E255D24E3F64C284F2EDF69E9EDF9CC2 /* hash.cc */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.cpp; name = hash.cc; path = util/hash.cc; sourceTree = "<group>"; };
-		E25C7C0525DFF4680080240E /* DueDateDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DueDateDatePicker.swift; path = ../Modal/DueDateDatePicker.swift; sourceTree = "<group>"; };
 		E2696A39FDF4119C2C48344542E0E92A /* slice_utils.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = slice_utils.h; path = src/core/lib/slice/slice_utils.h; sourceTree = "<group>"; };
 		E269E0A409F4A98BCA9F2BD9A9CFDFBB /* FIRGeoPoint.mm */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.cpp.objcpp; name = FIRGeoPoint.mm; path = Firestore/Source/API/FIRGeoPoint.mm; sourceTree = "<group>"; };
 		E27642071F7A001BFED3603284AD6EAC /* health.upb.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = health.upb.h; path = "src/core/ext/upb-generated/src/proto/grpc/health/v1/health.upb.h"; sourceTree = "<group>"; };
@@ -15454,7 +15453,6 @@
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
-				E25C7C0525DFF4680080240E /* DueDateDatePicker.swift */,
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				D4F75014C9F5292C6073D25FF23753F7 /* Frameworks */,
 				0C72E7313BCE3925E704EDB62B7EC967 /* Pods */,

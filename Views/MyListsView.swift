@@ -18,7 +18,7 @@ struct MyListsView: View {
             GeometryReader{ geometry in
                 ZStack(alignment: .leading)
                 {
-                    MainView(entry: ShoppingListEntry(listName: "Bra dag", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
+                    MainView(entry: ShoppingListEntry(listName: "List Name", dueDate: ""), item: Items(itemName: "", itemQty: "", itemQtyType: "", itemIsShopped: false), dueDate: "")
                         .frame(width: geometry.size.width,height: geometry.size.height)
                         .offset(x: self.showMenu ? geometry.size.width/2:0)
                         .disabled(self.showMenu ? true:false)
@@ -64,11 +64,12 @@ struct MainView : View
                 List(){
                     ForEach(shoppingList.entries) { entry in
                         NavigationLink(
-                            destination: ShoppingListItemView(listEntry: entry, item: item, itemDocId: "")){
+                            destination: ShoppingListItemView(listEntry: entry, item: item, itemDocId: "", autoCompleteData: autoCompleteData)){
                             ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                             Button(action: {
                                 docID = entry.docId!
+                                self.listName = entry.listName //Assign listname to state variable
                                 self.ediShoppingListAlert = true
                             }) {
                                 Text("Edit")
@@ -105,7 +106,7 @@ struct MainView : View
         
         EditShoppingListAlertView(title: "Enter name of the list", isShown: $ediShoppingListAlert, listName: $listName, onAdd: {_ in
             updateShoppingListInDB()
-        }, dueDate: .constant(""))
+        }, dueDate: $dueDate)
         
     }
     func saveShoppingListInDB(){
@@ -123,7 +124,7 @@ struct MainView : View
     func updateShoppingListInDB(){
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : listName, "dueDate": dueDate])
+        db.collection("Users").document(currentUser).collection("Lists").document(docID).updateData(["listName" : self.listName, "dueDate": dueDate])
         { error in
             if let error = error{
                 print("error")
