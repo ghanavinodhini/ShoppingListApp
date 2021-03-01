@@ -10,16 +10,14 @@ import SwiftUI
 struct ShoppingListCardView: View {
     var entry: ShoppingListEntry
     var body: some View {
-        VStack(alignment: .leading){
-            ZStack(){
-                Rectangle().fill(Color.blue).frame(width:330, height:40).cornerRadius(5.0).shadow(radius: 10 )
-                VStack(alignment: .leading) {
-                    Text(entry.listName)
-                    HStack(){
-                        Text("DueDate:")
-                        Text(entry.dueDate)
-                        Spacer()
-                    }
+        ZStack(){
+            Rectangle().fill(Color.blue).frame(width:330, height:40).cornerRadius(5.0).shadow(radius: 10 )
+            VStack(alignment: .leading) {
+                Text(entry.listName)
+                HStack(){
+                    Text("DueDate:")
+                    Text(entry.dueDate)
+                    Spacer()
                 }
             }
         }
