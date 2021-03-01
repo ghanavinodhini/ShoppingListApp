@@ -10,21 +10,22 @@ import SwiftUI
 struct ShoppingListCardView: View {
     var entry: ShoppingListEntry
     var body: some View {
-        ZStack{
-            Rectangle().fill(Color.blue).frame(width:330, height:25).cornerRadius(/*@START_MENU_TOKEN@*/3.0/*@END_MENU_TOKEN@*/).shadow(radius: 10 )
-            HStack{
+        ZStack(){
+            Rectangle().fill(Color.blue).frame(width:330, height:40).cornerRadius(5.0).shadow(radius: 10 )
+            VStack(alignment: .leading) {
                 Text(entry.listName)
-                Spacer()
-                Text("DueDate:")
-                Text(entry.dueDate)
+                HStack(){
+                    Text("DueDate:")
+                    Text(entry.dueDate)
+                    Spacer()
+                }
             }
-            
         }
     }
 }
 
 struct CardView_Previews: PreviewProvider {
     static var previews: some View {
-        ShoppingListCardView(entry: ShoppingListEntry(listName: "Bra dag"))
+        ShoppingListCardView(entry: ShoppingListEntry(listName: "List Name"))
     }
 }

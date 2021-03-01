@@ -26,16 +26,16 @@ class UserModelData : ObservableObject
             }
         }
     }
-
+    
     @Published var reEnterPassword = ""
-   
+    
     // Error Alerts
     @Published var alert = false
     @Published var alertMsg = ""
     
     //Current User Name
     @Published var currentUserName = ""
-   
+    
     let db = Firestore.firestore()
     
     
@@ -57,8 +57,8 @@ class UserModelData : ObservableObject
                 self.alert.toggle()
                 return
             }else{
-              //self.alertMsg = "Login Success"
-              //self.alert.toggle()
+                //self.alertMsg = "Login Success"
+                //self.alert.toggle()
                 self.isLogin.toggle()
                 self.getCurrentUserInfo()
             }
@@ -90,11 +90,11 @@ class UserModelData : ObservableObject
                 self.alert.toggle()
                 return
             }else{
-              self.alertMsg = "SignUp Successful"
-              self.alert.toggle()
+                self.alertMsg = "SignUp Successful"
+                self.alert.toggle()
                 //Calling upload function to store user data
                 self.uploadUserInfo(userName:self.userName_SignUp,userEmail:self.email_SignUp)
-        }
+            }
         }
     }
     
@@ -113,26 +113,26 @@ class UserModelData : ObservableObject
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser)
             .addSnapshotListener{(snap,err) in
-            if err != nil{
-                print("Error fetching data from firebase")
-                return
-            }
+                if err != nil{
+                    print("Error fetching data from firebase")
+                    return
+                }
                 if let data = snap?.data(){
                     self.currentUserName = (data["UserName"] as? String)!
                     print("Current User Name in Modeldata: \(self.currentUserName)")
-                   
+                    
                 }
-        }
-       
+            }
+        
     }
     
     //Reset Password
     func resetPassword()
     {
         let resetAlert = UIAlertController(title: "Reset Password", message: "Enter Valid E-Mail ID To Reset Your Password", preferredStyle: .alert)
-    
+        
         resetAlert.addTextField { (password) in
-        password.placeholder = "Valid Email Address"
+            password.placeholder = "Valid Email Address"
         }
         
         //Closure for proceeding password reset alert
@@ -175,7 +175,7 @@ class UserModelData : ObservableObject
             print("User signedout")
             self.isLogin.toggle()
         } catch let signOutError as NSError {
-          print ("Error signing out: %@", signOutError)
+            print ("Error signing out: %@", signOutError)
             self.alertMsg = signOutError as! String
             self.alert.toggle()
             return

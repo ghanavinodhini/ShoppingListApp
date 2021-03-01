@@ -14,7 +14,7 @@ struct AuthenticationView: View {
     var body: some View {
         
         LoginView(userModel: userModel)
-       
+        
     }
 }
 
@@ -26,39 +26,39 @@ struct AuthenticationView_Previews: PreviewProvider {
 
 //Login View
 struct LoginView : View {
-      
-      @ObservedObject var userModel : UserModelData
-      
-      var body: some View{
-          
-          ZStack{
-              VStack{
-                  ZStack{
-                      //For smaller Devices
-                      if UIScreen.main.bounds.height < 750
-                      {
-                          Image("logo")
-                              .resizable()
-                              .frame(width: 100, height: 100)
-                      }
-                      else{
-                          Image("logo")
+    
+    @ObservedObject var userModel : UserModelData
+    
+    var body: some View{
+        
+        ZStack{
+            VStack{
+                ZStack{
+                    //For smaller Devices
+                    if UIScreen.main.bounds.height < 750
+                    {
+                        Image("logo")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                    }
+                    else{
+                        Image("logo")
                             .resizable()
                             .frame(width: 150, height: 150)
-                            }
-                  }
-                      .padding(.horizontal)
-                      .padding(.vertical,20)
-                     
-                  
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.vertical,20)
+                
+                
                 VStack(spacing:10){
-                          Text("Shopping List")
-                              .font(.system(size: 35, weight: .heavy))
-                              .foregroundColor(.blue)
-                  }.padding(.top)
-                  
-                  VStack(spacing: 20)
-                  {
+                    Text("Shopping List")
+                        .font(.system(size: 35, weight: .heavy))
+                        .foregroundColor(.blue)
+                }.padding(.top)
+                
+                VStack(spacing: 20)
+                {
                     HStack(spacing:15){
                         Image(systemName: "envelope.fill")
                         TextField("Enter Email", text:$userModel.email)
@@ -70,62 +70,62 @@ struct LoginView : View {
                     }
                     Divider().background(Color.white.opacity(0.5))
                     
-                  }.padding()
+                }.padding()
                 
-                    //Forgot Password action
-                    Button(action: userModel.resetPassword) {
-                        Text("Forgot Password?")
-                            .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
-                            .foregroundColor(Color.blue)
-                    }
-                    Divider().background(Color.white.opacity(0.5))
-                    .padding(.top,10)
-                  
-                //Login Button
-                  Button(action: userModel.login)
-                  {
-                      Text("LOGIN")
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .padding(.vertical)
-                            .frame(width: UIScreen.main.bounds.width - 30)
-                            .background(Color.blue)
-                            .clipShape(Capsule())
-                  }
-                  .padding(.top,20)
-                 
-                  HStack(spacing: 10){
-                      Button(action: {userModel.isSignUp.toggle()})
-                      {
-                          Text("Sign Up")
-                              .fontWeight(.bold)
-                              .foregroundColor(.blue)
-                      }
-                  }.padding(.top,25)
-                    Spacer()
-                  
-              }
-          }.sheet(isPresented: $userModel.isSignUp)
-                {
-                    SignUpView(userModel: userModel)
+                //Forgot Password action
+                Button(action: userModel.resetPassword) {
+                    Text("Forgot Password?")
+                        .fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/)
+                        .foregroundColor(Color.blue)
                 }
+                Divider().background(Color.white.opacity(0.5))
+                    .padding(.top,10)
+                
+                //Login Button
+                Button(action: userModel.login)
+                {
+                    Text("LOGIN")
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.vertical)
+                        .frame(width: UIScreen.main.bounds.width - 30)
+                        .background(Color.blue)
+                        .clipShape(Capsule())
+                }
+                .padding(.top,20)
+                
+                HStack(spacing: 10){
+                    Button(action: {userModel.isSignUp.toggle()})
+                    {
+                        Text("Sign Up")
+                            .fontWeight(.bold)
+                            .foregroundColor(.blue)
+                    }
+                }.padding(.top,25)
+                Spacer()
+                
+            }
+        }.sheet(isPresented: $userModel.isSignUp)
+        {
+            SignUpView(userModel: userModel)
+        }
         VStack{
-          
+            
         }.fullScreenCover(isPresented: $userModel.isLogin)
         {
             MyListsView(userModel: userModel)
             
         }
-          // Alerts for Login button validate fields
-          .alert(isPresented: $userModel.alert, content: {
-              
-              Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok")))
-          })
-      }
+        // Alerts for Login button validate fields
+        .alert(isPresented: $userModel.alert, content: {
+            
+            Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok")))
+        })
+    }
 }
 
 
-  
+
 //SignUp View
 struct SignUpView : View {
     
@@ -140,18 +140,18 @@ struct SignUpView : View {
                 //Display close button in signup view right corner
                 HStack{
                     Spacer()
-                //Toggle isSignup on click,
-                Button(action: {userModel.isSignUp.toggle()}){
-                Image(systemName: "xmark.circle.fill").resizable()
-                        .frame(width: 30, height: 30)
-                        .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
-                        .padding()
-                                        
-                }
+                    //Toggle isSignup on click,
+                    Button(action: {userModel.isSignUp.toggle()}){
+                        Image(systemName: "xmark.circle.fill").resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(/*@START_MENU_TOKEN@*/.blue/*@END_MENU_TOKEN@*/)
+                            .padding()
+                        
+                    }
                     .padding(.trailing,10)
                     .padding(.top,10)
-            }
-
+                }
+                
                 
                 ZStack{
                     //For small devices
@@ -197,10 +197,10 @@ struct SignUpView : View {
                         TextField("Re-Enter Password",text:$userModel.reEnterPassword)
                     }
                     Divider().background(Color.white.opacity(0.5))
-                 
+                    
                 }
                 .padding()
-               
+                
                 //SignUp button
                 Button(action: userModel.signUp) {
                     Text("SIGNUP")
@@ -211,21 +211,21 @@ struct SignUpView : View {
                         .background(Color.blue)
                         .clipShape(Capsule())
                 }.padding(.vertical,20)
-                    Spacer()
+                Spacer()
             }
         }
-    
+        
         // Alerts Signup success
         .alert(isPresented: $userModel.alert, content: {
             Alert(title: Text("Message"), message: Text(userModel.alertMsg), dismissButton: .destructive(Text("Ok"), action: {
-                 
-              if userModel.alertMsg == "SignUp Successful"
-              {
+                
+                if userModel.alertMsg == "SignUp Successful"
+                {
                     userModel.userName_SignUp = ""
                     userModel.email_SignUp = ""
                     userModel.password_SignUp = ""
                     userModel.reEnterPassword = ""
-                self.presentationMode.wrappedValue.dismiss()
+                    self.presentationMode.wrappedValue.dismiss()
                 }
             }))
         })

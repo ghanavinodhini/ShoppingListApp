@@ -120,6 +120,6 @@ struct AddNewListAlertView: View {
 }
 
 struct AddNewListAlertView_Previews: PreviewProvider {
-    static var previews: some View {AddNewListAlertView(title: "Add Item", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""), notificationListName: "")
+    static var previews: some View {AddNewListAlertView(title: "Add new Shoppinglist", isShown: .constant(true), listName: .constant(""), dueDate: .constant(""), notificationListName: "")
     }
 }

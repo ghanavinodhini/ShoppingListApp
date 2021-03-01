@@ -10,7 +10,7 @@ import Foundation
 struct ShoppingListEntry : Identifiable  {
     
     var id = UUID()
-    var docId : String?
+    var listDocId : String?
     var listName : String
     var date : Date = Date()
     var eachListItems = [Items]()

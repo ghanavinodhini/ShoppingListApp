@@ -77,6 +77,6 @@ struct EditShoppingListItemAlertView: View {
 }
 struct EditShoppingListItemAlertView_Previews: PreviewProvider {
     static var previews: some View {
-        EditShoppingListItemAlertView(title: "Add Item", isShown: .constant(true), shoppingListEditItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
+        EditShoppingListItemAlertView(title: "Edit Item", isShown: .constant(true), shoppingListEditItem: .constant(""), itemQty: .constant(""), itemQtyType: .constant(""))
     }
 }
