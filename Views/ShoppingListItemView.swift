@@ -218,7 +218,7 @@ struct ShoppingListItemView : View {
                                             self.isAddCartIconClicked.toggle()
                                             self.isAddItemMode.toggle()
                                             print("ListName:\(self.listEntry.listName)")
-                                            print("List docID: \(self.$listEntry.docId)")
+                                            print("List docID: \(self.$listEntry.listDocId)")
                                         }) {
                                             Image(systemName: "cart.badge.plus") .font(Font.system(size:30))
                                         }.opacity(self.isAddItemMode ? 0 : 1))
@@ -238,7 +238,7 @@ struct ShoppingListItemView : View {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         //guard let itemDocumentId = self.item.itemDocid else {return}
         // itemName = self.item.itemName
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocId)
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").document(itemDocId)
             /* .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])*/
             .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
             { error in
@@ -285,7 +285,7 @@ struct ShoppingListItemView : View {
             print(currentUser)
             
             db.collection("Users").document(currentUser).collection("Lists")
-                .document(listEntry.docId!)
+                .document(listEntry.listDocId!)
                 .collection("Items")
                 .document(listItemDocId.itemDocid!)
                 .delete{
@@ -302,7 +302,7 @@ struct ShoppingListItemView : View {
     // Adds item to DB
     func saveItemToDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped]){ error in
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").addDocument(data: ["Item Name":newItem, "Item Qty": newItemQty, "Item Qty Type": newQtyType[selectedPickerValue], "Item IsShopped": newItemIsShopped]){ error in
             if let error = error{
                 print("Error saving document: \(error)")
             }else{
@@ -315,7 +315,7 @@ struct ShoppingListItemView : View {
     // fetchItems using SnapshotListener
     func fetchItemsFromDB() {
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addSnapshotListener { (querySnapshot, error) in
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").addSnapshotListener { (querySnapshot, error) in
             guard let documents = querySnapshot?.documents else {
                 print("No documents")
                 return
@@ -397,7 +397,7 @@ struct ItemRowView: View{
             print("index value insside delete function: \(index)")
             self.listEntry.eachListItems.remove(atOffsets: [index])
         }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemDocumentId).delete(){
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").document(itemDocumentId).delete(){
             error in
             if let error = error{
                 print("Error deleting document for item selected : \(error)")
@@ -411,12 +411,12 @@ struct ItemRowView: View{
     //Update checkbox click status in DB
     func itemSelectedUpdateInDB(_ itemId:String)
     {
-        print("Value of list docId: \(self.listEntry.docId!)")
+        print("Value of list docId: \(self.listEntry.listDocId!)")
         print("Value itemShopped inside function: \(self.entry.itemIsShopped)")
         print("Item Doc id inside function: \(String(describing: itemId))")
         
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").document(itemId).updateData(["Item IsShopped":self.entry.itemIsShopped]){ error in
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").document(itemId).updateData(["Item IsShopped":self.entry.itemIsShopped]){ error in
             if let error = error{
                 print("Error updating document for item selected : \(error)")
             }else{
@@ -467,7 +467,7 @@ struct MicView : View{
                 
                 Button(action: {
                     print("Ok button pressed in mic view inside itemview file's struct")
-                    print("List doc id inside item file's MicView struct: \(self.listEntry.docId!)")
+                    print("List doc id inside item file's MicView struct: \(self.listEntry.listDocId!)")
                     withAnimation{
                         self.isOkPressed.toggle()
                         self.spokenText = self.speechData.speech.outputText //Assign spoken text to state variable
@@ -558,7 +558,7 @@ struct MicView : View{
     func saveSpokenTextToDB(){
         print("Inside save function in Mic View struct")
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.docId!).collection("Items").addDocument(data: ["Item Name":self.spokenItem, "Item Qty": self.spokenQty, "Item Qty Type": self.spokenQtyType, "Item IsShopped": false]){ error in
+        db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").addDocument(data: ["Item Name":self.spokenItem, "Item Qty": self.spokenQty, "Item Qty Type": self.spokenQtyType, "Item IsShopped": false]){ error in
             if let error = error{
                 print("Error saving document: \(error)")
             }else{

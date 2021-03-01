@@ -52,7 +52,7 @@ struct MainView : View
     @State private var listName: String = ""
     var entry : ShoppingListEntry
     var db = Firestore.firestore()
-    @State var docID : String = ""
+    @State var listDocId : String = ""
     var item:Items
     // Added for Notification functionality, due date variables
     @State var dueDate : String
@@ -68,7 +68,7 @@ struct MainView : View
                             ShoppingListCardView(entry: entry)
                         }        .contextMenu{
                             Button(action: {
-                                docID = entry.docId!
+                                listDocId = entry.listDocId!
                                 self.listName = entry.listName //Assign listname to state variable
                                 self.ediShoppingListAlert = true
                             }) {
@@ -76,8 +76,8 @@ struct MainView : View
                             }
                             
                             Button(action: {
-                                docID = entry.docId!
-                                print(docID)
+                                listDocId = entry.listDocId!
+                                print(listDocId)
                             }) {
                                 Text("Cancel")
                             }
@@ -135,9 +135,9 @@ struct MainView : View
     }
     func deleteListInDB(at indexSet: IndexSet) {
         indexSet.forEach { index in
-            let shoppingListDocId = shoppingList.entries[index]
+            let listDocId = shoppingList.entries[index]
             guard let currentUser = Auth.auth().currentUser?.uid else { return }
-            db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).delete{
+            db.collection("Users").document(currentUser).collection("Lists").document(listDocId.listDocId!).delete{
                 error in
                 if let error = error{
                     print(error.localizedDescription)
