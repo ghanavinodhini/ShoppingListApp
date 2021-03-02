@@ -13,7 +13,6 @@ struct ShoppingListItemView : View {
     
     @EnvironmentObject var userModel : UserModelData
     @State var listEntry : ShoppingListEntry
-    
     @State var item : Items
     @State var newItem:String = ""
     @State var showErrorMessage = false
@@ -41,7 +40,7 @@ struct ShoppingListItemView : View {
     
     var db = Firestore.firestore()
     
-    //Text field for adding new item
+    //Card for adding new item
     var newItemAddCard : some View{
         
         VStack{
@@ -71,7 +70,6 @@ struct ShoppingListItemView : View {
                         .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show autoSearchlist on item selected
                         
                     }
-                    
                     
                     Spacer()
                     
@@ -142,7 +140,7 @@ struct ShoppingListItemView : View {
             }.padding()
             
         }.frame(width:  UIScreen.main.bounds.width - 32, height: 250, alignment: .top)
-        .background(Color(.systemGreen))
+        .background(LinearGradient(gradient: Gradient(colors: [.secondary,.white]), startPoint: .leading, endPoint: .trailing))
         .cornerRadius(10)
         .shadow(radius:8)
         
@@ -277,7 +275,6 @@ struct ShoppingListItemView : View {
     
     func deleteItem(at indexSet: IndexSet)
     {
-        
         print("Inside delete item function")
         indexSet.forEach { index in
             let listItemDocId = listEntry.eachListItems[index]
@@ -350,7 +347,7 @@ struct ItemRowView: View{
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.green]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color(.systemIndigo)]),startPoint: .topLeading,endPoint: .bottomTrailing))
                     .padding(.horizontal, 4)
                     .shadow(color: Color.black, radius: 3, x: 3, y: 3)
                 
@@ -373,7 +370,6 @@ struct ItemRowView: View{
                     })
                     
                     //Strikeout item details by checking the checkbox click status
-                    
                     entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                         Text(self.entry.itemName).fontWeight(.bold).font(.body)
                     Spacer()

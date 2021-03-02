@@ -11,9 +11,11 @@ struct ShoppingListCardView: View {
     var entry: ShoppingListEntry
     var body: some View {
         ZStack(){
-            Rectangle().fill(Color.blue).frame(width:330, height:40).cornerRadius(5.0).shadow(radius: 10 )
+            Rectangle()
+                .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color(.systemIndigo)]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                .frame(width:330, height:40).cornerRadius(5.0).shadow(radius: 10 )
             VStack(alignment: .leading) {
-                Text(entry.listName)
+                Text(entry.listName).fontWeight(/*@START_MENU_TOKEN@*/.bold/*@END_MENU_TOKEN@*/).font(.callout)
                 HStack(){
                     Text("DueDate:")
                     Text(entry.dueDate)
