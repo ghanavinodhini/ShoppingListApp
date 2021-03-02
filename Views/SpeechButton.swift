@@ -13,10 +13,7 @@ struct SpeechButton: View {
     @State var animateBigCircle = false
     @State var animateSmallCircle = false
     @State var actionPop:Bool = false
-    
-    
     @EnvironmentObject var speechData : SpeechData
-    
     
     var body: some View {
         VStack{

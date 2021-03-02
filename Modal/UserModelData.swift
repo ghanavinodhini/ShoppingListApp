@@ -18,6 +18,7 @@ class UserModelData : ObservableObject
     @Published var isSignUp = false
     @Published var isLogin = false
     @Published var email_SignUp = ""
+   
     //Set password to accept only 8 chars
     @Published var password_SignUp = "" {
         didSet{
@@ -26,13 +27,10 @@ class UserModelData : ObservableObject
             }
         }
     }
-    
     @Published var reEnterPassword = ""
-    
     // Error Alerts
     @Published var alert = false
     @Published var alertMsg = ""
-    
     //Current User Name
     @Published var currentUserName = ""
     
@@ -57,8 +55,6 @@ class UserModelData : ObservableObject
                 self.alert.toggle()
                 return
             }else{
-                //self.alertMsg = "Login Success"
-                //self.alert.toggle()
                 self.isLogin.toggle()
                 self.getCurrentUserInfo()
             }
@@ -109,7 +105,6 @@ class UserModelData : ObservableObject
     
     //Retrieve user info from Firebase
     func getCurrentUserInfo(){
-        //let db = Firestore.firestore()
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser)
             .addSnapshotListener{(snap,err) in
@@ -130,7 +125,6 @@ class UserModelData : ObservableObject
     func resetPassword()
     {
         let resetAlert = UIAlertController(title: "Reset Password", message: "Enter Valid E-Mail ID To Reset Your Password", preferredStyle: .alert)
-        
         resetAlert.addTextField { (password) in
             password.placeholder = "Valid Email Address"
         }
@@ -138,12 +132,11 @@ class UserModelData : ObservableObject
         //Closure for proceeding password reset alert
         let resetOk = UIAlertAction(title: "Reset", style: .default) { (_) in
             
-            // Sending Password Link...
+            // Sending Password Link
             if resetAlert.textFields![0].text! != ""
             {
                 let resetEmail = resetAlert.textFields?[0].text
                 print("Reset Email entered: \(String(describing: resetEmail))")
-                //Auth.auth().sendPasswordReset(withEmail: resetAlert.textFields![0].text!) { (err) in
                 Auth.auth().sendPasswordReset(withEmail: String(resetEmail ?? "")) { (err) in
                     if err != nil
                     {

@@ -39,7 +39,6 @@ struct AddNewListAlertView: View {
             
             // Added for Notification functionality , Date Picker layout
             HStack{
-                
                 Text("DueDate")
                 DueDatePicker(placeholder: "", date: self.$date)
             }
@@ -77,9 +76,7 @@ struct AddNewListAlertView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20.0, style: .continuous))
         .offset(y: isShown ? 0 : screenSize.height)
         .animation(.spring())
-        
         .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
-        
     }
     // get current user name from db to show in notification
     func getCurrentUserInfo(){
