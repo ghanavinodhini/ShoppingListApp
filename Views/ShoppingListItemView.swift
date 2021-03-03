@@ -27,6 +27,7 @@ struct ShoppingListItemView : View {
     //Variables for Edit Alert
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
+    @State var editItemQty:String = ""
     @State var itemQtyType:String = ""
     @State var shoppingListEditItem:String = ""
     
@@ -187,8 +188,8 @@ struct ShoppingListItemView : View {
                             Button(action: {
                                 itemDocId = items.itemDocid!
                                 self.shoppingListEditItem = items.itemName//Assign existing itemName to state variable
-                                //self.newItemQty = items.itemQty
-                                //self.itemQtyType = items.itemQtyType
+                                self.editItemQty = items.itemQty
+                                self.itemQtyType = items.itemQtyType
                                 
                                 print("ShoppingListItem: \(self.shoppingListEditItem)")
                                 print("New Item Qty Edit: \(self.newItemQty)")
@@ -225,7 +226,8 @@ struct ShoppingListItemView : View {
             //show alert to update Item name
             EditShoppingListItemAlertView(title: "Enter name of the item", isShown: $ediShoppingListItemAlert, shoppingListEditItem: self.$shoppingListEditItem, onAdd: {_ in
                 updateShoppingListItemsInDB()
-            }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
+            }, itemQty: self.$editItemQty, itemQtyType: self.$itemQtyType)
+           // }, itemQty: self.$newItemQty, itemQtyType: self.$itemQtyType)
         }
     }
     
@@ -235,7 +237,8 @@ struct ShoppingListItemView : View {
     func updateShoppingListItemsInDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").document(itemDocId)
-            .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
+           // .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
+            .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.editItemQty, "Item Qty Type": self.itemQtyType])
             { error in
                 if let error = error{
                     print("error")
