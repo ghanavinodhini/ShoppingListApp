@@ -17,7 +17,7 @@ struct EditShoppingListItemAlertView: View {
     @Binding var shoppingListEditItem: String
     var onAdd: (String) -> Void = { _ in }
     var onCancel: () -> Void = { }
-    @Binding var itemQty:String 
+    @Binding var itemQty:String
     @Binding var itemQtyType:String
     
     var body: some View {
