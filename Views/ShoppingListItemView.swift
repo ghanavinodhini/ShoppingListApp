@@ -187,8 +187,8 @@ struct ShoppingListItemView : View {
                             Button(action: {
                                 itemDocId = items.itemDocid!
                                 self.shoppingListEditItem = items.itemName//Assign existing itemName to state variable
-                                self.newItemQty = items.itemQty
-                                self.itemQtyType = items.itemQtyType
+                                //self.newItemQty = items.itemQty
+                                //self.itemQtyType = items.itemQtyType
                                 
                                 print("ShoppingListItem: \(self.shoppingListEditItem)")
                                 print("New Item Qty Edit: \(self.newItemQty)")
