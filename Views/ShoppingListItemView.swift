@@ -13,7 +13,6 @@ struct ShoppingListItemView : View {
     
     @EnvironmentObject var userModel : UserModelData
     @State var listEntry : ShoppingListEntry
-    
     @State var item : Items
     @State var newItem:String = ""
     @State var showErrorMessage = false
@@ -28,7 +27,6 @@ struct ShoppingListItemView : View {
     //Variables for Edit Alert
     @State var itemDocId : String
     @State var ediShoppingListItemAlert = false
-    // @State var itemName : String = ""
     @State var itemQtyType:String = ""
     @State var shoppingListEditItem:String = ""
     
@@ -41,19 +39,22 @@ struct ShoppingListItemView : View {
     
     var db = Firestore.firestore()
     
-    //Text field for adding new item
+    //Card for adding new item
     var newItemAddCard : some View{
         
         VStack{
             ZStack(){
-                Rectangle().foregroundColor(Color(.white)).padding(.top,20)
+                Rectangle()
+                    .foregroundColor(Color(.white)).padding(.top,20)
                     .cornerRadius(5)
                     .frame(width: UIScreen.main.bounds.width - 60,height:70)
+                
                 HStack{
                     TextField("Enter New Item",text:self.$newItem, onEditingChanged: { isEditing in
                         self.isSearchRowSelected = false
                         
                     }).padding(.top,15).foregroundColor(.black)
+                    
                     
                     //AutoSearchsuggestion List
                     if self.newItem != ""
@@ -65,13 +66,12 @@ struct ShoppingListItemView : View {
                                     self.newItem = selectedItem
                                     self.isSearchRowSelected = true
                                     print("SearchText value: \(self.newItem)")
-                                }).foregroundColor(.red)
+                                }).foregroundColor(.black)
                             
                         }.frame(height: 90)
                         .opacity(self.isSearchRowSelected ? 0 : 1) //Hide & Show autoSearchlist on item selected
                         
                     }
-                    
                     
                     Spacer()
                     
@@ -142,7 +142,7 @@ struct ShoppingListItemView : View {
             }.padding()
             
         }.frame(width:  UIScreen.main.bounds.width - 32, height: 250, alignment: .top)
-        .background(Color(.systemGreen))
+        .background(Color(.secondarySystemBackground))
         .cornerRadius(10)
         .shadow(radius:8)
         
@@ -160,13 +160,11 @@ struct ShoppingListItemView : View {
         if self.isMicCardViewShown{
             VStack{}.fullScreenCover(isPresented: $isMicCardViewShown)
             {
-                //MicCardView().environmentObject(SpeechData())
                 MicView(listEntry: listEntry).environmentObject(SpeechData())
             }
         }
         
         //Displaying Card View if add cart clicked
-        
         if self.isItemAddCardShown
         {
             newItemAddCard.padding()
@@ -236,10 +234,7 @@ struct ShoppingListItemView : View {
     //update Item name in DB
     func updateShoppingListItemsInDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
-        //guard let itemDocumentId = self.item.itemDocid else {return}
-        // itemName = self.item.itemName
         db.collection("Users").document(currentUser).collection("Lists").document(self.listEntry.listDocId!).collection("Items").document(itemDocId)
-            /* .updateData(["Item Name" : itemName, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])*/
             .updateData(["Item Name" : self.shoppingListEditItem, "Item Qty" : self.newItemQty, "Item Qty Type": self.itemQtyType])
             { error in
                 if let error = error{
@@ -260,12 +255,10 @@ struct ShoppingListItemView : View {
         }else{
             self.showErrorMessage = false
             let newItemEntry = Items(itemName: self.newItem, itemQty: self.newItemQty, itemQtyType: self.newQtyType[selectedPickerValue], itemIsShopped: self.newItemIsShopped)
-            
             self.listEntry.eachListItems.append(newItemEntry)
             
             saveItemToDB()
             clearFields()
-            
         }
     }
     
@@ -274,10 +267,9 @@ struct ShoppingListItemView : View {
         self.newItemQty = "0"
     }
     
-    
+    //Deletes Item
     func deleteItem(at indexSet: IndexSet)
     {
-        
         print("Inside delete item function")
         indexSet.forEach { index in
             let listItemDocId = listEntry.eachListItems[index]
@@ -342,15 +334,11 @@ struct ItemRowView: View{
     @Binding var isAddCartIconClicked:Bool
     var db = Firestore.firestore()
     
-    
     var body: some View {
-        
-        // ScrollView{
-        
         VStack{
             ZStack{
                 RoundedRectangle(cornerRadius: 2)
-                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color.green]),startPoint: .topLeading,endPoint: .bottomTrailing))
+                    .fill(LinearGradient(gradient: Gradient(colors:[Color.white,Color(.systemIndigo)]),startPoint: .topLeading,endPoint: .bottomTrailing))
                     .padding(.horizontal, 4)
                     .shadow(color: Color.black, radius: 3, x: 3, y: 3)
                 
@@ -373,7 +361,6 @@ struct ItemRowView: View{
                     })
                     
                     //Strikeout item details by checking the checkbox click status
-                    
                     entry.itemIsShopped ? Text(self.entry.itemName).fontWeight(.bold).font(.body).strikethrough(/*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, color: /*@START_MENU_TOKEN@*/Color.black/*@END_MENU_TOKEN@*/) :
                         Text(self.entry.itemName).fontWeight(.bold).font(.body)
                     Spacer()
@@ -388,6 +375,7 @@ struct ItemRowView: View{
             }
         }
     }
+    
     //Delete individual item
     func deleteItemFromDB(){
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
@@ -405,7 +393,6 @@ struct ItemRowView: View{
                 print(" Deleted item from DB")
             }
         }
-        
     }
     
     //Update checkbox click status in DB
@@ -434,7 +421,6 @@ struct MicView : View{
     
     @State var isOkPressed:Bool = false
     @State var spokenText:String = ""
-    
     @State var spokenItem:String = ""
     @State var spokenQty:String = ""
     @State var spokenQtyType:String = ""
@@ -509,7 +495,6 @@ struct MicView : View{
         {
             Alert(title: Text("Error"), message: Text("Please input some Item by clicking on Mic button!Input item as (ItemName, Qty, Qtytype): Eg: Salt hundred grams"), dismissButton: .default(Text("OK")))
         }
-        
     }
     
     //Functions splits spoken text and stores in variables
@@ -541,11 +526,11 @@ struct MicView : View{
             self.spokenQty = "0"
             self.spokenQtyType = "KG"
         }
-        
     }
     
     //Function adds spoken text to Items array
-    func addSpokenTextToList(){
+    func addSpokenTextToList()
+    {
         print("Inside ass Spoken function in Mic view struct")
         let newSpokenItemEntry = Items(itemName: self.spokenItem, itemQty: self.spokenQty, itemQtyType: self.spokenQtyType, itemIsShopped: false)
         self.listEntry.eachListItems.append(newSpokenItemEntry)

@@ -21,6 +21,8 @@ struct DueDatePicker: UIViewRepresentable {
     public var placeholder : String
     var backgroundColor: UIColor = .white
     @Binding public var date: Date?
+   
+    
     func makeUIView(context: Context) ->  UITextField {
         let now = Date()
         self.datePicker.datePickerMode = .dateAndTime
@@ -52,6 +54,7 @@ struct DueDatePicker: UIViewRepresentable {
             }
             self.textField.resignFirstResponder()
         }
+      
         return self.textField
     }
     

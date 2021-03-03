@@ -59,6 +59,7 @@ struct EditShoppingListAlertView: View {
                     self.listName = ""
                     getCurrentUserInfo()
                 }.disabled(listName.isEmpty || date == nil )
+                
             }
         }
         .onAppear(){
@@ -77,10 +78,11 @@ struct EditShoppingListAlertView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20.0, style: .continuous))
         .offset(y: isShown ? 0 : screenSize.height)
         .animation(.spring())
-        
         .shadow(color: Color(#colorLiteral(red: 0.8596749902, green: 0.854565084, blue: 0.8636032343, alpha: 1)), radius: 3, x: -9, y: -9)
         
     }
+    
+    
     // get current user name from db to show in notification
     func getCurrentUserInfo(){
         let db = Firestore.firestore()
@@ -106,6 +108,7 @@ struct EditShoppingListAlertView: View {
         content.body = notificationListName
         content.sound = UNNotificationSound.default
         let date = self.date!.addingTimeInterval(10)
+        print("Date value inside sendNotification function: \($date)")
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
         let uuidString = UUID().uuidString

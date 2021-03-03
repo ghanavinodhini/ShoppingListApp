@@ -57,6 +57,7 @@ struct MainView : View
     // Added for Notification functionality, due date variables
     @State var dueDate : String
     @State var showFootnote = false
+    
     var body: some View
     {
         VStack{
@@ -89,11 +90,13 @@ struct MainView : View
                 .navigationBarItems(trailing: Button(action: {
                     self.addNewListAlert = true
                 }){
-                    Image(systemName: "plus")
+                    //Image(systemName: "plus")
+                    Image("addListIcon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .padding()
-                        .frame(width: 55, height: 55)
+                        .frame(width: 75, height: 75)
+                        .padding(.top,10)
                 })
             }
             .onAppear() {
@@ -109,8 +112,9 @@ struct MainView : View
         }, dueDate: $dueDate)
         
     }
+    
+    
     func saveShoppingListInDB(){
-        
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").addDocument(data: ["listName": listName, "dueDate": dueDate]) { error in
             if let error = error{
@@ -122,7 +126,6 @@ struct MainView : View
     }
     
     func updateShoppingListInDB(){
-        
         guard let currentUser = Auth.auth().currentUser?.uid else { return }
         db.collection("Users").document(currentUser).collection("Lists").document(listDocId).updateData(["listName" : self.listName, "dueDate": dueDate])
         { error in
@@ -145,15 +148,6 @@ struct MainView : View
                     print("deleteSuccess")
                 }
             }
-            // Delete the Items of the Shopping list
-            /*db.collection("Users").document(currentUser).collection("Lists").document(shoppingListDocId.docId!).collection("Item").document("sBNYoe4a9zXBVDP96Zs6").delete{
-             error in
-             if let error = error{
-             print(error.localizedDescription)
-             } else {
-             print("deleteSuccess")
-             }
-             }*/
         }
     }
 }

@@ -15,7 +15,6 @@ struct Speech{
 
 public class SpeechData:ObservableObject
 {
-    /* Variables **/
     @Published var isRecording:Bool = false
     @Published var button = SpeechButton()
     @Published var speech = Speech()
@@ -25,7 +24,6 @@ public class SpeechData:ObservableObject
     let authStat = SFSpeechRecognizer.authorizationStatus()
     var recognitionTask: SFSpeechRecognitionTask?
     let audioEngine = AVAudioEngine()
-    //public var outputText:String = ""
     
     init(){
         
